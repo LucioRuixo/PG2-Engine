@@ -6,80 +6,94 @@ Game::~Game() {}
 
 //Sprite* sprite;
 //Sprite* sprite2;
-Sprite* playerSprite;
-TileMap* tileMap;
+Sprite* sprite1;
+Sprite* sprite2;
+//TileMap* tileMap;
+
+float scaleFactor = 0.1f;
+float rotationFactor = 0.1f;
 
 int Game::initialize()
 {
 	//------
 	//Tile Map
-	Sprite* grassSprite = new Sprite(renderer);
-	grassSprite->setBufferData();
-	grassSprite->setTexture("res/assets/pasto.png", RGB);
-
-	int tileMapWidth = 20;
-	int tileMapHeight = 10;
-	float tileWidth = 0.1f;
-	float tileHeight = 0.2f;
-	float initialX = -(1.0f - tileWidth / 2.0f);
-	float initialY = -(1.0f - tileHeight / 2.0f);
-	tileMap = new TileMap(tileMapWidth, tileMapHeight, tileWidth, tileHeight, initialX, initialY, grassSprite, renderer);
-
-	Sprite* obsidianSprite = new Sprite(renderer);
-	obsidianSprite->setBufferData();
-	obsidianSprite->setTexture("res/assets/bloque obsidiana.jpg", RGB);
-
-	tileMap->getTile(7, 7)->setSprite(obsidianSprite);
-	tileMap->getTile(7, 6)->setSprite(obsidianSprite);
-	tileMap->getTile(8, 7)->setSprite(obsidianSprite);
-	tileMap->getTile(8, 6)->setSprite(obsidianSprite);
-	tileMap->getTile(11, 7)->setSprite(obsidianSprite);
-	tileMap->getTile(11, 6)->setSprite(obsidianSprite);
-	tileMap->getTile(12, 7)->setSprite(obsidianSprite);
-	tileMap->getTile(12, 6)->setSprite(obsidianSprite);
-	tileMap->getTile(9, 5)->setSprite(obsidianSprite);
-	tileMap->getTile(10, 5)->setSprite(obsidianSprite);
-	tileMap->getTile(8, 2)->setSprite(obsidianSprite);
-	tileMap->getTile(8, 4)->setSprite(obsidianSprite);
-	tileMap->getTile(9, 4)->setSprite(obsidianSprite);
-	tileMap->getTile(10, 4)->setSprite(obsidianSprite);
-	tileMap->getTile(11, 4)->setSprite(obsidianSprite);
-	tileMap->getTile(8, 3)->setSprite(obsidianSprite);
-	tileMap->getTile(9, 3)->setSprite(obsidianSprite);
-	tileMap->getTile(10, 3)->setSprite(obsidianSprite);
-	tileMap->getTile(11, 3)->setSprite(obsidianSprite);
-	tileMap->getTile(11, 2)->setSprite(obsidianSprite);
-
-	tileMap->getTile(7, 7)->setWalkability(false);
-	tileMap->getTile(7, 6)->setWalkability(false);
-	tileMap->getTile(8, 7)->setWalkability(false);
-	tileMap->getTile(8, 6)->setWalkability(false);
-	tileMap->getTile(11, 7)->setWalkability(false);
-	tileMap->getTile(11, 6)->setWalkability(false);
-	tileMap->getTile(12, 7)->setWalkability(false);
-	tileMap->getTile(12, 6)->setWalkability(false);
-	tileMap->getTile(9, 5)->setWalkability(false);
-	tileMap->getTile(10, 5)->setWalkability(false);
-	tileMap->getTile(8, 2)->setWalkability(false);
-	tileMap->getTile(8, 4)->setWalkability(false);
-	tileMap->getTile(9, 4)->setWalkability(false);
-	tileMap->getTile(10, 4)->setWalkability(false);
-	tileMap->getTile(11, 4)->setWalkability(false);
-	tileMap->getTile(8, 3)->setWalkability(false);
-	tileMap->getTile(9, 3)->setWalkability(false);
-	tileMap->getTile(10, 3)->setWalkability(false);
-	tileMap->getTile(11, 3)->setWalkability(false);
-	tileMap->getTile(11, 2)->setWalkability(false);
+	//Sprite* grassSprite = new Sprite(renderer);
+	//grassSprite->setBufferData();
+	//grassSprite->setTexture("res/assets/pasto.png", RGB);
+	//
+	//int tileMapWidth = 20;
+	//int tileMapHeight = 10;
+	//float tileWidth = 0.1f;
+	//float tileHeight = 0.2f;
+	//float initialX = -(1.0f - tileWidth / 2.0f);
+	//float initialY = -(1.0f - tileHeight / 2.0f);
+	//tileMap = new TileMap(tileMapWidth, tileMapHeight, tileWidth, tileHeight, initialX, initialY, grassSprite, renderer);
+	//
+	//Sprite* obsidianSprite = new Sprite(renderer);
+	//obsidianSprite->setBufferData();
+	//obsidianSprite->setTexture("res/assets/bloque obsidiana.jpg", RGB);
+	//
+	//tileMap->getTile(7, 7)->setSprite(obsidianSprite);
+	//tileMap->getTile(7, 6)->setSprite(obsidianSprite);
+	//tileMap->getTile(8, 7)->setSprite(obsidianSprite);
+	//tileMap->getTile(8, 6)->setSprite(obsidianSprite);
+	//tileMap->getTile(11, 7)->setSprite(obsidianSprite);
+	//tileMap->getTile(11, 6)->setSprite(obsidianSprite);
+	//tileMap->getTile(12, 7)->setSprite(obsidianSprite);
+	//tileMap->getTile(12, 6)->setSprite(obsidianSprite);
+	//tileMap->getTile(9, 5)->setSprite(obsidianSprite);
+	//tileMap->getTile(10, 5)->setSprite(obsidianSprite);
+	//tileMap->getTile(8, 2)->setSprite(obsidianSprite);
+	//tileMap->getTile(8, 4)->setSprite(obsidianSprite);
+	//tileMap->getTile(9, 4)->setSprite(obsidianSprite);
+	//tileMap->getTile(10, 4)->setSprite(obsidianSprite);
+	//tileMap->getTile(11, 4)->setSprite(obsidianSprite);
+	//tileMap->getTile(8, 3)->setSprite(obsidianSprite);
+	//tileMap->getTile(9, 3)->setSprite(obsidianSprite);
+	//tileMap->getTile(10, 3)->setSprite(obsidianSprite);
+	//tileMap->getTile(11, 3)->setSprite(obsidianSprite);
+	//tileMap->getTile(11, 2)->setSprite(obsidianSprite);
+	//
+	//tileMap->getTile(7, 7)->setWalkability(false);
+	//tileMap->getTile(7, 6)->setWalkability(false);
+	//tileMap->getTile(8, 7)->setWalkability(false);
+	//tileMap->getTile(8, 6)->setWalkability(false);
+	//tileMap->getTile(11, 7)->setWalkability(false);
+	//tileMap->getTile(11, 6)->setWalkability(false);
+	//tileMap->getTile(12, 7)->setWalkability(false);
+	//tileMap->getTile(12, 6)->setWalkability(false);
+	//tileMap->getTile(9, 5)->setWalkability(false);
+	//tileMap->getTile(10, 5)->setWalkability(false);
+	//tileMap->getTile(8, 2)->setWalkability(false);
+	//tileMap->getTile(8, 4)->setWalkability(false);
+	//tileMap->getTile(9, 4)->setWalkability(false);
+	//tileMap->getTile(10, 4)->setWalkability(false);
+	//tileMap->getTile(11, 4)->setWalkability(false);
+	//tileMap->getTile(8, 3)->setWalkability(false);
+	//tileMap->getTile(9, 3)->setWalkability(false);
+	//tileMap->getTile(10, 3)->setWalkability(false);
+	//tileMap->getTile(11, 3)->setWalkability(false);
+	//tileMap->getTile(11, 2)->setWalkability(false);
 	//------
 
-	//Player
+	//Sprite 1
 	//------
-	playerSprite = new Sprite(renderer);
-	playerSprite->setBufferData();
+	sprite1 = new Sprite(renderer);
+	sprite1->setBufferData();
 
-	playerSprite->setTexture("res/assets/gato.jpg", RGB);
-	playerSprite->SetPosition(-0.7f, -0.7f, 0.0f);
-	playerSprite->SetScale(0.15f, 0.25f, 0.0f);
+	sprite1->setTexture("res/assets/gato.jpg", RGB);
+	sprite1->SetPosition(0.0f, 0.0f, -3.0f);
+	sprite1->SetScale(1.0f, 1.0f, 0.0f);
+	//------
+
+	//Sprite 2
+	//------
+	sprite2 = new Sprite(renderer);
+	sprite2->setBufferData();
+
+	sprite2->setTexture("res/assets/Cato in despair.jpg", RGB);
+	sprite2->SetPosition(0.0f, 0.0f, -10.0f);
+	sprite2->SetScale(1.0f, 1.0f, 0.0f);
 	//------
 
 	//sprite = new Sprite(renderer);
@@ -101,91 +115,53 @@ int Game::initialize()
 
 void Game::update()
 {
+	//clear screen
+	renderer->clearBackground();
+
 	//input
 	if (input->getKeyPress(FunctionKey::ESCAPE)) window->setWindowShouldClose(true);
 
 	//transform
-	if (input->getKeyPress(PrintableKey::W))
-	{
-		transY += 0.025f;
-		playerSprite->translateBounds(0.0f, 0.025f);
-		playerSprite->movingUp = true;
-	}
-	else playerSprite->movingUp = false;
+	if (input->getKeyPress(PrintableKey::W)) transY += 0.025f;
 
-	if (input->getKeyPress(PrintableKey::S))
-	{
-		transY -= 0.025f;
-		playerSprite->translateBounds(0.0f, -0.025f);
-		playerSprite->movingDown = true;
-	}
-	else playerSprite->movingDown = false;
+	if (input->getKeyPress(PrintableKey::S)) transY -= 0.025f;
 
-	if (input->getKeyPress(PrintableKey::D))
-	{
-		transX += 0.025f;
-		playerSprite->translateBounds(0.025f, 0.0f);
-		playerSprite->movingRight = true;
-	}
-	else playerSprite->movingRight = false;
+	if (input->getKeyPress(PrintableKey::D)) transX += 0.025f;
 
-	if (input->getKeyPress(PrintableKey::A))
-	{
-		transX -= 0.025f;
-		playerSprite->translateBounds(-0.025f, 0.0f);
-		playerSprite->movingLeft = true;
-	}
-	else playerSprite->movingLeft = false;
+	if (input->getKeyPress(PrintableKey::A)) transX -= 0.025f;
 
-	if (input->getKeyPress(PrintableKey::X)) transZ += 0.001f;
-	if (input->getKeyPress(PrintableKey::Z)) transZ -= 0.001f;
+	if (input->getKeyPress(PrintableKey::X)) transZ += 0.01f;
+	if (input->getKeyPress(PrintableKey::Z)) transZ -= 0.01f;
 
-	////rotate
-	//if (input->getKeyPress(PrintableKey::U)) rotateX += 0.01f;
-	//if (input->getKeyPress(PrintableKey::J)) rotateX -= 0.01f;
-	//if (input->getKeyPress(PrintableKey::I)) rotateY += 0.01f;
-	//if (input->getKeyPress(PrintableKey::K)) rotateY -= 0.01f;
-	//if (input->getKeyPress(PrintableKey::O)) rotateZ += 0.01f;
-	//if (input->getKeyPress(PrintableKey::L)) rotateZ -= 0.01f;
-	//
-	////scale
-	//if (input->getKeyPress(FunctionKey::UP))
-	//{
-	//	scaleX += 0.001f;
-	//	scaleY += 0.001f;
-	//	scaleZ += 0.001f;
-	//}
-	//if (input->getKeyPress(FunctionKey::DOWN))
-	//{
-	//	scaleX -= 0.001f;
-	//	scaleY -= 0.001f;
-	//	scaleZ -= 0.001f;
-	//}
-
-	//clear screen
-	renderer->clearBackground();
-
-	//view
-	renderer->setView(renderer->getShaderProgram(), renderer->getView());
-
-	//proj
-	renderer->setProj(renderer->getShaderProgram(), renderer->getProj());
+	//rotate
+	if (input->getKeyPress(PrintableKey::U)) sprite1->SetRotationX(sprite1->transform.rotation.x + rotationFactor);
+	if (input->getKeyPress(PrintableKey::J)) sprite1->SetRotationX(sprite1->transform.rotation.x - rotationFactor);
+	if (input->getKeyPress(PrintableKey::I)) sprite1->SetRotationY(sprite1->transform.rotation.y + rotationFactor);
+	if (input->getKeyPress(PrintableKey::K)) sprite1->SetRotationY(sprite1->transform.rotation.y - rotationFactor);
+	if (input->getKeyPress(PrintableKey::O)) sprite1->SetRotationZ(sprite1->transform.rotation.z + rotationFactor);
+	if (input->getKeyPress(PrintableKey::L)) sprite1->SetRotationZ(sprite1->transform.rotation.z - rotationFactor);
+	
+	//scale
+	if (input->getKeyPress(FunctionKey::UP))
+		sprite1->SetScale(sprite1->transform.scale.x + scaleFactor, sprite1->transform.scale.y + scaleFactor, sprite1->transform.scale.z + scaleFactor);
+	if (input->getKeyPress(FunctionKey::DOWN))
+		sprite1->SetScale(sprite1->transform.scale.x - scaleFactor, sprite1->transform.scale.y - scaleFactor, sprite1->transform.scale.z - scaleFactor);
 
 	//------
 	//Tile Map
-	tileMap->draw(renderer);
+	//tileMap->draw(renderer);
 
 	//------
 	//Player
-	playerSprite->Translate(transX, transY, transZ);
+	//playerSprite->Translate(transX, transY, transZ);
 
-	playerSprite->loadTexture();
-	renderer->setModel(renderer->getShaderProgram(), playerSprite->getModel());
+	sprite2->loadTexture();
+	renderer->setModel(renderer->getShaderProgram(), sprite2->getModel());
 	renderer->drawTriangles();
 
-	transX = 0.0f;
-	transY = 0.0f;
-	transZ = 0.0f;
+	sprite1->loadTexture();
+	renderer->setModel(renderer->getShaderProgram(), sprite1->getModel());
+	renderer->drawTriangles();
 
 	//------
 	//Sprite
@@ -207,7 +183,7 @@ void Game::update()
 
 	//------
 	//Collision detection
-	tileMap->detectCollisions(playerSprite);
+	//tileMap->detectCollisions(playerSprite);
 
 	//if (sprite->getBounds().min.x < sprite2->getBounds().max.x
 	//	&&
@@ -218,12 +194,20 @@ void Game::update()
 	//	sprite->getBounds().max.y > sprite2->getBounds().min.y)
 	//	std::cout << "Colliding: YES" << std::endl;
 	//else std::cout << "Colliding: NO" << std::endl;
+
+	//view
+	glm::mat4 translatedView = glm::translate(renderer->getView(), glm::vec3(-transX, -transY, -transZ));
+	renderer->setView(renderer->getShaderProgram(), translatedView);
+
+	//proj
+	renderer->setProj(renderer->getShaderProgram(), renderer->getProj());
 }
 
 int Game::terminate()
 {
-	if (tileMap) delete tileMap;
-	if (playerSprite) delete playerSprite;
+	//if (tileMap) delete tileMap;
+	if (sprite1) delete sprite1;
+	if (sprite2) delete sprite2;
 
 	//if (sprite) delete sprite;
 	//if (sprite2) delete sprite2;

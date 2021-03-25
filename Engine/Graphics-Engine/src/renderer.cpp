@@ -128,9 +128,9 @@ void Renderer::setProj(unsigned int& _shaderProg, glm::mat4 projection) {
 	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 }
 
-void Renderer::updateProj(glm::mat4 projection) {
-	//projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
-	projection = glm::ortho(0.0f, 1280.0f, 0.0f, 720.0f);
+void Renderer::updateProj(glm::mat4 &projection) {
+	projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+	//projection = glm::ortho(0.0f, 1280.0f, 0.0f, 720.0f);
 }
 
 void Renderer::setView(unsigned int& _shaderProg, glm::mat4 view) {

@@ -45,7 +45,7 @@ public:
 	int createShaderProgram(const char * vertexPath, const char * fragmentPath);
 	void setModel(unsigned int& _shaderProg, glm::mat4 model);
 	void setProj(unsigned int& _shaderProg, glm::mat4 projection);
-	void updateProj(glm::mat4 projection);
+	void updateProj(glm::mat4 &projection);
 	void setView(unsigned int& _shaderProg, glm::mat4 view);
 	void updateView(glm::mat4 view);
 	glm::mat4 getView();
