@@ -1,0 +1,165 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Archivos de recursos">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{567373f7-80e0-41b6-87f4-30cdc43f4836}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="res">
+      <UniqueIdentifier>{d993763d-6ef4-469b-8ec2-5cfb843af4f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="res\shaders">
+      <UniqueIdentifier>{9624e130-453a-44ed-a639-3f5905f8ee68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\stb_image">
+      <UniqueIdentifier>{5e4b0989-ca2e-4d54-9f3f-7ad048a2567b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\TextureImporter">
+      <UniqueIdentifier>{77038600-71db-44ac-8996-5303ecb106db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Time">
+      <UniqueIdentifier>{bd680321-65e8-41f5-807f-f1f30f9dd036}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Animation">
+      <UniqueIdentifier>{72074342-19aa-4bf5-8288-7a7ed787bbf6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Entity">
+      <UniqueIdentifier>{1bd08f1a-fc96-4046-a2bf-b0cced0549e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Entity2D">
+      <UniqueIdentifier>{26d6cf91-07ae-4fc1-a6eb-38f455b4cb0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\GameBase">
+      <UniqueIdentifier>{554ebdac-4fd1-481d-bf2c-f5bb20bf3645}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Renderer">
+      <UniqueIdentifier>{8f2ff6bf-17d7-4495-8180-d85d51626d01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Shape">
+      <UniqueIdentifier>{ba4c91d0-ac34-4752-b9c1-dc7466b3d1a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sprite">
+      <UniqueIdentifier>{d45a8175-87b3-4a1b-acdb-2ae289a7631e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Window">
+      <UniqueIdentifier>{dfa6c1d6-8626-428d-841f-1f9e0a3be89c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Tools">
+      <UniqueIdentifier>{9d6fe0d6-05cc-4faf-b63e-b817204b6c2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Input">
+      <UniqueIdentifier>{9c445a2a-276d-4360-9d28-317b249bc827}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Tile">
+      <UniqueIdentifier>{93512a1f-eae2-4e9e-85e2-5703a83d5aef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\TileMap">
+      <UniqueIdentifier>{d1a36d4b-997b-4a3a-9205-931c07ed5d6a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\stb_image.cpp">
+      <Filter>src\stb_image</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Entity2D.cpp">
+      <Filter>src\Entity2D</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Animation.cpp">
+      <Filter>src\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Time.cpp">
+      <Filter>src\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Entity.cpp">
+      <Filter>src\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameBase.cpp">
+      <Filter>src\GameBase</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer.cpp">
+      <Filter>src\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shape.cpp">
+      <Filter>src\Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Sprite.cpp">
+      <Filter>src\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TextureImporter.cpp">
+      <Filter>src\TextureImporter</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Window.cpp">
+      <Filter>src\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Input.cpp">
+      <Filter>src\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TileMap.cpp">
+      <Filter>src\TileMap</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tile.cpp">
+      <Filter>src\Tile</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\stb_image.h">
+      <Filter>src\stb_image</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Entity2D.h">
+      <Filter>src\Entity2D</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Animation.h">
+      <Filter>src\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Time.h">
+      <Filter>src\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Entity.h">
+      <Filter>src\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameBase.h">
+      <Filter>src\GameBase</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer.h">
+      <Filter>src\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Shape.h">
+      <Filter>src\Shape</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Sprite.h">
+      <Filter>src\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TextureImporter.h">
+      <Filter>src\TextureImporter</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Window.h">
+      <Filter>src\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Export.h">
+      <Filter>src\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Includes.h">
+      <Filter>src\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Input.h">
+      <Filter>src\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TileMap.h">
+      <Filter>src\TileMap</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tile.h">
+      <Filter>src\Tile</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\shaders\shader-vs.shader">
+      <Filter>res\shaders</Filter>
+    </None>
+    <None Include="res\shaders\shader-fs.shader">
+      <Filter>res\shaders</Filter>
+    </None>
+  </ItemGroup>
+</Project>
