@@ -6,6 +6,7 @@
 #include "Shape.h"
 #include "Sprite.h"
 #include "Window.h"
+#include "Camera.h"
 #include "Input.h"
 #include "TileMap.h"
 
@@ -23,6 +24,7 @@ protected:
 	float scaleZ;
 
 	Window* window;
+	Camera* camera;
 	Input* input;
 	Renderer* renderer;
 	Time* time;

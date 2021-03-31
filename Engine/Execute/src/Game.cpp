@@ -10,6 +10,7 @@ Sprite* sprite1;
 Sprite* sprite2;
 //TileMap* tileMap;
 
+float movementSpeed = 0.025f;
 float scaleFactor = 0.1f;
 float rotationFactor = 0.1f;
 
@@ -122,16 +123,14 @@ void Game::update()
 	if (input->getKeyPress(FunctionKey::ESCAPE)) window->setWindowShouldClose(true);
 
 	//transform
-	if (input->getKeyPress(PrintableKey::W)) transY += 0.025f;
+	if (input->getKeyPress(PrintableKey::W)) transY += movementSpeed;
+	if (input->getKeyPress(PrintableKey::S)) transY -= movementSpeed;
 
-	if (input->getKeyPress(PrintableKey::S)) transY -= 0.025f;
+	if (input->getKeyPress(PrintableKey::D)) transX += movementSpeed;
+	if (input->getKeyPress(PrintableKey::A)) transX -= movementSpeed;
 
-	if (input->getKeyPress(PrintableKey::D)) transX += 0.025f;
-
-	if (input->getKeyPress(PrintableKey::A)) transX -= 0.025f;
-
-	if (input->getKeyPress(PrintableKey::X)) transZ += 0.01f;
-	if (input->getKeyPress(PrintableKey::Z)) transZ -= 0.01f;
+	if (input->getKeyPress(PrintableKey::X)) transZ += movementSpeed;
+	if (input->getKeyPress(PrintableKey::Z)) transZ -= movementSpeed;
 
 	//rotate
 	if (input->getKeyPress(PrintableKey::U)) sprite1->SetRotationX(sprite1->transform.rotation.x + rotationFactor);
@@ -196,8 +195,9 @@ void Game::update()
 	//else std::cout << "Colliding: NO" << std::endl;
 
 	//view
-	glm::mat4 translatedView = glm::translate(renderer->getView(), glm::vec3(-transX, -transY, -transZ));
-	renderer->setView(renderer->getShaderProgram(), translatedView);
+	//glm::mat4 translatedView = glm::translate(renderer->getView(), glm::vec3(-transX, -transY, -transZ));
+	//renderer->setView(renderer->getShaderProgram(), translatedView);
+	camera->translate(transX, transY, transZ);
 
 	//proj
 	renderer->setProj(renderer->getShaderProgram(), renderer->getProj());

@@ -59,6 +59,9 @@
     <Filter Include="src\TileMap">
       <UniqueIdentifier>{d1a36d4b-997b-4a3a-9205-931c07ed5d6a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Camera">
+      <UniqueIdentifier>{670b8680-0ce4-4ddd-9c74-ffd1417d3ccc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\stb_image.cpp">
@@ -102,6 +105,9 @@
     </ClCompile>
     <ClCompile Include="src\Tile.cpp">
       <Filter>src\Tile</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Camera.cpp">
+      <Filter>src\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -152,6 +158,9 @@
     </ClInclude>
     <ClInclude Include="src\Tile.h">
       <Filter>src\Tile</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Camera.h">
+      <Filter>src\Camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

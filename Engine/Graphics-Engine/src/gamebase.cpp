@@ -13,8 +13,9 @@ GameBase::GameBase() {
 	scaleZ = 1.0f;
 
 	window = new Window();
-	input = new Input(window);
 	renderer = new Renderer();
+	camera = new Camera(renderer);
+	input = new Input(window);
 	time = new Time();
 
 	//if (!glfwInit() || window == NULL) return -1;
