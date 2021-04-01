@@ -27,18 +27,22 @@ GameBase::GameBase() {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	//create VBO
+	//Create VBO
 	renderer->createVBO();
-	//create Tr
+	//Create Tr
 	renderer->bindVBO(renderer->getVBO());
 	renderer->setVertexAttrib();
-	//shader
+	//Shader
 	renderer->setShader();
 	//Set texture
 	renderer->generateTexture();
 	renderer->setParameterTexture();
 	//------
 	glUseProgram(renderer->getShaderProgram());
+
+	//Light color
+	int lightColorLocation = glGetUniformLocation(renderer->getShaderProgram(), "lightColor");
+	glUniform3f(lightColorLocation, 0.8f, 0.25f, 0.25f);
 }
 
 GameBase::~GameBase() {
@@ -46,8 +50,9 @@ GameBase::~GameBase() {
 	window->glfwTerminate();
 
 	if (window) delete window;
-	if (input) delete input;
 	if (renderer) delete renderer;
+	if (camera) delete camera;
+	if (input) delete input;
 	if (time) delete time;
 }
 
