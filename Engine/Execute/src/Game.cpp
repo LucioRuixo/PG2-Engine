@@ -80,21 +80,21 @@ int Game::initialize()
 	//Sprite 1
 	//------
 	sprite1 = new Sprite(renderer);
-	sprite1->setBufferData();
+	//sprite1->setBufferData();
 
 	sprite1->setTexture("res/assets/gato.jpg", RGB);
-	sprite1->SetPosition(0.0f, 0.0f, -3.0f);
-	sprite1->SetScale(1.0f, 1.0f, 0.0f);
+	sprite1->setPosition(0.0f, 0.0f, -3.0f);
+	sprite1->setScale(1.0f, 1.0f, 0.0f);
 	//------
 
 	//Sprite 2
 	//------
 	sprite2 = new Sprite(renderer);
-	sprite2->setBufferData();
+	//sprite2->setBufferData();
 
 	sprite2->setTexture("res/assets/Cato in despair.jpg", RGB);
-	sprite2->SetPosition(0.0f, 0.0f, -10.0f);
-	sprite2->SetScale(1.0f, 1.0f, 0.0f);
+	sprite2->setPosition(0.0f, 0.0f, -10.0f);
+	sprite2->setScale(1.0f, 1.0f, 0.0f);
 	//------
 
 	//sprite = new Sprite(renderer);
@@ -142,9 +142,9 @@ void Game::update()
 	
 	//scale
 	if (input->getKeyPress(FunctionKey::UP))
-		sprite1->SetScale(sprite1->transform.scale.x + scaleFactor, sprite1->transform.scale.y + scaleFactor, sprite1->transform.scale.z + scaleFactor);
+		sprite1->setScale(sprite1->transform.scale.x + scaleFactor, sprite1->transform.scale.y + scaleFactor, sprite1->transform.scale.z + scaleFactor);
 	if (input->getKeyPress(FunctionKey::DOWN))
-		sprite1->SetScale(sprite1->transform.scale.x - scaleFactor, sprite1->transform.scale.y - scaleFactor, sprite1->transform.scale.z - scaleFactor);
+		sprite1->setScale(sprite1->transform.scale.x - scaleFactor, sprite1->transform.scale.y - scaleFactor, sprite1->transform.scale.z - scaleFactor);
 
 	//------
 	//Tile Map
