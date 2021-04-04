@@ -1,15 +1,15 @@
 #include "Sprite.h"
+
 using namespace glm;
 
-float vertexBufferTriSprite[] = {
+float vertexBufferTriSprite[] =
+{
 	-0.5f, -0.5f, 0.0f,   1.0f, 1.0f, 1.0f,   0.0f, 0.0f,
 	 0.5f, -0.5f, 0.0f,   1.0f, 1.0f, 1.0f,   1.0f, 0.0f,
 	 0.0f,  0.5f, 0.0f,   1.0f, 1.0f, 1.0f,   0.5f, 1.0f
 }; 
 
-unsigned int triIndicesSprite[] = {
-	0, 1, 2
-};
+unsigned int triIndicesSprite[] = { 0, 1, 2 };
 
 //T = top
 //B = bottom
@@ -22,52 +22,90 @@ vec2 BR = vec2( 0.5f, -0.5f);
 vec2 _boundsMin = BL;
 vec2 _boundsMax = TR;
 
-float vertexBufferQuadSprite[QUAD_VERTEX_BUFFER_SIZE] = {
-	//TL.x, TL.y, 0.0f,		1.0f, 0.0f, 0.0f,	0.0f, 0.5f,
-	//TR.x, TR.y, 0.0f,		0.0f, 1.0f, 0.0f,	0.5f, 0.5f,
-	//BR.x, BR.y, 0.0f,		0.0f, 0.0f, 1.0f,	0.5f, 0.0f,
-	//
-	//BR.x, BR.y, 0.0f,		0.0f, 0.0f, 1.0f,	0.5f, 0.0f,
-	//BL.x, BL.y, 0.0f,		1.0f, 1.0f, 1.0f,	0.0f, 0.0f,
-	//TL.x, TL.y, 0.0f,		1.0f, 0.0f, 0.0f,	0.0f, 0.5f
+float vertexBufferQuadSprite[QUAD_VERTEX_BUFFER_SIZE] =
+{
+	//Plane
+	//-------------------
+	//TL.x, TL.y, 0.0f,	  1.0f, 0.0f, 0.0f,	  0.0f, 1.0f,
+	//TR.x, TR.y, 0.0f,	  0.0f, 1.0f, 0.0f,	  1.0f, 1.0f,
+	//BR.x, BR.y, 0.0f,	  0.0f, 0.0f, 1.0f,	  1.0f, 0.0f,
+	//					  					  
+	//BR.x, BR.y, 0.0f,	  0.0f, 0.0f, 1.0f,	  1.0f, 0.0f,
+	//BL.x, BL.y, 0.0f,	  1.0f, 1.0f, 1.0f,	  0.0f, 0.0f,
+	//TL.x, TL.y, 0.0f,	  1.0f, 0.0f, 0.0f,	  0.0f, 1.0f
+	//-------------------
 
-	TL.x, TL.y, 0.0f,	  1.0f, 0.0f, 0.0f,	  0.0f, 1.0f,
-	TR.x, TR.y, 0.0f,	  0.0f, 1.0f, 0.0f,	  1.0f, 1.0f,
-	BR.x, BR.y, 0.0f,	  0.0f, 0.0f, 1.0f,	  1.0f, 0.0f,
-						  					  
-	BR.x, BR.y, 0.0f,	  0.0f, 0.0f, 1.0f,	  1.0f, 0.0f,
-	BL.x, BL.y, 0.0f,	  1.0f, 1.0f, 1.0f,	  0.0f, 0.0f,
-	TL.x, TL.y, 0.0f,	  1.0f, 0.0f, 0.0f,	  0.0f, 1.0f
+	//Cube
+	//-------------------
+	-0.5f, -0.5f, -0.5f,  	1.0f, 0.0f, 0.0f,    1.0f, 1.0f,
+	 0.5f, -0.5f, -0.5f,  	0.0f, 1.0f, 0.0f,    0.0f, 1.0f,
+	 0.5f,  0.5f, -0.5f,  	0.0f, 0.0f, 1.0f,    0.0f, 0.0f,
+	 0.5f,  0.5f, -0.5f,  	0.0f, 0.0f, 1.0f,    0.0f, 0.0f,
+	-0.5f,  0.5f, -0.5f,  	1.0f, 1.0f, 1.0f,    1.0f, 0.0f,
+	-0.5f, -0.5f, -0.5f,  	1.0f, 0.0f, 0.0f,    1.0f, 1.0f,
+
+	-0.5f, -0.5f,  0.5f,    1.0f, 0.0f, 0.0f,    1.0f, 1.0f,
+	 0.5f, -0.5f,  0.5f,  	0.0f, 1.0f, 0.0f,    0.0f, 1.0f,
+	 0.5f,  0.5f,  0.5f,  	0.0f, 0.0f, 1.0f,    0.0f, 0.0f,
+	 0.5f,  0.5f,  0.5f,    0.0f, 0.0f, 1.0f,    0.0f, 0.0f,
+	-0.5f,  0.5f,  0.5f,  	1.0f, 1.0f, 1.0f,    1.0f, 0.0f,
+	-0.5f, -0.5f,  0.5f,  	1.0f, 0.0f, 0.0f,    1.0f, 1.0f,
+
+	-0.5f,  0.5f,  0.5f,  	1.0f, 0.0f, 0.0f,    1.0f, 1.0f,
+	-0.5f,  0.5f, -0.5f,  	0.0f, 1.0f, 0.0f,    0.0f, 1.0f,
+	-0.5f, -0.5f, -0.5f,  	0.0f, 0.0f, 1.0f,    0.0f, 0.0f,
+	-0.5f, -0.5f, -0.5f,  	0.0f, 0.0f, 1.0f,    0.0f, 0.0f,
+	-0.5f, -0.5f,  0.5f,  	1.0f, 1.0f, 1.0f,    1.0f, 0.0f,
+	-0.5f,  0.5f,  0.5f,  	1.0f, 0.0f, 0.0f,    1.0f, 1.0f,
+
+	 0.5f,  0.5f,  0.5f,  	1.0f, 0.0f, 0.0f,    1.0f, 1.0f,
+	 0.5f,  0.5f, -0.5f,  	0.0f, 1.0f, 0.0f,    0.0f, 1.0f,
+	 0.5f, -0.5f, -0.5f,  	0.0f, 0.0f, 1.0f,    0.0f, 0.0f,
+	 0.5f, -0.5f, -0.5f,  	0.0f, 0.0f, 1.0f,    0.0f, 0.0f,
+	 0.5f, -0.5f,  0.5f,  	1.0f, 1.0f, 1.0f,    1.0f, 0.0f,
+	 0.5f,  0.5f,  0.5f,  	1.0f, 0.0f, 0.0f,    1.0f, 1.0f,
+
+	-0.5f, -0.5f, -0.5f,  	1.0f, 0.0f, 0.0f,    1.0f, 1.0f,
+	 0.5f, -0.5f, -0.5f,  	0.0f, 1.0f, 0.0f,    0.0f, 1.0f,
+	 0.5f, -0.5f,  0.5f,  	0.0f, 0.0f, 1.0f,    0.0f, 0.0f,
+	 0.5f, -0.5f,  0.5f,  	0.0f, 0.0f, 1.0f,    0.0f, 0.0f,
+	-0.5f, -0.5f,  0.5f,  	1.0f, 1.0f, 1.0f,    1.0f, 0.0f,
+	-0.5f, -0.5f, -0.5f,  	1.0f, 0.0f, 0.0f,    1.0f, 1.0f,
+
+	-0.5f,  0.5f, -0.5f,  	1.0f, 0.0f, 0.0f,    1.0f, 1.0f,
+	 0.5f,  0.5f, -0.5f,  	0.0f, 1.0f, 0.0f,    0.0f, 1.0f,
+	 0.5f,  0.5f,  0.5f,  	0.0f, 0.0f, 1.0f,    0.0f, 0.0f,
+	 0.5f,  0.5f,  0.5f,  	0.0f, 0.0f, 1.0f,    0.0f, 0.0f,
+	-0.5f,  0.5f,  0.5f,  	1.0f, 1.0f, 1.0f,    1.0f, 0.0f,
+	-0.5f,  0.5f, -0.5f,  	1.0f, 0.0f, 0.0f,    1.0f, 1.0f
+	//-------------------
 };
 /*
-float vertexBufferQuad[] = {
+float vertexBufferQuad[] =
+{
 	 0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 1.0f,   0.0f, 0.0f,
 	 0.5f, -0.5f, 0.0f,   1.0f, 1.0f, 1.0f,   0.0f, 0.0f,
 	-0.5f, -0.5f, 0.0f,   1.0f, 1.0f, 1.0f,   1.0f, 0.0f,
 	-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 1.0f,   1.0f, 1.0f
 };
 */
-unsigned int quadIndicesSprite[] = {  // note that we start from 0!
+unsigned int quadIndicesSprite[] =
+{ 
 	0, 1, 3,   // first triangle
 	1, 2, 3    // second triangle
 };
 
-Sprite::Sprite(Renderer* _render) : Entity2D(_render, _boundsMin, _boundsMax) {
-	renderer = _render;
+Sprite::Sprite(Renderer* _renderer) : Entity2D(_renderer, _boundsMin, _boundsMax)
+{
+	renderer = _renderer;
 	type = GL_QUADS;
-	size = QUAD_VERTEX_BUFFER_SIZE;
+	//vertexBufferSize = QUAD_VERTEX_BUFFER_SIZE;
 	animation = NULL;
 
-	for (int i = 0; i < QUAD_VERTEX_BUFFER_SIZE; i++)
-	{
-		vertexBuffer[i] = vertexBufferQuadSprite[i];
-	}
+	for (int i = 0; i < QUAD_VERTEX_BUFFER_SIZE; i++) vertexBuffer[i] = vertexBufferQuadSprite[i];
 }
 
-Sprite::~Sprite()
-{
-	if (animation) delete animation;
-}
+Sprite::~Sprite() { if (animation) delete animation; }
 
 TextureData Sprite::setTexture(const char* filePath, int _type)
 {
@@ -110,16 +148,8 @@ void Sprite::updateAnimation()
 	}
 }
 
-void Sprite::setBufferData() {
-	renderer->setBufferData(size, vertexBuffer);
-}
+void Sprite::setBufferData() { renderer->setBufferData(QUAD_VERTEX_BUFFER_SIZE, vertexBuffer); }
 
-void Sprite::setAnimation(Animation* _animation)
-{
-	animation = _animation;
-}
+void Sprite::setAnimation(Animation* _animation) { animation = _animation; }
 
-Animation* Sprite::getAnimation()
-{
-	return animation;
-}
+Animation* Sprite::getAnimation() { return animation; }

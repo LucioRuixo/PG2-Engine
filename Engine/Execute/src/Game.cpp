@@ -123,14 +123,14 @@ void Game::update()
 	if (input->getKeyPress(FunctionKey::ESCAPE)) window->setWindowShouldClose(true);
 
 	//transform
-	if (input->getKeyPress(PrintableKey::W)) transY += movementSpeed;
-	if (input->getKeyPress(PrintableKey::S)) transY -= movementSpeed;
+	if (input->getKeyPress(PrintableKey::W)) translationY += movementSpeed;
+	if (input->getKeyPress(PrintableKey::S)) translationY -= movementSpeed;
 
-	if (input->getKeyPress(PrintableKey::D)) transX += movementSpeed;
-	if (input->getKeyPress(PrintableKey::A)) transX -= movementSpeed;
+	if (input->getKeyPress(PrintableKey::D)) translationX += movementSpeed;
+	if (input->getKeyPress(PrintableKey::A)) translationX -= movementSpeed;
 
-	if (input->getKeyPress(PrintableKey::X)) transZ += movementSpeed;
-	if (input->getKeyPress(PrintableKey::Z)) transZ -= movementSpeed;
+	if (input->getKeyPress(PrintableKey::X)) translationZ += movementSpeed;
+	if (input->getKeyPress(PrintableKey::Z)) translationZ -= movementSpeed;
 
 	//rotate
 	if (input->getKeyPress(PrintableKey::U)) sprite1->SetRotationX(sprite1->transform.rotation.x + rotationFactor);
@@ -154,12 +154,12 @@ void Game::update()
 	//Player
 	//playerSprite->Translate(transX, transY, transZ);
 
-	sprite2->loadTexture();
-	renderer->setModel(renderer->getShaderProgram(), sprite2->getModel());
-	renderer->drawTriangles();
-
 	sprite1->loadTexture();
 	renderer->setModel(renderer->getShaderProgram(), sprite1->getModel());
+	renderer->drawTriangles();
+
+	sprite2->loadTexture();
+	renderer->setModel(renderer->getShaderProgram(), sprite2->getModel());
 	renderer->drawTriangles();
 
 	//------
@@ -194,13 +194,7 @@ void Game::update()
 	//	std::cout << "Colliding: YES" << std::endl;
 	//else std::cout << "Colliding: NO" << std::endl;
 
-	//view
-	//glm::mat4 translatedView = glm::translate(renderer->getView(), glm::vec3(-transX, -transY, -transZ));
-	//renderer->setView(renderer->getShaderProgram(), translatedView);
-	camera->translate(transX, transY, transZ);
-
-	//proj
-	renderer->setProj(renderer->getShaderProgram(), renderer->getProj());
+	camera->translate(translationX, translationY, translationZ);
 }
 
 int Game::terminate()
@@ -208,9 +202,6 @@ int Game::terminate()
 	//if (tileMap) delete tileMap;
 	if (sprite1) delete sprite1;
 	if (sprite2) delete sprite2;
-
-	//if (sprite) delete sprite;
-	//if (sprite2) delete sprite2;
 
 	return 0;
 }

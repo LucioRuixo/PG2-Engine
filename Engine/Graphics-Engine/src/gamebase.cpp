@@ -2,9 +2,9 @@
 
 GameBase::GameBase() {
 	glfwInit();
-	transX = 0.0f;
-	transY = 0.0f;
-	transZ = 0.0f;
+	translationX = 0.0f;
+	translationY = 0.0f;
+	translationZ = 0.0f;
 	rotateX = 0.0f;
 	rotateY = 0.0f;
 	rotateZ = 0.0f;
@@ -15,6 +15,7 @@ GameBase::GameBase() {
 	window = new Window();
 	renderer = new Renderer();
 	camera = new Camera(renderer);
+	lighting = new Lighting(renderer);
 	input = new Input(window);
 	time = new Time();
 
@@ -24,6 +25,7 @@ GameBase::GameBase() {
 	window->createContexCurrent();
 	window->initGLEW();
 
+	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -40,11 +42,14 @@ GameBase::GameBase() {
 	//------
 	glUseProgram(renderer->getShaderProgram());
 
-	//Light color
-	int lightColorLocation = glGetUniformLocation(renderer->getShaderProgram(), "lightColor");
-	glUniform3f(lightColorLocation, 0.8f, 0.25f, 0.25f);
-}
+	//Projection
+	renderer->setProjection(renderer->getShaderProgram(), renderer->getProjection());
 
+	//Ambient light
+	lighting->setAmbientLightColor(lighting->getAmbientLightColor());
+	lighting->setAmbientLightStrenth(lighting->getAmbientLightStrenth());
+}
+ 
 GameBase::~GameBase() {
 	glDeleteProgram(renderer->getShaderProgram());
 	window->glfwTerminate();
@@ -52,6 +57,7 @@ GameBase::~GameBase() {
 	if (window) delete window;
 	if (renderer) delete renderer;
 	if (camera) delete camera;
+	if (lighting) delete lighting;
 	if (input) delete input;
 	if (time) delete time;
 }
@@ -65,6 +71,8 @@ void GameBase::run()
 		update();
 
 		time->Tick();
+
+		//Print FPS
 		//std::cout << "FPS: " << 1.0 / time->DeltaTime() << std::endl;
 
 		window->swapBuffers();

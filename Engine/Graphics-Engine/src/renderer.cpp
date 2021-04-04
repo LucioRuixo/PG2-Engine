@@ -39,8 +39,8 @@ unsigned int Renderer::getEBO() {
 	return EBO;
 }
 
-void Renderer::setBufferData(int tam, float* vertexBuffer) {
-	glBufferData(GL_ARRAY_BUFFER, tam * sizeof(float), vertexBuffer, GL_DYNAMIC_DRAW);
+void Renderer::setBufferData(int size, float* vertexBuffer) {
+	glBufferData(GL_ARRAY_BUFFER, size * sizeof(float), vertexBuffer, GL_DYNAMIC_DRAW);
 }
 
 void Renderer::clearBackground() {
@@ -76,7 +76,8 @@ unsigned int Renderer::compileShader(unsigned int type, const char* source) {
 
 	sourceShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 
-	try {
+	try
+	{
 		sourceShaderFile.open(source);
 		std::stringstream sourceShaderStream;
 
@@ -86,9 +87,7 @@ unsigned int Renderer::compileShader(unsigned int type, const char* source) {
 
 		sourceShaderCode = sourceShaderStream.str();
 	}
-	catch (std::ifstream::failure& e) {
-		std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ" << std::endl;
-	}
+	catch (std::ifstream::failure& e) { std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ" << std::endl; }
 
 	const char* srcCode = sourceShaderCode.c_str();
 
@@ -120,15 +119,15 @@ void Renderer::setModel(unsigned int& _shaderProg, glm::mat4 model) {
 	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 }
 
-void Renderer::setProj(unsigned int& _shaderProg, glm::mat4 projection) {
+void Renderer::setProjection(unsigned int& _shaderProg, glm::mat4 projection) {
 	unsigned int projectionLoc = glGetUniformLocation(_shaderProg, "projection");
 
-	updateProj(projection);
+	updateProjection(projection);
 
 	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 }
 
-void Renderer::updateProj(glm::mat4 &projection) {
+void Renderer::updateProjection(glm::mat4 &projection) {
 	projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
 	//projection = glm::ortho(0.0f, 1280.0f, 0.0f, 720.0f);
 }
@@ -149,7 +148,7 @@ glm::mat4 Renderer::getView() {
 	return _VP.view;
 }
 
-glm::mat4 Renderer::getProj() {
+glm::mat4 Renderer::getProjection() {
 	return _VP.projection;
 }
 
@@ -185,5 +184,6 @@ void Renderer::updateUnifornTexture() {
 }
 
 void Renderer::drawTriangles() {
-	glDrawArrays(GL_TRIANGLES, 0, 6);
+	//glDrawArrays(GL_TRIANGLES, 0, 6);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
 }

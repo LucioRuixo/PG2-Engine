@@ -7,9 +7,9 @@
 class GENGINE_API Shape : public Entity2D{
 private:
 	int type;
-	int tam;
+	//int vertexBufferSize;
 public:
-	Shape(Renderer* _render, int _type);
+	Shape(Renderer* _renderer, int _type);
 	~Shape();
 	void setBufferData();
 };

@@ -7,15 +7,16 @@
 #include "Sprite.h"
 #include "Window.h"
 #include "Camera.h"
+#include "Lighting.h"
 #include "Input.h"
 #include "TileMap.h"
 
 class GENGINE_API GameBase
 {
 protected:
-	float transX;
-	float transY;
-	float transZ;
+	float translationX;
+	float translationY;
+	float translationZ;
 	float rotateX;
 	float rotateY;
 	float rotateZ;
@@ -24,9 +25,10 @@ protected:
 	float scaleZ;
 
 	Window* window;
-	Camera* camera;
-	Input* input;
 	Renderer* renderer;
+	Camera* camera;
+	Lighting* lighting;
+	Input* input;
 	Time* time;
 public:
 	GameBase();

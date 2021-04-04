@@ -11,7 +11,7 @@
 class GENGINE_API Sprite : public Entity2D
 {
 private:
-	int size;
+	//int vertexBufferSize;
 	int type;
 	TextureData textureData;
 	textureImporter texture;

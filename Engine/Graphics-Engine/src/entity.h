@@ -19,7 +19,7 @@ struct GENGINE_API InternalData {
 	glm::mat4 scale;
 };
 
-const int QUAD_VERTEX_BUFFER_SIZE = 48;
+const int QUAD_VERTEX_BUFFER_SIZE = /*48*/ 288;
 
 class GENGINE_API Entity {
 protected:
