@@ -11,7 +11,7 @@ Animation::~Animation() {
 	if (totalFrames.size() > 0)
 		totalFrames.clear();
 }
-void Animation::Update() {
+void Animation::update() {
 	currentTime += (Time::DeltaTime());
 
 	while (currentTime >= length) {
@@ -21,7 +21,7 @@ void Animation::Update() {
 	float frameLength = length / animations[currentAnimation].size();
 	currentFrame = static_cast<int>(currentTime / frameLength);
 }
-void Animation::AddFrame(float frameX, float frameY,
+void Animation::addFrame(float frameX, float frameY,
 	int spriteWidth, int spriteHeigth,
 	int textureWidth, int textureHeigth,
 	float timeToAnim, int _totalFrames, int framesPerRow) {
@@ -55,19 +55,19 @@ void Animation::AddFrame(float frameX, float frameY,
 		}
 	}
 }
-int Animation::GetCurrentFrame() {
+int Animation::getCurrentFrame() {
 	return currentFrame;
 }
-std::vector<Frame>& Animation::GetAnimation() {
+std::vector<Frame>& Animation::getAnimation() {
 	if (currentAnimation < animations.size())
 		return animations[currentAnimation];
 
 	return animations[animations.size() - 1];
 }
-void Animation::SetCurrentAnimation(int _currentAnimation) {
+void Animation::setCurrentAnimation(int _currentAnimation) {
 	currentAnimation = _currentAnimation;
 }
-void Animation::AddFrame(float frameX, float frameY,
+void Animation::addFrame(float frameX, float frameY,
 	int spriteWidth, int spriteHeigth,
 	int textureWidth, int textureHeigth, float timeToAnim) {
 	//---
@@ -89,7 +89,7 @@ void Animation::AddFrame(float frameX, float frameY,
 	//--------
 	totalFrames.push_back(frame);
 }
-void Animation::AddAnimation() {
+void Animation::addAnimation() {
 	if (totalFrames.size() > 0)
 	{
 		animations.push_back(totalFrames);

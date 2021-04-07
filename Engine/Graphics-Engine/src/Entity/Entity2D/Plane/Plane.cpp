@@ -13,16 +13,16 @@ vec2 boundsMax = TR;
 
 float Plane::vertices[] =
 {
-	//Position            //Color              //Texture coordinates
+	//Position           //Color              //Normal             //UV       
+	//--------------									      
+	//With TBLR							      
+	TL.x, TL.y, 0.0f,    1.0f, 0.0f, 0.0f,    0.0f, 0.0f, 1.0f,    0.0f, 1.0f,
+	TR.x, TR.y, 0.0f,    0.0f, 1.0f, 0.0f,    0.0f, 0.0f, 1.0f,    1.0f, 1.0f,
+	BR.x, BR.y, 0.0f,    0.0f, 0.0f, 1.0f,    0.0f, 0.0f, 1.0f,    1.0f, 0.0f,
 
-	//With TBLR
-	TL.x, TL.y, 0.0f,	  1.0f, 0.0f, 0.0f,	  0.0f, 1.0f,
-	TR.x, TR.y, 0.0f,	  0.0f, 1.0f, 0.0f,	  1.0f, 1.0f,
-	BR.x, BR.y, 0.0f,	  0.0f, 0.0f, 1.0f,	  1.0f, 0.0f,
-						  					  
-	BR.x, BR.y, 0.0f,	  0.0f, 0.0f, 1.0f,	  1.0f, 0.0f,
-	BL.x, BL.y, 0.0f,	  1.0f, 1.0f, 1.0f,	  0.0f, 0.0f,
-	TL.x, TL.y, 0.0f,	  1.0f, 0.0f, 0.0f,	  0.0f, 1.0f
+	BR.x, BR.y, 0.0f,    0.0f, 0.0f, 1.0f,    0.0f, 0.0f, 1.0f,    1.0f, 0.0f,
+	BL.x, BL.y, 0.0f,    1.0f, 1.0f, 1.0f,    0.0f, 0.0f, 1.0f,    0.0f, 0.0f,
+	TL.x, TL.y, 0.0f,    1.0f, 0.0f, 0.0f,    0.0f, 0.0f, 1.0f,    0.0f, 1.0f
 
 	//Without TBLR
 	//-0.5f,  0.5f, 0.0f,	   1.0f, 0.0f, 0.0f,    1.0f, 1.0f,
@@ -32,9 +32,12 @@ float Plane::vertices[] =
 	// 0.5f, -0.5f, 0.0f,	   0.0f, 0.0f, 1.0f,    0.0f, 0.0f,
 	//-0.5f, -0.5f, 0.0f,	   1.0f, 1.0f, 1.0f,    1.0f, 0.0f,
 	//-0.5f,  0.5f, 0.0f,	   1.0f, 0.0f, 0.0f,    1.0f, 1.0f
+	//--------------									      
 };
+
 /*
-float indexedVertices[] = {
+float indexedVertices[] =
+{
 	 0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 1.0f,   0.0f, 0.0f,
 	 0.5f, -0.5f, 0.0f,   1.0f, 1.0f, 1.0f,   0.0f, 0.0f,
 	-0.5f, -0.5f, 0.0f,   1.0f, 1.0f, 1.0f,   1.0f, 0.0f,
@@ -48,14 +51,18 @@ unsigned int indices[] =
 };
 */
 
-Plane::Plane(Renderer* _renderer/*, int _type*/) : Entity2D(_renderer, boundsMin, boundsMax)
+Plane::Plane(Renderer* _renderer) : Entity2D(_renderer, boundsMin, boundsMax)
 {
 	renderer = _renderer;
-	//type = _type;
 
 	for (int i = 0; i < PLANE_VERTEX_COMPONENTS; i++) vertexBuffer[i] = vertices[i];
-
-	renderer->setBufferData(PLANE_VERTEX_COMPONENTS, vertexBuffer);
 }
 
 Plane::~Plane() {}
+
+void Plane::draw()
+{
+	renderer->setBufferData(PLANE_VERTEX_COMPONENTS, vertexBuffer);
+	renderer->setModel(renderer->getShaderProgram(), internalData.model);
+	renderer->drawTriangles(vertexAmount);
+}

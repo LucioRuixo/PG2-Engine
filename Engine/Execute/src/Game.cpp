@@ -1,18 +1,19 @@
 #include "Game.h"
 
+float cameraMovementSpeed = 0.025f;
+float spriteScaleFactor = 0.1f;
+float spriteRotationFactor = 0.1f;
+
+vec3 cameraMovement = vec3(0.0f, 0.0f, 0.0f);
+
+//TileMap* tileMap;
+Sprite* sprite1;
+Sprite* sprite2;
+Cube* cube;
+
 Game::Game() {}
 
 Game::~Game() {}
-
-//Sprite* sprite;
-//Sprite* sprite2;
-Sprite* sprite1;
-Sprite* sprite2;
-//TileMap* tileMap;
-
-float movementSpeed = 0.025f;
-float scaleFactor = 0.1f;
-float rotationFactor = 0.1f;
 
 int Game::initialize()
 {
@@ -78,73 +79,62 @@ int Game::initialize()
 	//------
 
 	//Sprite 1
-	//------
 	sprite1 = new Sprite(renderer);
-	//sprite1->setBufferData();
-
-	sprite1->setTexture("res/assets/gato.jpg", RGB);
-	sprite1->setPosition(0.0f, 0.0f, -3.0f);
-	sprite1->setScale(1.0f, 1.0f, 0.0f);
-	//------
+	sprite1->setTexture("res/assets/gato 1.jpg", RGB);
+	sprite1->setPosition(1.0f, 0.0f, -6.0f);
+	sprite1->setRotationY(-45.0f);
 
 	//Sprite 2
-	//------
 	sprite2 = new Sprite(renderer);
-	//sprite2->setBufferData();
+	sprite2->setTexture("res/assets/gato 2.jpg", RGB);
+	sprite2->setPosition(-1.0f, 0.0f, -3.0f);
+	sprite2->setRotationY(45.0f);
 
-	sprite2->setTexture("res/assets/Cato in despair.jpg", RGB);
-	sprite2->setPosition(0.0f, 0.0f, -10.0f);
-	sprite2->setScale(1.0f, 1.0f, 0.0f);
-	//------
-
-	//sprite = new Sprite(renderer);
-	//sprite2 = new Sprite(renderer);
-	//
-	//sprite->setBufferData();
-	//sprite2->setBufferData();
-	//
-	////------
-	////Set Sprite animation
+	//Cube
+	cube = new Cube(renderer);
+	cube->setPosition(0.0f, 3.0f, -4.5f);
+	
+	//Sprite animation
 	//Animation* animation = new Animation();
 	//animation->AddFrame(0.0f, 0.0f, 640.0f, 360.0f, 1280.0f, 720.0f, 4.0f, 4, 2);
 	//animation->AddAnimation();
 	//animation->SetCurrentAnimation(0);
 	//sprite->setAnimation(animation);
 
+	//Lighting
+	lighting->enableDirectionalLight(vec3(1.0f, 1.0f, 1.0f), vec3(0.0f, 3.0f, -4.5f));
+
 	return 0;
 }
 
 void Game::update()
 {
-	//clear screen
-	renderer->clearBackground();
-
 	//input
 	if (input->getKeyPress(FunctionKey::ESCAPE)) window->setWindowShouldClose(true);
 
 	//transform
-	if (input->getKeyPress(PrintableKey::W)) translationY += movementSpeed;
-	if (input->getKeyPress(PrintableKey::S)) translationY -= movementSpeed;
+	if (input->getKeyPress(PrintableKey::D)) cameraMovement.x += cameraMovementSpeed;
+	if (input->getKeyPress(PrintableKey::A)) cameraMovement.x -= cameraMovementSpeed;
 
-	if (input->getKeyPress(PrintableKey::D)) translationX += movementSpeed;
-	if (input->getKeyPress(PrintableKey::A)) translationX -= movementSpeed;
+	if (input->getKeyPress(PrintableKey::W)) cameraMovement.y += cameraMovementSpeed;
+	if (input->getKeyPress(PrintableKey::S)) cameraMovement.y -= cameraMovementSpeed;
 
-	if (input->getKeyPress(PrintableKey::X)) translationZ += movementSpeed;
-	if (input->getKeyPress(PrintableKey::Z)) translationZ -= movementSpeed;
+	if (input->getKeyPress(PrintableKey::X)) cameraMovement.z += cameraMovementSpeed;
+	if (input->getKeyPress(PrintableKey::Z)) cameraMovement.z -= cameraMovementSpeed;
 
 	//rotate
-	if (input->getKeyPress(PrintableKey::U)) sprite1->SetRotationX(sprite1->transform.rotation.x + rotationFactor);
-	if (input->getKeyPress(PrintableKey::J)) sprite1->SetRotationX(sprite1->transform.rotation.x - rotationFactor);
-	if (input->getKeyPress(PrintableKey::I)) sprite1->SetRotationY(sprite1->transform.rotation.y + rotationFactor);
-	if (input->getKeyPress(PrintableKey::K)) sprite1->SetRotationY(sprite1->transform.rotation.y - rotationFactor);
-	if (input->getKeyPress(PrintableKey::O)) sprite1->SetRotationZ(sprite1->transform.rotation.z + rotationFactor);
-	if (input->getKeyPress(PrintableKey::L)) sprite1->SetRotationZ(sprite1->transform.rotation.z - rotationFactor);
+	if (input->getKeyPress(PrintableKey::U)) sprite1->setRotationX(sprite1->transform.rotation.x + spriteRotationFactor);
+	if (input->getKeyPress(PrintableKey::J)) sprite1->setRotationX(sprite1->transform.rotation.x - spriteRotationFactor);
+	if (input->getKeyPress(PrintableKey::I)) sprite1->setRotationY(sprite1->transform.rotation.y + spriteRotationFactor);
+	if (input->getKeyPress(PrintableKey::K)) sprite1->setRotationY(sprite1->transform.rotation.y - spriteRotationFactor);
+	if (input->getKeyPress(PrintableKey::O)) sprite1->setRotationZ(sprite1->transform.rotation.z + spriteRotationFactor);
+	if (input->getKeyPress(PrintableKey::L)) sprite1->setRotationZ(sprite1->transform.rotation.z - spriteRotationFactor);
 	
 	//scale
 	if (input->getKeyPress(FunctionKey::UP))
-		sprite1->setScale(sprite1->transform.scale.x + scaleFactor, sprite1->transform.scale.y + scaleFactor, sprite1->transform.scale.z + scaleFactor);
+		sprite1->setScale(sprite1->transform.scale.x + spriteScaleFactor, sprite1->transform.scale.y + spriteScaleFactor, sprite1->transform.scale.z + spriteScaleFactor);
 	if (input->getKeyPress(FunctionKey::DOWN))
-		sprite1->setScale(sprite1->transform.scale.x - scaleFactor, sprite1->transform.scale.y - scaleFactor, sprite1->transform.scale.z - scaleFactor);
+		sprite1->setScale(sprite1->transform.scale.x - spriteScaleFactor, sprite1->transform.scale.y - spriteScaleFactor, sprite1->transform.scale.z - spriteScaleFactor);
 
 	//------
 	//Tile Map
@@ -155,12 +145,13 @@ void Game::update()
 	//playerSprite->Translate(transX, transY, transZ);
 
 	sprite1->loadTexture();
-	renderer->setModel(renderer->getShaderProgram(), sprite1->getModel());
-	renderer->drawTriangles();
+	sprite1->draw();
 
 	sprite2->loadTexture();
-	renderer->setModel(renderer->getShaderProgram(), sprite2->getModel());
-	renderer->drawTriangles();
+	sprite2->draw();
+
+	//se rompe cuando hace setModel()
+	//cube->draw();
 
 	//------
 	//Sprite
@@ -194,7 +185,7 @@ void Game::update()
 	//	std::cout << "Colliding: YES" << std::endl;
 	//else std::cout << "Colliding: NO" << std::endl;
 
-	camera->translate(translationX, translationY, translationZ);
+	camera->translate(cameraMovement.x, cameraMovement.y, cameraMovement.z);
 }
 
 int Game::terminate()
@@ -202,6 +193,7 @@ int Game::terminate()
 	//if (tileMap) delete tileMap;
 	if (sprite1) delete sprite1;
 	if (sprite2) delete sprite2;
+	if (cube) delete cube;
 
 	return 0;
 }

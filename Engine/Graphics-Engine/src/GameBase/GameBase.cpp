@@ -1,16 +1,12 @@
 #include "GameBase.h"
 
-GameBase::GameBase() {
-	glfwInit();
-	translationX = 0.0f;
-	translationY = 0.0f;
-	translationZ = 0.0f;
-	rotateX = 0.0f;
-	rotateY = 0.0f;
-	rotateZ = 0.0f;
-	scaleX = 1.0f;
-	scaleY = 1.0f;
-	scaleZ = 1.0f;
+GameBase::GameBase()
+{
+	if (!glfwInit())
+	{
+		std::cout << "Error: GLFW did not initialize" << std::endl;
+		return;
+	}
 
 	window = new Window();
 	renderer = new Renderer();
@@ -19,7 +15,11 @@ GameBase::GameBase() {
 	input = new Input(window);
 	time = new Time();
 
-	//if (!glfwInit() || window == NULL) return -1;
+	if (!window)
+	{
+		std::cout << "Error: window is null" << std::endl;
+		return;
+	}
 
 	window->createWindowValidate();
 	window->createContexCurrent();
@@ -31,11 +31,12 @@ GameBase::GameBase() {
 
 	//Create VBO
 	renderer->createVBO();
-	//Create Tr
 	renderer->bindVBO(renderer->getVBO());
-	renderer->setVertexAttrib();
+	renderer->setVertexAttributes();
+
 	//Shader
 	renderer->setShader();
+
 	//Set texture
 	renderer->generateTexture();
 	renderer->setParameterTexture();
@@ -50,7 +51,8 @@ GameBase::GameBase() {
 	lighting->setAmbientLightStrenth(lighting->getAmbientLightStrenth());
 }
  
-GameBase::~GameBase() {
+GameBase::~GameBase()
+{
 	glDeleteProgram(renderer->getShaderProgram());
 	window->glfwTerminate();
 
@@ -68,6 +70,8 @@ void GameBase::run()
 
 	while (!window->detecWindowShouldClose())
 	{
+		renderer->clearBackground();
+
 		update();
 
 		time->Tick();

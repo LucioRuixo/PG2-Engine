@@ -4,26 +4,34 @@
 #include "../Tools/Includes.h"
 #include "../stb_image/stb_image.h"
 
-struct matrixVP {
-	glm::mat4 view;
-	glm::mat4 projection;
-	glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
-	glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-	glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
-};
-
 #define TRPOS6 6
 #define TRPOS3 3
 
-class GENGINE_API Renderer {
+using namespace glm;
+
+struct matrixVP
+{
+	mat4 view;
+	mat4 projection;
+	vec3 cameraPos = vec3(0.0f, 0.0f, 3.0f);
+	vec3 cameraFront = vec3(0.0f, 0.0f, -1.0f);
+	vec3 cameraUp = vec3(0.0f, 1.0f, 0.0f);
+};
+
+class GENGINE_API Renderer
+{
 private:
 	unsigned int VBO;
 	unsigned int EBO;
 	unsigned int shaderProgram;
-	unsigned int _posAttrib;
-	unsigned int _colorAttrib;
-	matrixVP _VP;
+	unsigned int positionAttribute;
+	unsigned int colorAttribute;
+	unsigned int normalAttribute;
 	unsigned int texture;
+
+	vec3 backgroundColor;
+
+	matrixVP _VP;
 public:
 	Renderer();
 	~Renderer();
@@ -34,7 +42,7 @@ public:
 	void bindEBO(unsigned int _EBO);
 	unsigned int getVBO();
 	unsigned int getEBO();
-	void setBufferData(int tam, float* verterBuffer);
+	void setBufferData(int tam, /*float* verterBuffer*/float vertexBuffer[]);
 	void clearBackground();
 	void setShader();
 	//---------------
@@ -43,19 +51,21 @@ public:
 	//---------------
 	unsigned int compileShader(unsigned int type, const char* source);
 	int createShaderProgram(const char * vertexPath, const char * fragmentPath);
-	void setModel(unsigned int& _shaderProg, glm::mat4 model);
-	void setProjection(unsigned int& _shaderProg, glm::mat4 projection);
-	void updateProjection(glm::mat4 &projection);
-	void setView(unsigned int& _shaderProg, glm::mat4 view);
-	void updateView(glm::mat4 view);
-	glm::mat4 getView();
-	glm::mat4 getProjection();
-	glm::vec3 getCameraPos();
-	glm::vec3 getCameraFront();
-	glm::vec3 getCameraUp();
-	void setVertexAttrib();
+	void setModel(unsigned int/*&*/ _shaderProgram, mat4 model);
+	void setProjection(unsigned int/*&*/ _shaderProgram, mat4 projection);
+	void updateProjection(mat4 &projection);
+	void setView(unsigned int/*&*/ _shaderProgram, mat4 view);
+	void updateView(mat4 view);
+	mat4 getView();
+	mat4 getProjection();
+	vec3 getCameraPos();
+	vec3 getCameraFront();
+	vec3 getCameraUp();
+	void setVertexAttributes();
 	void updateUnifornTexture();
-	void drawTriangles();
+	void drawTriangles(int vertexAmount);
+	void setBackgroundColor(vec3 value);
+	vec3 getBackgroundColor();
 };
 
 #endif // !RENDERER_H

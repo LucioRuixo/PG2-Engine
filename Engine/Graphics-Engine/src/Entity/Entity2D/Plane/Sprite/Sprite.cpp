@@ -36,8 +36,8 @@ void Sprite::updateAnimation()
 {
 	if (animation)
 	{
-		animation->Update();
-		Frame frame = animation->GetAnimation()[animation->GetCurrentFrame()];
+		animation->update();
+		Frame frame = animation->getAnimation()[animation->getCurrentFrame()];
 
 		vertexBuffer[6] = frame.frameCoords[0].u;
 		vertexBuffer[7] = frame.frameCoords[0].v;

@@ -151,7 +151,7 @@
       <AdditionalDependencies>glew32.lib;glfw3.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>"$(ProjectDir)tools\copy.bat" "$(SolutionDir)Execute" "$(ProjectDir)bin\Debug\Win32\Graphics-Engine.dll" "$(ProjectDir)bin\Debug\Win32\glew32.dll"</Command>
+      <Command>"$(ProjectDir)tools\copy.bat" "$(SolutionDir)Execute" "$(ProjectDir)bin\Debug\Win32\Graphics-Engine.dll" "$(ProjectDir)lib\GLEW\dll\glew32.dll"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

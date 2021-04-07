@@ -33,9 +33,10 @@ Sprite* Tile::getSprite()
 	return sprite;
 }
 
+//(no funciona)
 void Tile::draw()
 {
 	sprite->loadTexture();
 	renderer->setModel(renderer->getShaderProgram(), getModel());
-	renderer->drawTriangles();
+	//renderer->drawTriangles();
 }
