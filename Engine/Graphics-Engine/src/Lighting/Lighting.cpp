@@ -38,35 +38,35 @@ float Lighting::getAmbientLightStrenth() { return ambientLightStrenth; }
 
 vec3 Lighting::getAmbientLightColor() { return ambientLightColor; }
 
-void Lighting::enableDirectionalLight(vec3 color, vec3 position)
+void Lighting::enableLightSource(vec3 color, vec3 position)
 {
-	directionalLightActive = true;
+	lightSourceActive = true;
 
-	directionalLightColor = color;
-	directionalLightPosition = position;
+	lightSourceColor = color;
+	lightSourcePosition = position;
 
-	int uniformLocation = glGetUniformLocation(renderer->getShaderProgram(), "directionalLightActive");
-	glUniform1i(uniformLocation, directionalLightActive);
+	int uniformLocation = glGetUniformLocation(renderer->getShaderProgram(), "lightSourceActive");
+	glUniform1i(uniformLocation, lightSourceActive);
 
-	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(), "directionalLightColor");
-	glUniform3f(uniformLocation, directionalLightColor.r, directionalLightColor.g, directionalLightColor.b);
+	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(), "lightSourceColor");
+	glUniform3f(uniformLocation, lightSourceColor.r, lightSourceColor.g, lightSourceColor.b);
 
-	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(), "directionalLightPosition");
-	glUniform3f(uniformLocation, directionalLightPosition.x, directionalLightPosition.y, directionalLightPosition.z);
+	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(), "lightSourcePosition");
+	glUniform3f(uniformLocation, lightSourcePosition.x, lightSourcePosition.y, lightSourcePosition.z);
 }
 
-void Lighting::disableDirectionalLight()
+void Lighting::disableLightSource()
 {
-	directionalLightActive = false;
+	lightSourceActive = false;
 
-	int uniformLocation = glGetUniformLocation(renderer->getShaderProgram(), "directionalLightActive");
-	glUniform1i(uniformLocation, directionalLightActive);
+	int uniformLocation = glGetUniformLocation(renderer->getShaderProgram(), "lightSourceActive");
+	glUniform1i(uniformLocation, lightSourceActive);
 }
 
-void Lighting::setDirectionalLightActive(bool value) { directionalLightActive = value; }
+void Lighting::setLightSourceActive(bool value) { lightSourceActive = value; }
 
-bool Lighting::getDirectionalLightActive() { return directionalLightActive; }
+bool Lighting::getLightSourceActive() { return lightSourceActive; }
 
-void Lighting::setDirectionalLightPosition(vec3 value) { directionalLightPosition = value; }
+void Lighting::setLightSourcePosition(vec3 value) { lightSourcePosition = value; }
 
-vec3 Lighting::getDirectionalLightPosition() { return directionalLightPosition; }
+vec3 Lighting::getLightSourcePosition() { return lightSourcePosition; }

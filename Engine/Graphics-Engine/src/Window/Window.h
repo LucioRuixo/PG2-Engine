@@ -1,7 +1,7 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-#include "../Tools/Includes.h"
+#include "Tools/Includes.h"
 
 class GENGINE_API Window {
 private:

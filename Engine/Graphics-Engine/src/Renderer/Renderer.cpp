@@ -41,7 +41,7 @@ unsigned int Renderer::getVBO() { return VBO; }
 
 unsigned int Renderer::getEBO() { return EBO; }
 
-void Renderer::setBufferData(int size, float vertexBuffer[])
+void Renderer::setBufferData(int size, float* vertexBuffer)
 {
 	glBufferData(GL_ARRAY_BUFFER, size * sizeof(float), vertexBuffer, GL_DYNAMIC_DRAW);
 }
@@ -54,7 +54,7 @@ void Renderer::clearBackground()
 
 void Renderer::setShader()
 {
-	shaderProgram = createShaderProgram("../Graphics-Engine/res/shaders/shader-vs.shader","../Graphics-Engine/res/shaders/shader-fs.shader");
+	shaderProgram = createShaderProgram("../Graphics-Engine/res/shaders/shader-vs.shader", "../Graphics-Engine/res/shaders/shader-fs.shader");
 }
 
 //---------------------

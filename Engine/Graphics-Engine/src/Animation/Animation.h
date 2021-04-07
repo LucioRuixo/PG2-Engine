@@ -1,9 +1,9 @@
 #ifndef ANIMATION_H
 #define ANIMATION_H
 
-#include "../Tools/Includes.h"
+#include "Tools/Includes.h"
 #include "Frame.h"
-#include "../Time/Time.h"
+#include "Time/Time.h"
 #include <vector>
 
 using namespace std;

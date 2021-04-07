@@ -1,6 +1,6 @@
 #include "TextureImporter.h"
 
-TextureData textureImporter::importTexture(const char* filePath, int type)
+TextureData TextureImporter::importTexture(const char* filePath, int type)
 {
 	TextureData textureData;
 	textureData.pixelData = stbi_load(filePath, &textureData.width, &textureData.height, &textureData.nrChannels, 0);
@@ -24,7 +24,7 @@ TextureData textureImporter::importTexture(const char* filePath, int type)
 	return textureData;
 }
 
-void textureImporter::loadTexture(TextureData textureData, int type)
+void TextureImporter::loadTexture(TextureData textureData, int type)
 {
 	if (textureData.pixelData)
 	{

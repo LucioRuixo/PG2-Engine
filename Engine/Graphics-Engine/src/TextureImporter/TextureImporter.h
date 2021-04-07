@@ -1,8 +1,8 @@
 #ifndef TEXTURE_IMPORTER_H
 #define TEXTURE_IMPORTER_H
 
-#include "../Tools/Includes.h"
-#include "../stb_image/stb_image.h"
+#include "Tools/Includes.h"
+#include "stb_image/stb_image.h"
 
 struct TextureData
 {
@@ -12,9 +12,8 @@ struct TextureData
 	int nrChannels;
 };
 
-class textureImporter {
-private:
-
+class TextureImporter
+{
 public:
 	TextureData importTexture(const char* filePath, int type);
 	void loadTexture(TextureData textureData, int type);

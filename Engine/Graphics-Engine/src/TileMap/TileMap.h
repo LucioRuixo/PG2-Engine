@@ -1,8 +1,8 @@
 #ifndef TILE_MAP_H
 #define TILE_MAP_H
 
-#include "../Renderer/Renderer.h"
-#include "../Tile/Tile.h"
+#include "Renderer/Renderer.h"
+#include "Tile/Tile.h"
 
 class GENGINE_API TileMap
 {

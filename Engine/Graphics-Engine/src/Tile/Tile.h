@@ -1,8 +1,8 @@
 #ifndef TILE_H
 #define TILE_H
 
-#include "../Entity/Entity2D/Entity2D.h"
-#include "../Entity/Entity2D/Plane/Sprite/Sprite.h"
+#include "Entity/Entity2D/Entity2D.h"
+#include "Entity/Entity2D/Plane/Sprite/Sprite.h"
 
 class GENGINE_API Tile : public Entity2D
 {

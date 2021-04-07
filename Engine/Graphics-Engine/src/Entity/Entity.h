@@ -1,17 +1,11 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
-#include "../Tools/Includes.h"
-#include "../Renderer/Renderer.h"
+#include "Tools/Includes.h"
+#include "Renderer/Renderer.h"
+#include "Transform/Transform.h"
 
 using namespace glm;
-
-struct GENGINE_API Transform
-{
-	vec3 position;
-	vec3 rotation;
-	vec3 scale;
-};
 
 struct GENGINE_API InternalData
 {
@@ -24,18 +18,19 @@ struct GENGINE_API InternalData
 	mat4 scale;
 };
 
-const int VERTEX_BUFFER_SIZE = /*48*/ 288;
+const int VERTEX_BUFFER_SIZE = /*48*/ 396;
 
 class GENGINE_API Entity
 {
 protected:
 	float vertexBuffer[VERTEX_BUFFER_SIZE];
-	Renderer* renderer;
+
 	InternalData internalData;
+	Renderer* renderer;
 
 	void updateModelMatrix();
 public:
-	Transform transform;
+	Transform* transform;
 
 	Entity(Renderer *_renderer);
 	~Entity();

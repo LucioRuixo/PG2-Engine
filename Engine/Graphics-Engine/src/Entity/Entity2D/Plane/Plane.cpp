@@ -62,6 +62,9 @@ Plane::~Plane() {}
 
 void Plane::draw()
 {
+	int uniformLocation = glGetUniformLocation(renderer->getShaderProgram(), "textureActive");
+	glUniform1i(uniformLocation, 0);
+
 	renderer->setBufferData(PLANE_VERTEX_COMPONENTS, vertexBuffer);
 	renderer->setModel(renderer->getShaderProgram(), internalData.model);
 	renderer->drawTriangles(vertexAmount);

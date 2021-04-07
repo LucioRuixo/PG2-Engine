@@ -1,14 +1,14 @@
 #ifndef GAMEBASE_H
 #define GAMEBASE_H
 
-#include "../Tools/Includes.h"
-#include "../Camera/Camera.h"
-#include "../Input/Input.h"
-#include "../Lighting/Lighting.h"
-#include "../Renderer/Renderer.h"
-#include "../TileMap/TileMap.h"
-#include "../Time/Time.h"
-#include "../Window/Window.h"
+#include "Tools/Includes.h"
+#include "Camera/Camera.h"
+#include "Input/Input.h"
+#include "Lighting/Lighting.h"
+#include "Renderer/Renderer.h"
+#include "TileMap/TileMap.h"
+#include "Time/Time.h"
+#include "Window/Window.h"
 
 class GENGINE_API GameBase
 {

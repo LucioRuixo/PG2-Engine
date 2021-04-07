@@ -80,8 +80,8 @@ void TileMap::detectCollisions(Sprite* other)
 	int xCollisionTile = 0;
 	int yCollisionTile = 0;
 
-	float otherX = other->transform.position.x;
-	float otherY = other->transform.position.y;
+	float otherX = other->transform->position.x;
+	float otherY = other->transform->position.y;
 
 	for (int x = 0; x < width; x++)
 	{
@@ -95,12 +95,12 @@ void TileMap::detectCollisions(Sprite* other)
 			xCollisionTile = x;
 
 			if (other->movingRight)
-				otherX = tile->transform.position.x - tile->getBounds().size.x / 2.0f - other->getBounds().size.x / 2.0f;
+				otherX = tile->transform->position.x - tile->getBounds().size.x / 2.0f - other->getBounds().size.x / 2.0f;
 			
 			if (other->movingLeft)
 			{
 				xCollisionTile = x - 1;
-				otherX = tile->transform.position.x - tile->getBounds().size.x / 2.0f + other->getBounds().size.x / 2.0f;
+				otherX = tile->transform->position.x - tile->getBounds().size.x / 2.0f + other->getBounds().size.x / 2.0f;
 			}
 		}
 	}
@@ -117,12 +117,12 @@ void TileMap::detectCollisions(Sprite* other)
 			yCollisionTile = y;
 
 			if (other->movingUp)
-				otherY = tile->transform.position.y - tile->getBounds().size.y / 2.0f - other->getBounds().size.y / 2.0f;
+				otherY = tile->transform->position.y - tile->getBounds().size.y / 2.0f - other->getBounds().size.y / 2.0f;
 			
 			if (other->movingDown)
 			{
 				yCollisionTile = y - 1;
-				otherY = tile->transform.position.y - tile->getBounds().size.y / 2.0f + other->getBounds().size.y / 2.0f;
+				otherY = tile->transform->position.y - tile->getBounds().size.y / 2.0f + other->getBounds().size.y / 2.0f;
 			}
 		}
 	}

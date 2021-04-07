@@ -1,8 +1,8 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
-#include "../Tools/Includes.h"
-#include "../stb_image/stb_image.h"
+#include "Tools/Includes.h"
+#include "stb_image/stb_image.h"
 
 #define TRPOS6 6
 #define TRPOS3 3
@@ -42,7 +42,7 @@ public:
 	void bindEBO(unsigned int _EBO);
 	unsigned int getVBO();
 	unsigned int getEBO();
-	void setBufferData(int tam, /*float* verterBuffer*/float vertexBuffer[]);
+	void setBufferData(int tam, float* verterBuffer);
 	void clearBackground();
 	void setShader();
 	//---------------

@@ -1,8 +1,8 @@
 #ifndef INPUT_H
 #define INPUT_H
 
-#include "../Tools/Includes.h"
-#include "../Window/Window.h"
+#include "Tools/Includes.h"
+#include "Window/Window.h"
 
 enum PrintableKey
 {

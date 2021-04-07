@@ -1,7 +1,7 @@
 #ifndef CUBE_H
 #define CUBE_H
 
-#include "../../Tools/Includes.h"
+#include "Tools/Includes.h"
 #include "../Entity.h"
 
 const int CUBE_VERTEX_COMPONENTS = 396;

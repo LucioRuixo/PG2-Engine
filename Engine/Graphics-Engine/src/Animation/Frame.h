@@ -1,7 +1,7 @@
 #ifndef FRAME_H
 #define FRAME_H
 
-#include "../Tools/Includes.h"
+#include "Tools/Includes.h"
 
 struct Coordinates
 {

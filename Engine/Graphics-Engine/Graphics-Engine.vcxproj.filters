@@ -68,6 +68,9 @@
     <Filter Include="src\Entity\Cube">
       <UniqueIdentifier>{acd3d751-c15a-4422-9c30-3c33f025833f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Transform">
+      <UniqueIdentifier>{f1d8c50c-d0e8-4995-9752-aad7f3ecb381}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\shader-vs.shader">
@@ -128,6 +131,9 @@
     </ClCompile>
     <ClCompile Include="src\Entity\Cube\Cube.cpp">
       <Filter>src\Entity\Cube</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Transform\Transform.cpp">
+      <Filter>src\Transform</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -190,6 +196,9 @@
     </ClInclude>
     <ClInclude Include="src\Entity\Cube\Cube.h">
       <Filter>src\Entity\Cube</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Transform\Transform.h">
+      <Filter>src\Transform</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

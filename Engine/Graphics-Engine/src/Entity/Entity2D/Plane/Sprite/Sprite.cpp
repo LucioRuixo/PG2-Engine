@@ -56,3 +56,13 @@ void Sprite::updateAnimation()
 		renderer->setBufferData(PLANE_VERTEX_COMPONENTS, vertexBuffer);
 	}
 }
+
+void Sprite::draw()
+{
+	int uniformLocation = glGetUniformLocation(renderer->getShaderProgram(), "textureActive");
+	glUniform1i(uniformLocation, 1);
+
+	renderer->setBufferData(PLANE_VERTEX_COMPONENTS, vertexBuffer);
+	renderer->setModel(renderer->getShaderProgram(), internalData.model);
+	renderer->drawTriangles(vertexAmount);
+}

@@ -10,9 +10,10 @@ out vec4 FragColor;
 uniform float ambientLightStrenth;
 uniform vec3 ambientLightColor;
 
-uniform bool directionalLightActive = false;
-uniform vec3 directionalLightColor;
-uniform vec3 directionalLightPosition;
+uniform bool textureActive;
+uniform bool lightSourceActive = false;
+uniform vec3 lightSourceColor;
+uniform vec3 lightSourcePosition;
 
 uniform sampler2D textureData;
 
@@ -30,7 +31,7 @@ void main()
 	//Texture affected by vertex color
 	//FragColor = texture(textureData, TextureCoordinates) * vec4(Color, 1.0);
 
-	//Texture affected by ambient light
+	//Texture affected by ambient lighting
 	//FragColor.x = texture(textureData, TextureCoordinates).x * ambientLightColor.x * ambientLightStrenth;
 	//FragColor.y = texture(textureData, TextureCoordinates).y * ambientLightColor.y * ambientLightStrenth;
 	//FragColor.z = texture(textureData, TextureCoordinates).z * ambientLightColor.z * ambientLightStrenth;
@@ -39,26 +40,30 @@ void main()
 	//Texture affected by vertex color and ambient light
 	//FragColor = texture(textureData, TextureCoordinates) * vec4(Color, 1.0) * vec4(lightColor, 1.0);
 
-	//Texture affected by ambient light and directional light
+	//Texture affected by ambient and diffuse lighting
+	vec3 objectColor;
+	if (textureActive)
+	{
+		objectColor.x = texture(textureData, TextureCoordinates).x;
+		objectColor.y = texture(textureData, TextureCoordinates).y;
+		objectColor.z = texture(textureData, TextureCoordinates).z;
+	}
+	else objectColor = Color;
+
 	vec3 ambient = ambientLightColor * ambientLightStrenth;
 	
 	vec3 diffuse;
-	if (directionalLightActive)
+	if (lightSourceActive)
 	{
 		vec3 nNormal = normalize(Normal);
-		vec3 directionalLightDirection = normalize(directionalLightPosition - FragmentPosition);
-		float diffuseImpact = max(dot(nNormal, directionalLightDirection), 0.0);
-		diffuse = diffuseImpact * directionalLightColor;
+		vec3 lightSourceDirection = normalize(lightSourcePosition - FragmentPosition);
+		float diffuseImpact = max(dot(nNormal, lightSourceDirection), 0.0);
+		diffuse = diffuseImpact * lightSourceColor;
 	}
 	else diffuse = vec3(0.0, 0.0, 0.0);
 
-	//vec3 ambient = vec3(0.1f, 0.1f, 0.1f);
-	//vec3 diffuse = vec3(0.5f, 0.5f, 0.5f);
-	//FragRGB = vec3(texture(textureData, TextureCoordinates) * (ambient + diffuse));
-	//FragColor = vec4(FragRGB, 1.0f);
-
-	FragColor.x = texture(textureData, TextureCoordinates).x * (ambient.x + diffuse.x);
-	FragColor.y = texture(textureData, TextureCoordinates).y * (ambient.y + diffuse.y);
-	FragColor.z = texture(textureData, TextureCoordinates).z * (ambient.z + diffuse.z);
+	FragColor.x = objectColor.x * (ambient.x + diffuse.x);
+	FragColor.y = objectColor.y * (ambient.y + diffuse.y);
+	FragColor.z = objectColor.z * (ambient.z + diffuse.z);
 	FragColor.w = 1.0f;
 }

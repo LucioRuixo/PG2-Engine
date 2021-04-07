@@ -3,6 +3,7 @@
 Entity::Entity(Renderer *_renderer)
 {
 	renderer = _renderer;
+	transform = new Transform();
 
 	internalData.model = mat4(1.0f);
 	internalData.rotationX = mat4(1.0f);
@@ -18,7 +19,7 @@ Entity::Entity(Renderer *_renderer)
 	setScale(1.0f, 1.0f, 1.0f);
 }
 
-Entity::~Entity() {}
+Entity::~Entity() { if (transform) delete transform; }
 
 void Entity::updateModelMatrix()
 {
@@ -33,23 +34,23 @@ InternalData Entity::getInternalData() { return internalData; }
 
 void Entity::setPosition(float x, float y, float z)
 {
-	transform.position = vec3(x, y, z);
+	transform->position = vec3(x, y, z);
 
-	internalData.translate = glm::translate(mat4(1.0f), transform.position);
+	internalData.translate = glm::translate(mat4(1.0f), transform->position);
 	updateModelMatrix();
 }
 
 void Entity::setScale(float x, float y, float z)
 {
-	transform.scale = vec3(x, y, z);
+	transform->scale = vec3(x, y, z);
 
-	internalData.scale = scale(mat4(1.0f), transform.scale);
+	internalData.scale = scale(mat4(1.0f), transform->scale);
 	updateModelMatrix();
 }
 
 void Entity::setRotationX(float x)
 {
-	transform.rotation.x = x;
+	transform->rotation.x = x;
 	vec3 axis = vec3(1.0f, 0.0f, 0.0f);
 
 	internalData.rotationX = rotate(mat4(1.0f), x, axis);
@@ -58,7 +59,7 @@ void Entity::setRotationX(float x)
 
 void Entity::setRotationY(float y)
 {
-	transform.rotation.y = y;
+	transform->rotation.y = y;
 	vec3 axis = vec3(0.0f, 1.0f, 0.0f);
 
 	internalData.rotationY = rotate(mat4(1.0f), y, axis);
@@ -67,7 +68,7 @@ void Entity::setRotationY(float y)
 
 void Entity::setRotationZ(float z)
 {
-	transform.rotation.z = z;
+	transform->rotation.z = z;
 	vec3 axis = vec3(0.0f, 0.0f, 1.0f);
 
 	internalData.rotationZ = rotate(mat4(1.0f), z, axis);
@@ -76,9 +77,9 @@ void Entity::setRotationZ(float z)
 
 void Entity::translate(float x, float y, float z)
 {
-	transform.position = vec3(x, y, z);
+	transform->position = vec3(x, y, z);
 
-	internalData.translate = glm::translate(mat4(1.0f), transform.position);
+	internalData.translate = glm::translate(mat4(1.0f), transform->position);
 	updateModelMatrix();
 }
 

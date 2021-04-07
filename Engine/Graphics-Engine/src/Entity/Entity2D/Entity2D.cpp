@@ -17,30 +17,30 @@ Entity2D::Entity2D(Renderer* _renderer, vec2 _boundsMin, vec2 _boundsMax) : Enti
 
 void Entity2D::setPosition(float x, float y, float z)
 {
-	transform.position = vec3(x, y, z);
+	transform->position = vec3(x, y, z);
 
-	internalData.translate = glm::translate(glm::mat4(1.0f), transform.position);
+	internalData.translate = glm::translate(glm::mat4(1.0f), transform->position);
 	updateModelMatrix();
 
-	bounds.min.x = transform.position.x - bounds.size.x / 2.0f;
-	bounds.max.x = transform.position.x + bounds.size.x / 2.0f;
-	bounds.min.y = transform.position.y - bounds.size.y / 2.0f;
-	bounds.max.y = transform.position.y + bounds.size.y / 2.0f;
+	bounds.min.x = transform->position.x - bounds.size.x / 2.0f;
+	bounds.max.x = transform->position.x + bounds.size.x / 2.0f;
+	bounds.min.y = transform->position.y - bounds.size.y / 2.0f;
+	bounds.max.y = transform->position.y + bounds.size.y / 2.0f;
 }
 
 void Entity2D::setScale(float x, float y, float z)
 {
-	transform.scale = vec3(x, y, z);
+	transform->scale = vec3(x, y, z);
 
-	internalData.scale = glm::scale(glm::mat4(1.0f), transform.scale);
+	internalData.scale = glm::scale(glm::mat4(1.0f), transform->scale);
 	updateModelMatrix();
 
 	bounds.size.x = x;
 	bounds.size.y = y;
-	bounds.min.x = transform.position.x - bounds.size.x / 2.0f;
-	bounds.max.x = transform.position.x + bounds.size.x / 2.0f;
-	bounds.min.y = transform.position.y - bounds.size.y / 2.0f;
-	bounds.max.y = transform.position.y + bounds.size.y / 2.0f;
+	bounds.min.x = transform->position.x - bounds.size.x / 2.0f;
+	bounds.max.x = transform->position.x + bounds.size.x / 2.0f;
+	bounds.min.y = transform->position.y - bounds.size.y / 2.0f;
+	bounds.max.y = transform->position.y + bounds.size.y / 2.0f;
 }
 
 void Entity2D::setBounds(Bounds _bounds)
