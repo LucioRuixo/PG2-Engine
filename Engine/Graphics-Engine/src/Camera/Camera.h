@@ -9,18 +9,18 @@ using namespace glm;
 
 class GENGINE_API Camera
 {
+	MatrixData matrixData;
 	Renderer* renderer;
 
-	void setTransformPosition(float x, float y, float z);
+	void updateViewMatrix();
 public:
 	Transform* transform;
 
 	Camera(Renderer* renderer);
 	~Camera();
 	void setPosition(float x, float y, float z);
-	void setPosition(vec3 value);
 	void translate(float x, float y, float z);
-	void translate(vec3 translation);
+	void setRotation(float x, float y, float z);
 };
 
 #endif // !CAMERA_H

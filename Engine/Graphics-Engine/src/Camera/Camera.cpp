@@ -5,27 +5,28 @@ Camera::Camera(Renderer* _renderer)
 	renderer = _renderer;
 
 	transform = new Transform();
-	//setPosition(0.0f, 0.0f, 0.0f);
 }
 
 Camera::~Camera() { if (transform) delete transform; }
 
-void Camera::setTransformPosition(float x, float y, float z)
+void Camera::updateViewMatrix()
 {
-	transform->position = vec3(x, y, z);
+	matrixData.mainMatrix = matrixData.translation *
+							matrixData.rotationX * matrixData.rotationY * matrixData.rotationZ *
+							matrixData.scale;
+
+	renderer->setView(renderer->getShaderProgram(), matrixData.mainMatrix);
 }
 
 void Camera::setPosition(float x, float y, float z)
 {
-	mat4 translatedView = glm::translate(renderer->getView(), vec3(-x, -y, -z));
-	renderer->setView(renderer->getShaderProgram(), translatedView);
+	matrixData.translation = glm::translate(mat4(1.0f), vec3(-x, -y, -z));
+	updateViewMatrix();
 
-	setTransformPosition(x, y, z);
-}
+	transform->position = vec3(x, y, z);
 
-void Camera::setPosition(vec3 value)
-{
-	setPosition(value.x, value.y, value.z);
+	int uniformLocation = glGetUniformLocation(renderer->getShaderProgram(), "viewPosition");
+	glUniform3f(uniformLocation, transform->position.x, transform->position.y, transform->position.z);
 }
 
 void Camera::translate(float x, float y, float z)
@@ -39,10 +40,22 @@ void Camera::translate(float x, float y, float z)
 	float newTransformX = transform->position.x + x;
 	float newTransformY = transform->position.y + y;
 	float newTransformZ = transform->position.z + z;
-	setTransformPosition(newTransformX, newTransformY, newTransformZ);
+	transform->position = vec3(newTransformX, newTransformY, newTransformZ);
+
+	int uniformLocation = glGetUniformLocation(renderer->getShaderProgram(), "viewPosition");
+	glUniform3f(uniformLocation, transform->position.x, transform->position.y, transform->position.z);
 }
 
-void Camera::translate(vec3 translation)
+void Camera::setRotation(float x, float y, float z)
 {
-	translate(translation.x, translation.y, translation.z);
+	vec3 xAxis = vec3(1.0f, 0.0f, 0.0f);
+	vec3 yAxis = vec3(0.0f, 1.0f, 0.0f);
+	vec3 zAxis = vec3(0.0f, 0.0f, 1.0f);
+
+	matrixData.rotationX = rotate(mat4(1.0f), -x, xAxis);
+	matrixData.rotationY = rotate(mat4(1.0f), -y, yAxis);
+	matrixData.rotationZ = rotate(mat4(1.0f), -z, zAxis);
+	updateViewMatrix();
+
+	transform->rotation = vec3(x, y, z);
 }

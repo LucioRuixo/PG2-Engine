@@ -3,27 +3,27 @@
 Lighting::Lighting(Renderer* _renderer)
 {
 	renderer = _renderer;
-
-	ambientLightStrenth = 0.1f;
-	ambientLightColor = vec3(1.0f, 1.0f, 1.0f);
 }
 
-Lighting::Lighting(Renderer* _renderer, vec3 _ambientLightColor, float _ambientLightStrenth)
+Lighting::Lighting(Renderer* _renderer, vec3 _ambientLightColor, float _ambientLightStrength)
 {
 	renderer = _renderer;
 
-	ambientLightStrenth = _ambientLightStrenth;
+	ambientLightStrength = _ambientLightStrength;
 	ambientLightColor = _ambientLightColor;
 }
 
 Lighting::~Lighting() {}
 
-void Lighting::setAmbientLightStrenth(float value)
-{
-	ambientLightStrenth = value;
+//Ambient light
+//-----------------
 
-	int uniformLocation = glGetUniformLocation(renderer->getShaderProgram(), "ambientLightStrenth");
-	glUniform1f(uniformLocation, ambientLightStrenth);
+void Lighting::setAmbientLightStrength(float value)
+{
+	ambientLightStrength = value;
+
+	int uniformLocation = glGetUniformLocation(renderer->getShaderProgram(), "ambientLightStrength");
+	glUniform1f(uniformLocation, ambientLightStrength);
 }
 
 void Lighting::setAmbientLightColor(vec3 value)
@@ -34,9 +34,12 @@ void Lighting::setAmbientLightColor(vec3 value)
 	glUniform3f(uniformLocation, ambientLightColor.r, ambientLightColor.g, ambientLightColor.b);
 }
 
-float Lighting::getAmbientLightStrenth() { return ambientLightStrenth; }
+float Lighting::getAmbientLightStrength() { return ambientLightStrength; }
 
 vec3 Lighting::getAmbientLightColor() { return ambientLightColor; }
+
+//Light source
+//-----------------
 
 void Lighting::enableLightSource(vec3 color, vec3 position)
 {
@@ -70,3 +73,18 @@ bool Lighting::getLightSourceActive() { return lightSourceActive; }
 void Lighting::setLightSourcePosition(vec3 value) { lightSourcePosition = value; }
 
 vec3 Lighting::getLightSourcePosition() { return lightSourcePosition; }
+
+//Specular
+//-----------------
+
+void Lighting::setSpecularStrength(float value)
+{
+	specularStrength = value;
+
+	int uniformLocation = glGetUniformLocation(renderer->getShaderProgram(), "specularStrength");
+	glUniform1f(uniformLocation, specularStrength);
+
+	std::cout << "specularStrength: " << specularStrength << std::endl;
+}
+
+float Lighting::getSpecularStrength() { return specularStrength; }

@@ -19,7 +19,7 @@ void Entity2D::setPosition(float x, float y, float z)
 {
 	transform->position = vec3(x, y, z);
 
-	internalData.translate = glm::translate(glm::mat4(1.0f), transform->position);
+	matrixData.translation = glm::translate(glm::mat4(1.0f), transform->position);
 	updateModelMatrix();
 
 	bounds.min.x = transform->position.x - bounds.size.x / 2.0f;
@@ -32,7 +32,7 @@ void Entity2D::setScale(float x, float y, float z)
 {
 	transform->scale = vec3(x, y, z);
 
-	internalData.scale = glm::scale(glm::mat4(1.0f), transform->scale);
+	matrixData.scale = glm::scale(glm::mat4(1.0f), transform->scale);
 	updateModelMatrix();
 
 	bounds.size.x = x;

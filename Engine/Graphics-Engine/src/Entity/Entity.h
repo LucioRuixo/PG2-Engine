@@ -7,17 +7,6 @@
 
 using namespace glm;
 
-struct GENGINE_API InternalData
-{
-	mat4 model;
-
-	mat4 translate;
-	mat4 rotationX;
-	mat4 rotationY;
-	mat4 rotationZ;
-	mat4 scale;
-};
-
 const int VERTEX_BUFFER_SIZE = /*48*/ 396;
 
 class GENGINE_API Entity
@@ -25,7 +14,7 @@ class GENGINE_API Entity
 protected:
 	float vertexBuffer[VERTEX_BUFFER_SIZE];
 
-	InternalData internalData;
+	MatrixData matrixData;
 	Renderer* renderer;
 
 	void updateModelMatrix();
@@ -35,7 +24,7 @@ public:
 	Entity(Renderer *_renderer);
 	~Entity();
 	Renderer* getRenderer();
-	InternalData getInternalData();
+	MatrixData getInternalData();
 	virtual void setPosition(float x, float y, float z);
 	virtual void setScale(float x, float y, float z);
 	void setRotationX(float x);
