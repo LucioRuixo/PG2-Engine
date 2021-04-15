@@ -2,8 +2,8 @@
 
 Camera::Camera(Renderer* _renderer)
 {
-	direction = vec3(0.0f, 0.0f, -1.0f);
-	up = vec3(0.0f, 1.0f, 0.0f);
+	forward = vec3(0.0f, 0.0f, -1.0f);
+	upVector = vec3(0.0f, 1.0f, 0.0f);
 	view = mat4(1.0f);
 
 	renderer = _renderer;
@@ -23,7 +23,7 @@ void Camera::setPosition(float x, float y, float z)
 {
 	transform->position = vec3(x, y, z);
 
-	view = lookAt(transform->position, transform->position + direction, up);
+	view = lookAt(transform->position, transform->position + forward, upVector);
 	updateViewMatrix();
 
 	int uniformLocation = glGetUniformLocation(renderer->getShaderProgram(), "viewPosition");
@@ -32,11 +32,13 @@ void Camera::setPosition(float x, float y, float z)
 
 void Camera::translate(float x, float y, float z)
 {
-	float newX = transform->position.x + x;
-	float newY = transform->position.y + y;
-	float newZ = transform->position.z + z;
+	vec3 newPosition = transform->position;
 
-	setPosition(newX, newY, newZ);
+	vec3 right = normalize(cross(forward, upVector));
+	vec3 up = cross(right, forward);
+	newPosition += right * x + up * y - forward * z;
+
+	setPosition(newPosition.x, newPosition.y, newPosition.z);
 }
 
 void Camera::setRotation(float pitch, float yaw, float roll)
@@ -45,12 +47,12 @@ void Camera::setRotation(float pitch, float yaw, float roll)
 	if (pitch < -89.0f) pitch = -89.0f;
 	transform->rotation = vec3(pitch, yaw, roll);
 
-	direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-	direction.y = sin(glm::radians(pitch));
-	direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-	direction = glm::normalize(direction);
+	forward.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+	forward.y = sin(glm::radians(pitch));
+	forward.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+	forward = glm::normalize(forward);
 
-	view = lookAt(transform->position, transform->position + direction, up);
+	view = lookAt(transform->position, transform->position + forward, upVector);
 	updateViewMatrix();
 }
 

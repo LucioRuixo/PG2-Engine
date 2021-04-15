@@ -58,8 +58,8 @@ void Game::update()
 	if (input->getKeyPress(PrintableKey::D)) camera->translate(cameraMovementSpeed * time->DeltaTime(), 0.0f, 0.0f);
 	if (input->getKeyPress(PrintableKey::A)) camera->translate(-cameraMovementSpeed * time->DeltaTime(), 0.0f, 0.0f);
 
-	if (input->getKeyPress(PrintableKey::X)) camera->translate(0.0f, cameraMovementSpeed * time->DeltaTime(), 0.0f);
-	if (input->getKeyPress(PrintableKey::Z)) camera->translate(0.0f, -cameraMovementSpeed * time->DeltaTime(), 0.0f);
+	if (input->getKeyPress(PrintableKey::Z)) camera->translate(0.0f, cameraMovementSpeed * time->DeltaTime(), 0.0f);
+	if (input->getKeyPress(PrintableKey::X)) camera->translate(0.0f, -cameraMovementSpeed * time->DeltaTime(), 0.0f);
 
 	if (input->getKeyPress(PrintableKey::S)) camera->translate(0.0f, 0.0f, cameraMovementSpeed * time->DeltaTime());
 	if (input->getKeyPress(PrintableKey::W)) camera->translate(0.0f, 0.0f, -cameraMovementSpeed * time->DeltaTime());
