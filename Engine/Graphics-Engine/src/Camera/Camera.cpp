@@ -2,28 +2,29 @@
 
 Camera::Camera(Renderer* _renderer)
 {
+	direction = vec3(0.0f, 0.0f, -1.0f);
+	up = vec3(0.0f, 1.0f, 0.0f);
+	view = mat4(1.0f);
+
 	renderer = _renderer;
 
 	transform = new Transform();
+	transform->rotation.y = -90.0f;
 }
 
 Camera::~Camera() { if (transform) delete transform; }
 
 void Camera::updateViewMatrix()
 {
-	matrixData.mainMatrix = matrixData.translation *
-							matrixData.rotationX * matrixData.rotationY * matrixData.rotationZ *
-							matrixData.scale;
-
-	renderer->setView(renderer->getShaderProgram(), matrixData.mainMatrix);
+	renderer->setView(renderer->getShaderProgram(), view);
 }
 
 void Camera::setPosition(float x, float y, float z)
 {
-	matrixData.translation = glm::translate(mat4(1.0f), vec3(-x, -y, -z));
-	updateViewMatrix();
-
 	transform->position = vec3(x, y, z);
+
+	view = lookAt(transform->position, transform->position + direction, up);
+	updateViewMatrix();
 
 	int uniformLocation = glGetUniformLocation(renderer->getShaderProgram(), "viewPosition");
 	glUniform3f(uniformLocation, transform->position.x, transform->position.y, transform->position.z);
@@ -31,31 +32,33 @@ void Camera::setPosition(float x, float y, float z)
 
 void Camera::translate(float x, float y, float z)
 {
-	float translationX = x - transform->position.x;
-	float translationY = y - transform->position.y;
-	float translationZ = z - transform->position.z;
-	mat4 translatedView = glm::translate(renderer->getView(), vec3(translationX, translationY, translationZ));
-	renderer->setView(renderer->getShaderProgram(), translatedView);
+	float newX = transform->position.x + x;
+	float newY = transform->position.y + y;
+	float newZ = transform->position.z + z;
 
-	float newTransformX = transform->position.x + x;
-	float newTransformY = transform->position.y + y;
-	float newTransformZ = transform->position.z + z;
-	transform->position = vec3(newTransformX, newTransformY, newTransformZ);
-
-	int uniformLocation = glGetUniformLocation(renderer->getShaderProgram(), "viewPosition");
-	glUniform3f(uniformLocation, transform->position.x, transform->position.y, transform->position.z);
+	setPosition(newX, newY, newZ);
 }
 
-void Camera::setRotation(float x, float y, float z)
+void Camera::setRotation(float pitch, float yaw, float roll)
 {
-	vec3 xAxis = vec3(1.0f, 0.0f, 0.0f);
-	vec3 yAxis = vec3(0.0f, 1.0f, 0.0f);
-	vec3 zAxis = vec3(0.0f, 0.0f, 1.0f);
+	if (pitch > 89.0f) pitch = 89.0f;
+	if (pitch < -89.0f) pitch = -89.0f;
+	transform->rotation = vec3(pitch, yaw, roll);
 
-	matrixData.rotationX = rotate(mat4(1.0f), -x, xAxis);
-	matrixData.rotationY = rotate(mat4(1.0f), -y, yAxis);
-	matrixData.rotationZ = rotate(mat4(1.0f), -z, zAxis);
+	direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+	direction.y = sin(glm::radians(pitch));
+	direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+	direction = glm::normalize(direction);
+
+	view = lookAt(transform->position, transform->position + direction, up);
 	updateViewMatrix();
+}
 
-	transform->rotation = vec3(x, y, z);
+void Camera::rotate(float pitch, float yaw, float roll)
+{
+	float newPitch = transform->rotation.x + pitch;
+	float newYaw = transform->rotation.y + yaw;
+	float newRoll = transform->rotation.z + roll;
+
+	setRotation(newPitch, newYaw, newRoll);
 }

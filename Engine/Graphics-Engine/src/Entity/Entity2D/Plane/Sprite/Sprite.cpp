@@ -63,6 +63,6 @@ void Sprite::draw()
 	glUniform1i(uniformLocation, 1);
 
 	renderer->setBufferData(PLANE_VERTEX_COMPONENTS, vertexBuffer);
-	renderer->setModel(renderer->getShaderProgram(), matrixData.mainMatrix);
+	renderer->setModel(renderer->getShaderProgram(), modelMatrix.model);
 	renderer->drawTriangles(vertexAmount);
 }

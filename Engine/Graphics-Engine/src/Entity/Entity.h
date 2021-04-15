@@ -7,14 +7,14 @@
 
 using namespace glm;
 
-const int VERTEX_BUFFER_SIZE = /*48*/ 396;
+const int VERTEX_BUFFER_SIZE = 396;
 
 class GENGINE_API Entity
 {
 protected:
 	float vertexBuffer[VERTEX_BUFFER_SIZE];
 
-	MatrixData matrixData;
+	ModelMatrixData modelMatrix;
 	Renderer* renderer;
 
 	void updateModelMatrix();
@@ -24,7 +24,6 @@ public:
 	Entity(Renderer *_renderer);
 	~Entity();
 	Renderer* getRenderer();
-	MatrixData getInternalData();
 	virtual void setPosition(float x, float y, float z);
 	virtual void setScale(float x, float y, float z);
 	void setRotationX(float x);

@@ -5,9 +5,9 @@
 
 using namespace glm;
 
-struct GENGINE_API MatrixData
+struct GENGINE_API ModelMatrixData
 {
-	mat4 mainMatrix;
+	mat4 model;
 
 	mat4 translation;
 	mat4 rotationX;

@@ -9,7 +9,12 @@ using namespace glm;
 
 class GENGINE_API Camera
 {
-	MatrixData matrixData;
+	//ModelMatrixData matrixData;
+	vec3 direction;
+	vec3 right;
+	vec3 up;
+	mat4 view;
+
 	Renderer* renderer;
 
 	void updateViewMatrix();
@@ -20,7 +25,8 @@ public:
 	~Camera();
 	void setPosition(float x, float y, float z);
 	void translate(float x, float y, float z);
-	void setRotation(float x, float y, float z);
+	void setRotation(float pitch, float yaw, float roll);
+	void rotate(float pitch, float yaw, float roll);
 };
 
 #endif // !CAMERA_H

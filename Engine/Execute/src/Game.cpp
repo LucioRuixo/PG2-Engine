@@ -1,7 +1,7 @@
 #include "Game.h"
 
 float cameraMovementSpeed = 1.0f;
-float cameraRotationSpeed = 1.0f;
+float cameraRotationSpeed = 50.0f;
 float spriteScaleAddition = 0.1f;
 
 vec3 cameraMovement;
@@ -54,38 +54,25 @@ void Game::update()
 	if (input->getKeyPress(FunctionKey::ESCAPE)) window->setWindowShouldClose(true);
 
 	//Move camera
-	cameraMovement = vec3(0.0f, 0.0f, 0.0f);
+	//-----------
+	if (input->getKeyPress(PrintableKey::D)) camera->translate(cameraMovementSpeed * time->DeltaTime(), 0.0f, 0.0f);
+	if (input->getKeyPress(PrintableKey::A)) camera->translate(-cameraMovementSpeed * time->DeltaTime(), 0.0f, 0.0f);
 
-	if (input->getKeyPress(PrintableKey::D)) cameraMovement.x = cameraMovementSpeed * time->DeltaTime();
-	if (input->getKeyPress(PrintableKey::A)) cameraMovement.x = -cameraMovementSpeed * time->DeltaTime();
+	if (input->getKeyPress(PrintableKey::X)) camera->translate(0.0f, cameraMovementSpeed * time->DeltaTime(), 0.0f);
+	if (input->getKeyPress(PrintableKey::Z)) camera->translate(0.0f, -cameraMovementSpeed * time->DeltaTime(), 0.0f);
 
-	if (input->getKeyPress(PrintableKey::X)) cameraMovement.y = cameraMovementSpeed * time->DeltaTime();
-	if (input->getKeyPress(PrintableKey::Z)) cameraMovement.y = -cameraMovementSpeed * time->DeltaTime();
-
-	if (input->getKeyPress(PrintableKey::S)) cameraMovement.z = cameraMovementSpeed * time->DeltaTime();
-	if (input->getKeyPress(PrintableKey::W)) cameraMovement.z = -cameraMovementSpeed * time->DeltaTime();
-
-	float translationX = camera->transform->position.x + cameraMovement.x;
-	float translationY = camera->transform->position.y + cameraMovement.y;
-	float translationZ = camera->transform->position.z + cameraMovement.z;
-	camera->setPosition(translationX, translationY, translationZ);
+	if (input->getKeyPress(PrintableKey::S)) camera->translate(0.0f, 0.0f, cameraMovementSpeed * time->DeltaTime());
+	if (input->getKeyPress(PrintableKey::W)) camera->translate(0.0f, 0.0f, -cameraMovementSpeed * time->DeltaTime());
+	//-----------
 
 	//Rotate camera
-	cameraRotation = vec3(0.0f, 0.0f, 0.0f);
-
-	if (input->getKeyPress(FunctionKey::UP)) cameraRotation.x = cameraRotationSpeed * time->DeltaTime();;
-	if (input->getKeyPress(FunctionKey::DOWN)) cameraRotation.x = -cameraRotationSpeed * time->DeltaTime();;
-
-	if (input->getKeyPress(FunctionKey::LEFT)) cameraRotation.y = cameraRotationSpeed * time->DeltaTime();;
-	if (input->getKeyPress(FunctionKey::RIGHT)) cameraRotation.y = -cameraRotationSpeed * time->DeltaTime();;
-
-	if (input->getKeyPress(PrintableKey::Q)) cameraRotation.z = cameraRotationSpeed * time->DeltaTime();;
-	if (input->getKeyPress(PrintableKey::E)) cameraRotation.z = -cameraRotationSpeed * time->DeltaTime();;
-
-	float rotationX = camera->transform->rotation.x + cameraRotation.x;
-	float rotationY = camera->transform->rotation.y + cameraRotation.y;
-	float rotationZ = camera->transform->rotation.z + cameraRotation.z;
-	camera->setRotation(rotationX, rotationY, rotationZ);
+	//-----------
+	if (input->getKeyPress(FunctionKey::UP)) camera->rotate(cameraRotationSpeed * time->DeltaTime(), 0.0f, 0.0f);
+	if (input->getKeyPress(FunctionKey::DOWN)) camera->rotate(-cameraRotationSpeed * time->DeltaTime(), 0.0f, 0.0f);
+	
+	if (input->getKeyPress(FunctionKey::RIGHT)) camera->rotate(0.0f, cameraRotationSpeed * time->DeltaTime(), 0.0f);
+	if (input->getKeyPress(FunctionKey::LEFT)) camera->rotate(0.0f, -cameraRotationSpeed * time->DeltaTime(), 0.0f);
+	//-----------
 	
 	//Scale sprite 1
 	//if (input->getKeyPress(FunctionKey::UP))

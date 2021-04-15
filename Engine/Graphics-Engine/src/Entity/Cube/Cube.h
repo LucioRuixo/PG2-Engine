@@ -9,12 +9,15 @@ const int CUBE_VERTEX_COMPONENTS = 396;
 class GENGINE_API Cube : public Entity
 {
 private:
-	const int vertexAmount = 36;
+	vec3 color;
 
+	const int vertexAmount = 36;
 	static float vertices[CUBE_VERTEX_COMPONENTS];
 public:
 	Cube(Renderer* _renderer);
+	Cube(Renderer* _renderer, vec3 _color);
 	~Cube();
+	void setColor();
 	void draw();
 };
 

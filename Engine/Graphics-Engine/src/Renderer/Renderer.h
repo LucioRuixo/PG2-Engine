@@ -51,16 +51,16 @@ public:
 	//---------------
 	unsigned int compileShader(unsigned int type, const char* source);
 	int createShaderProgram(const char * vertexPath, const char * fragmentPath);
-	void setModel(unsigned int/*&*/ _shaderProgram, mat4 model);
-	void setProjection(unsigned int/*&*/ _shaderProgram, mat4 projection);
+	void setModel(unsigned int _shaderProgram, mat4 model);
+	void setProjection(unsigned int _shaderProgram, mat4 projection);
 	void updateProjection(mat4 &projection);
-	void setView(unsigned int/*&*/ _shaderProgram, mat4 view);
-	void updateView(mat4 view);
-	mat4 getView();
+	void setView(unsigned int _shaderProgram, mat4 view);
+	//void updateView(mat4 view);
+	//mat4 getView();
 	mat4 getProjection();
-	vec3 getCameraPos();
-	vec3 getCameraFront();
-	vec3 getCameraUp();
+	//vec3 getCameraPos();
+	//vec3 getCameraFront();
+	//vec3 getCameraUp();
 	void setVertexAttributes();
 	void updateUnifornTexture();
 	void drawTriangles(int vertexAmount);

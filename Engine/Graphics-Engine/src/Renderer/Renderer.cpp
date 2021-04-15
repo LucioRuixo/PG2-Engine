@@ -123,14 +123,14 @@ int Renderer::createShaderProgram(const char* vertexPath, const char* fragmentPa
 	return sProgram;
 }
 
-void Renderer::setModel(unsigned int/*&*/ _shaderProgram, mat4 model)
+void Renderer::setModel(unsigned int _shaderProgram, mat4 model)
 {
 	unsigned int modelLocation = glGetUniformLocation(_shaderProgram, "model");
 
 	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, value_ptr(model));
 }
 
-void Renderer::setProjection(unsigned int/*&*/ _shaderProgram, mat4 projection)
+void Renderer::setProjection(unsigned int _shaderProgram, mat4 projection)
 {
 	unsigned int projectionLocation = glGetUniformLocation(_shaderProgram, "projection");
 
@@ -145,29 +145,21 @@ void Renderer::updateProjection(mat4& projection)
 	//projection = ortho(0.0f, 1280.0f, 0.0f, 720.0f);
 }
 
-void Renderer::setView(unsigned int/*&*/ _shaderProgram, mat4 view)
+void Renderer::setView(unsigned int _shaderProgram, mat4 view)
 {
 	unsigned int viewLocation = glGetUniformLocation(_shaderProgram, "view");
-
-	updateView(view);
-
 	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, value_ptr(view));
 }
 
-void Renderer::updateView(mat4 view)
-{
-	view = lookAt(getCameraPos(), getCameraPos() + getCameraFront(), getCameraUp());
-}
-
-mat4 Renderer::getView() { return _VP.view; }
+//mat4 Renderer::getView() { return _VP.view; }
 
 mat4 Renderer::getProjection() { return _VP.projection; }
 
-vec3 Renderer::getCameraPos() { return _VP.cameraPos; }
-
-vec3 Renderer::getCameraFront() { return _VP.cameraFront; }
-
-vec3 Renderer::getCameraUp() { return _VP.cameraUp; }
+//vec3 Renderer::getCameraPos() { return _VP.cameraPos; }
+//
+//vec3 Renderer::getCameraFront() { return _VP.cameraFront; }
+//
+//vec3 Renderer::getCameraUp() { return _VP.cameraUp; }
 
 void Renderer::setVertexAttributes()
 {
