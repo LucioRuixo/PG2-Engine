@@ -13,7 +13,7 @@ Lighting::Lighting(Renderer* _renderer, vec3 _ambientLightColor, float _ambientL
 	ambientLightColor = _ambientLightColor;
 }
 
-Lighting::~Lighting() {}
+Lighting::~Lighting() { if (lightSourceIcon) delete lightSourceIcon; }
 
 //Ambient light
 //-----------------
@@ -56,6 +56,15 @@ void Lighting::enableLightSource(vec3 color, vec3 position)
 
 	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(), "lightSourcePosition");
 	glUniform3f(uniformLocation, lightSourcePosition.x, lightSourcePosition.y, lightSourcePosition.z);
+
+	if (!lightSourceIcon)
+	{
+		lightSourceIconPath = "../Graphics-Engine/res/Assets/Light Icon White.png";
+		lightSourceIcon = new Sprite(renderer);
+		lightSourceIcon->setTexture(lightSourceIconPath, GL_RGBA);
+		lightSourceIcon->setScale(0.25f, 0.25f, 0.0f);
+	}
+	lightSourceIcon->setPosition(lightSourcePosition);
 }
 
 void Lighting::disableLightSource()
@@ -73,6 +82,8 @@ bool Lighting::getLightSourceActive() { return lightSourceActive; }
 void Lighting::setLightSourcePosition(vec3 value) { lightSourcePosition = value; }
 
 vec3 Lighting::getLightSourcePosition() { return lightSourcePosition; }
+
+Sprite* Lighting::getLightSourceIcon() { return lightSourceIcon; }
 
 //Specular
 //-----------------

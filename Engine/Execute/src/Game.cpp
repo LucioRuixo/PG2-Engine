@@ -7,10 +7,8 @@ float spriteScaleAddition = 0.1f;
 vec3 cameraMovement;
 vec3 cameraRotation;
 
-//TileMap* tileMap;
 Sprite* sprite1;
 Sprite* sprite2;
-Cube* lightCube;
 Cube* cube1;
 Cube* cube2;
 
@@ -20,99 +18,33 @@ Game::~Game() {}
 
 int Game::initialize()
 {
-	//------
-	//Tile Map
-	//Sprite* grassSprite = new Sprite(renderer);
-	//grassSprite->setBufferData();
-	//grassSprite->setTexture("res/assets/pasto.png", RGB);
-	//
-	//int tileMapWidth = 20;
-	//int tileMapHeight = 10;
-	//float tileWidth = 0.1f;
-	//float tileHeight = 0.2f;
-	//float initialX = -(1.0f - tileWidth / 2.0f);
-	//float initialY = -(1.0f - tileHeight / 2.0f);
-	//tileMap = new TileMap(tileMapWidth, tileMapHeight, tileWidth, tileHeight, initialX, initialY, grassSprite, renderer);
-	//
-	//Sprite* obsidianSprite = new Sprite(renderer);
-	//obsidianSprite->setBufferData();
-	//obsidianSprite->setTexture("res/assets/bloque obsidiana.jpg", RGB);
-	//
-	//tileMap->getTile(7, 7)->setSprite(obsidianSprite);
-	//tileMap->getTile(7, 6)->setSprite(obsidianSprite);
-	//tileMap->getTile(8, 7)->setSprite(obsidianSprite);
-	//tileMap->getTile(8, 6)->setSprite(obsidianSprite);
-	//tileMap->getTile(11, 7)->setSprite(obsidianSprite);
-	//tileMap->getTile(11, 6)->setSprite(obsidianSprite);
-	//tileMap->getTile(12, 7)->setSprite(obsidianSprite);
-	//tileMap->getTile(12, 6)->setSprite(obsidianSprite);
-	//tileMap->getTile(9, 5)->setSprite(obsidianSprite);
-	//tileMap->getTile(10, 5)->setSprite(obsidianSprite);
-	//tileMap->getTile(8, 2)->setSprite(obsidianSprite);
-	//tileMap->getTile(8, 4)->setSprite(obsidianSprite);
-	//tileMap->getTile(9, 4)->setSprite(obsidianSprite);
-	//tileMap->getTile(10, 4)->setSprite(obsidianSprite);
-	//tileMap->getTile(11, 4)->setSprite(obsidianSprite);
-	//tileMap->getTile(8, 3)->setSprite(obsidianSprite);
-	//tileMap->getTile(9, 3)->setSprite(obsidianSprite);
-	//tileMap->getTile(10, 3)->setSprite(obsidianSprite);
-	//tileMap->getTile(11, 3)->setSprite(obsidianSprite);
-	//tileMap->getTile(11, 2)->setSprite(obsidianSprite);
-	//
-	//tileMap->getTile(7, 7)->setWalkability(false);
-	//tileMap->getTile(7, 6)->setWalkability(false);
-	//tileMap->getTile(8, 7)->setWalkability(false);
-	//tileMap->getTile(8, 6)->setWalkability(false);
-	//tileMap->getTile(11, 7)->setWalkability(false);
-	//tileMap->getTile(11, 6)->setWalkability(false);
-	//tileMap->getTile(12, 7)->setWalkability(false);
-	//tileMap->getTile(12, 6)->setWalkability(false);
-	//tileMap->getTile(9, 5)->setWalkability(false);
-	//tileMap->getTile(10, 5)->setWalkability(false);
-	//tileMap->getTile(8, 2)->setWalkability(false);
-	//tileMap->getTile(8, 4)->setWalkability(false);
-	//tileMap->getTile(9, 4)->setWalkability(false);
-	//tileMap->getTile(10, 4)->setWalkability(false);
-	//tileMap->getTile(11, 4)->setWalkability(false);
-	//tileMap->getTile(8, 3)->setWalkability(false);
-	//tileMap->getTile(9, 3)->setWalkability(false);
-	//tileMap->getTile(10, 3)->setWalkability(false);
-	//tileMap->getTile(11, 3)->setWalkability(false);
-	//tileMap->getTile(11, 2)->setWalkability(false);
-	//------
-
 	//Sprite 1
 	sprite1 = new Sprite(renderer);
-	sprite1->setTexture("res/assets/gato 1.jpg", RGB);
+	sprite1->setTexture("res/Assets/gato 1.jpg", GL_RGB);
 	sprite1->setPosition(1.0f, 0.0f, -6.0f);
+
+	//Animation* animation = new Animation();
+	//animation->addFrame(0.0f, 0.0f, 640.0f, 360.0f, 1280.0f, 720.0f, 4.0f, 4, 2);
+	//animation->addAnimation();
+	//animation->setCurrentAnimation(0);
+	//sprite1->setAnimation(animation);
 
 	//Sprite 2
 	sprite2 = new Sprite(renderer);
-	sprite2->setTexture("res/assets/gato 2.jpg", RGB);
+	sprite2->setTexture("res/Assets/gato 2.jpg", GL_RGB);
 	sprite2->setPosition(-1.0f, 0.0f, -3.0f);
 
 	//Cube 1
 	cube1 = new Cube(renderer);
-	cube1->setPosition(-1.0f, 1.5f, -4.5f);
+	cube1->setPosition(-1.0f, 1.5f, -3.5f);
 
 	//Cube 2
 	cube2 = new Cube(renderer);
 	cube2->setPosition(2.5f, 0.5f, -10.0f);
 	cube2->setScale(2.0f, 2.0f, 2.0f);
-	
-	//Sprite animation
-	//Animation* animation = new Animation();
-	//animation->AddFrame(0.0f, 0.0f, 640.0f, 360.0f, 1280.0f, 720.0f, 4.0f, 4, 2);
-	//animation->AddAnimation();
-	//animation->SetCurrentAnimation(0);
-	//sprite->setAnimation(animation);
 
 	//Lighting
-	lighting->enableLightSource(vec3(1.0f, 0.0f, 0.0f), vec3(0.0f, 2.0f, -4.5f));
-
-	lightCube = new Cube(renderer);
-	lightCube->setPosition(lighting->getLightSourcePosition().x, lighting->getLightSourcePosition().y, lighting->getLightSourcePosition().z);
-	lightCube->setScale(0.25f, 0.25f, 0.25f);
+	lighting->enableLightSource(vec3(0.75f, 0.75f, 0.75f), vec3(0.0f, 2.0f, -4.5f));
 
 	return 0;
 }
@@ -175,7 +107,6 @@ void Game::update()
 	sprite2->loadTexture();
 	sprite2->draw();
 
-	lightCube->draw();
 	cube1->draw();
 	cube2->draw();
 
@@ -214,10 +145,10 @@ void Game::update()
 
 int Game::terminate()
 {
-	//if (tileMap) delete tileMap;
 	if (sprite1) delete sprite1;
 	if (sprite2) delete sprite2;
-	if (lightCube) delete lightCube;
+	if (cube1) delete cube1;
+	if (cube2) delete cube2;
 
 	return 0;
 }

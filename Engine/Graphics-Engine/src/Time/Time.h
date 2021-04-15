@@ -24,9 +24,9 @@ public:
 	float GetSeconds();
 	void StartTime();
 	void Tick();
-	void CalculateFps();
+	void CalculateFPS();
 	float GetFps();
-	void FPS();
+	void PrintFPS();
 };
 
 #endif // !TIME_H

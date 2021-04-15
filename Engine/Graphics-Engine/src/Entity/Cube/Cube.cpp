@@ -1,50 +1,52 @@
 #include "Cube.h"
 
+vec3 cubeColor = vec3(1.0f, 0.75f, 0.1f);
+
 float Cube::vertices[] =
 {
 	//Position              //Color               //Normal               //UV       
 	//-----------------
-	-0.5f, -0.5f, -0.5f,  	1.0f, 0.0f, 0.0f,     0.0f,  0.0f, -1.0f,    0.0f, 1.0f,
-	 0.5f, -0.5f, -0.5f,  	0.0f, 1.0f, 0.0f,     0.0f,  0.0f, -1.0f,    1.0f, 1.0f,
-	 0.5f,  0.5f, -0.5f,  	0.0f, 0.0f, 1.0f,     0.0f,  0.0f, -1.0f,    1.0f, 0.0f,
-	 0.5f,  0.5f, -0.5f,  	0.0f, 0.0f, 1.0f,     0.0f,  0.0f, -1.0f,    1.0f, 0.0f,
-	-0.5f,  0.5f, -0.5f,  	1.0f, 1.0f, 1.0f,     0.0f,  0.0f, -1.0f,    0.0f, 0.0f,
-	-0.5f, -0.5f, -0.5f,  	1.0f, 0.0f, 0.0f,     0.0f,  0.0f, -1.0f,    0.0f, 1.0f,
-
-	-0.5f, -0.5f,  0.5f,    1.0f, 0.0f, 0.0f,     0.0f,  0.0f, 1.0f,     0.0f, 1.0f,
-	 0.5f, -0.5f,  0.5f,  	0.0f, 1.0f, 0.0f,     0.0f,  0.0f, 1.0f,     1.0f, 1.0f,
-	 0.5f,  0.5f,  0.5f,  	0.0f, 0.0f, 1.0f,     0.0f,  0.0f, 1.0f,     1.0f, 0.0f,
-	 0.5f,  0.5f,  0.5f,    0.0f, 0.0f, 1.0f,     0.0f,  0.0f, 1.0f,     1.0f, 0.0f,
-	-0.5f,  0.5f,  0.5f,  	1.0f, 1.0f, 1.0f,     0.0f,  0.0f, 1.0f,     0.0f, 0.0f,
-	-0.5f, -0.5f,  0.5f,  	1.0f, 0.0f, 0.0f,     0.0f,  0.0f, 1.0f,     0.0f, 1.0f,
-
-	-0.5f,  0.5f,  0.5f,  	1.0f, 0.0f, 0.0f,    -1.0f,  0.0f,  0.0f,    0.0f, 1.0f,
-	-0.5f,  0.5f, -0.5f,  	0.0f, 1.0f, 0.0f,    -1.0f,  0.0f,  0.0f,    1.0f, 1.0f,
-	-0.5f, -0.5f, -0.5f,  	0.0f, 0.0f, 1.0f,    -1.0f,  0.0f,  0.0f,    1.0f, 0.0f,
-	-0.5f, -0.5f, -0.5f,  	0.0f, 0.0f, 1.0f,    -1.0f,  0.0f,  0.0f,    1.0f, 0.0f,
-	-0.5f, -0.5f,  0.5f,  	1.0f, 1.0f, 1.0f,    -1.0f,  0.0f,  0.0f,    0.0f, 0.0f,
-	-0.5f,  0.5f,  0.5f,  	1.0f, 0.0f, 0.0f,    -1.0f,  0.0f,  0.0f,    0.0f, 1.0f,
-
-	 0.5f,  0.5f,  0.5f,  	1.0f, 0.0f, 0.0f,     1.0f,  0.0f,  0.0f,    0.0f, 1.0f,
-	 0.5f,  0.5f, -0.5f,  	0.0f, 1.0f, 0.0f,     1.0f,  0.0f,  0.0f,    1.0f, 1.0f,
-	 0.5f, -0.5f, -0.5f,  	0.0f, 0.0f, 1.0f,     1.0f,  0.0f,  0.0f,    1.0f, 0.0f,
-	 0.5f, -0.5f, -0.5f,  	0.0f, 0.0f, 1.0f,     1.0f,  0.0f,  0.0f,    1.0f, 0.0f,
-	 0.5f, -0.5f,  0.5f,  	1.0f, 1.0f, 1.0f,     1.0f,  0.0f,  0.0f,    0.0f, 0.0f,
-	 0.5f,  0.5f,  0.5f,  	1.0f, 0.0f, 0.0f,     1.0f,  0.0f,  0.0f,    0.0f, 1.0f,
-
-	-0.5f, -0.5f, -0.5f,  	1.0f, 0.0f, 0.0f,     0.0f, -1.0f,  0.0f,    0.0f, 1.0f,
-	 0.5f, -0.5f, -0.5f,  	0.0f, 1.0f, 0.0f,     0.0f, -1.0f,  0.0f,    1.0f, 1.0f,
-	 0.5f, -0.5f,  0.5f,  	0.0f, 0.0f, 1.0f,     0.0f, -1.0f,  0.0f,    1.0f, 0.0f,
-	 0.5f, -0.5f,  0.5f,  	0.0f, 0.0f, 1.0f,     0.0f, -1.0f,  0.0f,    1.0f, 0.0f,
-	-0.5f, -0.5f,  0.5f,  	1.0f, 1.0f, 1.0f,     0.0f, -1.0f,  0.0f,    0.0f, 0.0f,
-	-0.5f, -0.5f, -0.5f,  	1.0f, 0.0f, 0.0f,     0.0f, -1.0f,  0.0f,    0.0f, 1.0f,
-
-	-0.5f,  0.5f, -0.5f,  	1.0f, 0.0f, 0.0f,     0.0f,  1.0f,  0.0f,    0.0f, 1.0f,
-	 0.5f,  0.5f, -0.5f,  	0.0f, 1.0f, 0.0f,     0.0f,  1.0f,  0.0f,    1.0f, 1.0f,
-	 0.5f,  0.5f,  0.5f,  	0.0f, 0.0f, 1.0f,     0.0f,  1.0f,  0.0f,    1.0f, 0.0f,
-	 0.5f,  0.5f,  0.5f,  	0.0f, 0.0f, 1.0f,     0.0f,  1.0f,  0.0f,	 1.0f, 0.0f,
-	-0.5f,  0.5f,  0.5f,  	1.0f, 1.0f, 1.0f,     0.0f,  1.0f,  0.0f,    0.0f, 0.0f,
-	-0.5f,  0.5f, -0.5f,  	1.0f, 0.0f, 0.0f,     0.0f,  1.0f,  0.0f,    0.0f, 1.0f
+	-0.5f, -0.5f, -0.5f,  	cubeColor.r, cubeColor.g , cubeColor.b,     0.0f,  0.0f, -1.0f,    0.0f, 1.0f,
+	 0.5f, -0.5f, -0.5f,  	cubeColor.r, cubeColor.g , cubeColor.b,     0.0f,  0.0f, -1.0f,    1.0f, 1.0f,
+	 0.5f,  0.5f, -0.5f,  	cubeColor.r, cubeColor.g , cubeColor.b,     0.0f,  0.0f, -1.0f,    1.0f, 0.0f,
+	 0.5f,  0.5f, -0.5f,  	cubeColor.r, cubeColor.g , cubeColor.b,     0.0f,  0.0f, -1.0f,    1.0f, 0.0f,
+	-0.5f,  0.5f, -0.5f,  	cubeColor.r, cubeColor.g , cubeColor.b,     0.0f,  0.0f, -1.0f,    0.0f, 0.0f,
+	-0.5f, -0.5f, -0.5f,  	cubeColor.r, cubeColor.g , cubeColor.b,     0.0f,  0.0f, -1.0f,    0.0f, 1.0f,
+							
+	-0.5f, -0.5f,  0.5f,    cubeColor.r, cubeColor.g , cubeColor.b,     0.0f,  0.0f, 1.0f,     0.0f, 1.0f,
+	 0.5f, -0.5f,  0.5f,  	cubeColor.r, cubeColor.g , cubeColor.b,     0.0f,  0.0f, 1.0f,     1.0f, 1.0f,
+	 0.5f,  0.5f,  0.5f,  	cubeColor.r, cubeColor.g , cubeColor.b,     0.0f,  0.0f, 1.0f,     1.0f, 0.0f,
+	 0.5f,  0.5f,  0.5f,    cubeColor.r, cubeColor.g , cubeColor.b,     0.0f,  0.0f, 1.0f,     1.0f, 0.0f,
+	-0.5f,  0.5f,  0.5f,  	cubeColor.r, cubeColor.g , cubeColor.b,     0.0f,  0.0f, 1.0f,     0.0f, 0.0f,
+	-0.5f, -0.5f,  0.5f,  	cubeColor.r, cubeColor.g , cubeColor.b,     0.0f,  0.0f, 1.0f,     0.0f, 1.0f,
+							
+	-0.5f,  0.5f,  0.5f,  	cubeColor.r, cubeColor.g , cubeColor.b,    -1.0f,  0.0f,  0.0f,    0.0f, 1.0f,
+	-0.5f,  0.5f, -0.5f,  	cubeColor.r, cubeColor.g , cubeColor.b,    -1.0f,  0.0f,  0.0f,    1.0f, 1.0f,
+	-0.5f, -0.5f, -0.5f,  	cubeColor.r, cubeColor.g , cubeColor.b,    -1.0f,  0.0f,  0.0f,    1.0f, 0.0f,
+	-0.5f, -0.5f, -0.5f,  	cubeColor.r, cubeColor.g , cubeColor.b,    -1.0f,  0.0f,  0.0f,    1.0f, 0.0f,
+	-0.5f, -0.5f,  0.5f,  	cubeColor.r, cubeColor.g , cubeColor.b,    -1.0f,  0.0f,  0.0f,    0.0f, 0.0f,
+	-0.5f,  0.5f,  0.5f,  	cubeColor.r, cubeColor.g , cubeColor.b,    -1.0f,  0.0f,  0.0f,    0.0f, 1.0f,
+							
+	 0.5f,  0.5f,  0.5f,  	cubeColor.r, cubeColor.g , cubeColor.b,     1.0f,  0.0f,  0.0f,    0.0f, 1.0f,
+	 0.5f,  0.5f, -0.5f,  	cubeColor.r, cubeColor.g , cubeColor.b,     1.0f,  0.0f,  0.0f,    1.0f, 1.0f,
+	 0.5f, -0.5f, -0.5f,  	cubeColor.r, cubeColor.g , cubeColor.b,     1.0f,  0.0f,  0.0f,    1.0f, 0.0f,
+	 0.5f, -0.5f, -0.5f,  	cubeColor.r, cubeColor.g , cubeColor.b,     1.0f,  0.0f,  0.0f,    1.0f, 0.0f,
+	 0.5f, -0.5f,  0.5f,  	cubeColor.r, cubeColor.g , cubeColor.b,     1.0f,  0.0f,  0.0f,    0.0f, 0.0f,
+	 0.5f,  0.5f,  0.5f,  	cubeColor.r, cubeColor.g , cubeColor.b,     1.0f,  0.0f,  0.0f,    0.0f, 1.0f,
+							
+	-0.5f, -0.5f, -0.5f,  	cubeColor.r, cubeColor.g , cubeColor.b,     0.0f, -1.0f,  0.0f,    0.0f, 1.0f,
+	 0.5f, -0.5f, -0.5f,  	cubeColor.r, cubeColor.g , cubeColor.b,     0.0f, -1.0f,  0.0f,    1.0f, 1.0f,
+	 0.5f, -0.5f,  0.5f,  	cubeColor.r, cubeColor.g , cubeColor.b,     0.0f, -1.0f,  0.0f,    1.0f, 0.0f,
+	 0.5f, -0.5f,  0.5f,  	cubeColor.r, cubeColor.g , cubeColor.b,     0.0f, -1.0f,  0.0f,    1.0f, 0.0f,
+	-0.5f, -0.5f,  0.5f,  	cubeColor.r, cubeColor.g , cubeColor.b,     0.0f, -1.0f,  0.0f,    0.0f, 0.0f,
+	-0.5f, -0.5f, -0.5f,  	cubeColor.r, cubeColor.g , cubeColor.b,     0.0f, -1.0f,  0.0f,    0.0f, 1.0f,
+							
+	-0.5f,  0.5f, -0.5f,  	cubeColor.r, cubeColor.g , cubeColor.b,     0.0f,  1.0f,  0.0f,    0.0f, 1.0f,
+	 0.5f,  0.5f, -0.5f,  	cubeColor.r, cubeColor.g , cubeColor.b,     0.0f,  1.0f,  0.0f,    1.0f, 1.0f,
+	 0.5f,  0.5f,  0.5f,  	cubeColor.r, cubeColor.g , cubeColor.b,     0.0f,  1.0f,  0.0f,    1.0f, 0.0f,
+	 0.5f,  0.5f,  0.5f,  	cubeColor.r, cubeColor.g , cubeColor.b,     0.0f,  1.0f,  0.0f,	 1.0f, 0.0f,
+	-0.5f,  0.5f,  0.5f,  	cubeColor.r, cubeColor.g , cubeColor.b,     0.0f,  1.0f,  0.0f,    0.0f, 0.0f,
+	-0.5f,  0.5f, -0.5f,  	cubeColor.r, cubeColor.g , cubeColor.b,     0.0f,  1.0f,  0.0f,    0.0f, 1.0f
 	//-----------------
 };																		 
 

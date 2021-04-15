@@ -5,9 +5,6 @@
 #include "Animation/Animation.h"
 #include "TextureImporter/TextureImporter.h"
 
-#define RGB 0x1907
-#define RGBA 0x1908
-
 class GENGINE_API Sprite : public Plane
 {
 private:

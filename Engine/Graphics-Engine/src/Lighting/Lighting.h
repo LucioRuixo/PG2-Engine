@@ -3,6 +3,7 @@
 
 #include "Tools/Includes.h"
 #include "Renderer/Renderer.h"
+#include "Entity/Entity2D/Plane/Sprite/Sprite.h"
 
 using namespace glm;
 
@@ -14,6 +15,8 @@ class GENGINE_API Lighting
 	bool lightSourceActive = false;
 	vec3 lightSourceColor;
 	vec3 lightSourcePosition;
+	const char* lightSourceIconPath;
+	Sprite* lightSourceIcon;
 
 	float specularStrength = 0.5f;
 
@@ -36,6 +39,7 @@ public:
 	bool getLightSourceActive();
 	void setLightSourcePosition(vec3 value);
 	vec3 getLightSourcePosition();
+	Sprite* getLightSourceIcon();
 
 	//Specular
 	void setSpecularStrength(float value);

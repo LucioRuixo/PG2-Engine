@@ -10,11 +10,11 @@ TextureData TextureImporter::importTexture(const char* filePath, int type)
 		switch (type)
 		{
 		case GL_RGB:
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureData.width, textureData.height, 0, GL_RGB, GL_UNSIGNED_BYTE, textureData.pixelData);
+			glTexImage2D(GL_TEXTURE_2D, 0, type, textureData.width, textureData.height, 0, type, GL_UNSIGNED_BYTE, textureData.pixelData);
 			glGenerateMipmap(GL_TEXTURE_2D);
 			break;
 		case GL_RGBA:
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, textureData.width, textureData.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureData.pixelData);
+			glTexImage2D(GL_TEXTURE_2D, 0, type, textureData.width, textureData.height, 0, type, GL_UNSIGNED_BYTE, textureData.pixelData);
 			glGenerateMipmap(GL_TEXTURE_2D);
 			break;
 		}
@@ -31,11 +31,11 @@ void TextureImporter::loadTexture(TextureData textureData, int type)
 		switch (type)
 		{
 		case GL_RGB:
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureData.width, textureData.height, 0, GL_RGB, GL_UNSIGNED_BYTE, textureData.pixelData);
+			glTexImage2D(GL_TEXTURE_2D, 0, type, textureData.width, textureData.height, 0, type, GL_UNSIGNED_BYTE, textureData.pixelData);
 			glGenerateMipmap(GL_TEXTURE_2D);
 			break;
 		case GL_RGBA:
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, textureData.width, textureData.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureData.pixelData);
+			glTexImage2D(GL_TEXTURE_2D, 0, type, textureData.width, textureData.height, 0, type, GL_UNSIGNED_BYTE, textureData.pixelData);
 			glGenerateMipmap(GL_TEXTURE_2D);
 			break;
 		}

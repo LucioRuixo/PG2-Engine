@@ -45,43 +45,48 @@ void main()
 
 	//Texture affected by ambient and diffuse lighting
 	vec3 objectColor;
-	if (textureActive)
-	{
-		objectColor.x = texture(textureData, TextureCoordinates).x;
-		objectColor.y = texture(textureData, TextureCoordinates).y;
-		objectColor.z = texture(textureData, TextureCoordinates).z;
-	}
+	if (textureActive) objectColor = vec3(texture(textureData, TextureCoordinates));
 	else objectColor = Color;
 
 	//Ambient
+	//-------
 	vec3 ambient = ambientLightColor * ambientLightStrength;
+	//-------
 	
 	vec3 lightSourceDirection = normalize(lightSourcePosition - FragmentPosition);
 	vec3 nNormal = normalize(Normal);
 
 	//Diffuse
+	//-------
 	vec3 diffuse;
 	if (lightSourceActive)
 	{
+		//float diffuseImpact = max(dot(nNormal, lightSourceDirection), 0.0f);
 		float diffuseImpact = max(dot(nNormal, lightSourceDirection), 0.0f);
+
 		diffuse = diffuseImpact * lightSourceColor;
 	}
 	else diffuse = vec3(0.0f, 0.0f, 0.0f);
+	//-------
 
 	//Specular
+	//-------
 	vec3 specular;
 	if (lightSourceActive)
 	{
 		vec3 viewDirection = normalize(viewPosition - FragmentPosition);
 		vec3 reflectDirection = reflect(-lightSourceDirection, nNormal);
-
+	
 		float specularImpact = pow(max(dot(viewDirection, reflectDirection), 0.0f), 32);
 		specular = specularStrength * specularImpact * lightSourceColor;
 	}
 	else specular = vec3(0.0f, 0.0f, 0.0f);
 
-	FragColor.x = objectColor.x * (/*ambient.x +*/ diffuse.x /*specular.x*/);
-	FragColor.y = objectColor.y * (/*ambient.y +*/ diffuse.y /*specular.y*/);
-	FragColor.z = objectColor.z * (/*ambient.z +*/ diffuse.z /*specular.z*/);
-	FragColor.w = 1.0f;
+	vec3 lighting = vec3(ambient + diffuse + specular);
+
+	FragColor.r = objectColor.r * lighting.r;
+	FragColor.g = objectColor.g * lighting.g;
+	FragColor.b = objectColor.b * lighting.b;
+	FragColor.a = 1.0f;
+	//-------
 }
