@@ -19,6 +19,9 @@ public:
 	bool movingLeft;
 
 	Sprite(Renderer* _renderer);
+	Sprite(Renderer* _renderer, vec3 _color);
+	Sprite(Renderer* _renderer, Material _material);
+	Sprite(Renderer* _renderer, vec3 _color, Material _material);
 	~Sprite();
 	TextureData setTexture(const char* filePath, int _type);
 	void loadTexture();

@@ -9,7 +9,6 @@ using namespace glm;
 
 class GENGINE_API Camera
 {
-	//ModelMatrixData matrixData;
 	vec3 forward;
 	vec3 upVector;
 	mat4 view;

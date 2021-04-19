@@ -16,13 +16,13 @@ float Plane::vertices[] =
 	//Position           //Color              //Normal             //UV       
 	//--------------									      
 	//With TBLR							      
-	TL.x, TL.y, 0.0f,    1.0f, 0.0f, 0.0f,    0.0f, 0.0f, 1.0f,    0.0f, 1.0f,
-	TR.x, TR.y, 0.0f,    0.0f, 1.0f, 0.0f,    0.0f, 0.0f, 1.0f,    1.0f, 1.0f,
-	BR.x, BR.y, 0.0f,    0.0f, 0.0f, 1.0f,    0.0f, 0.0f, 1.0f,    1.0f, 0.0f,
-
-	BR.x, BR.y, 0.0f,    0.0f, 0.0f, 1.0f,    0.0f, 0.0f, 1.0f,    1.0f, 0.0f,
-	BL.x, BL.y, 0.0f,    1.0f, 1.0f, 1.0f,    0.0f, 0.0f, 1.0f,    0.0f, 0.0f,
-	TL.x, TL.y, 0.0f,    1.0f, 0.0f, 0.0f,    0.0f, 0.0f, 1.0f,    0.0f, 1.0f
+	TL.x, TL.y, 0.0f,    /*1.0f, 0.0f, 0.0f,*/    0.0f, 0.0f, 1.0f,    0.0f, 1.0f,
+	TR.x, TR.y, 0.0f,    /*0.0f, 1.0f, 0.0f,*/    0.0f, 0.0f, 1.0f,    1.0f, 1.0f,
+	BR.x, BR.y, 0.0f,    /*0.0f, 0.0f, 1.0f,*/    0.0f, 0.0f, 1.0f,    1.0f, 0.0f,
+						 /*					*/
+	BR.x, BR.y, 0.0f,    /*0.0f, 0.0f, 1.0f,*/    0.0f, 0.0f, 1.0f,    1.0f, 0.0f,
+	BL.x, BL.y, 0.0f,    /*1.0f, 1.0f, 1.0f,*/    0.0f, 0.0f, 1.0f,    0.0f, 0.0f,
+	TL.x, TL.y, 0.0f,    /*1.0f, 0.0f, 0.0f,*/    0.0f, 0.0f, 1.0f,    0.0f, 1.0f
 
 	//Without TBLR
 	//-0.5f,  0.5f, 0.0f,	   1.0f, 0.0f, 0.0f,    1.0f, 1.0f,
@@ -51,7 +51,28 @@ unsigned int indices[] =
 };
 */
 
-Plane::Plane(Renderer* _renderer) : Entity2D(_renderer, boundsMin, boundsMax)
+Plane::Plane(Renderer* _renderer) : Entity(_renderer)
+{
+	renderer = _renderer;
+
+	for (int i = 0; i < PLANE_VERTEX_COMPONENTS; i++) vertexBuffer[i] = vertices[i];
+}
+
+Plane::Plane(Renderer* _renderer, vec3 _color) : Entity(_renderer, _color)
+{
+	renderer = _renderer;
+
+	for (int i = 0; i < PLANE_VERTEX_COMPONENTS; i++) vertexBuffer[i] = vertices[i];
+}
+
+Plane::Plane(Renderer* _renderer, Material _material) : Entity(_renderer, _material)
+{
+	renderer = _renderer;
+
+	for (int i = 0; i < PLANE_VERTEX_COMPONENTS; i++) vertexBuffer[i] = vertices[i];
+}
+
+Plane::Plane(Renderer* _renderer, vec3 _color, Material _material) : Entity(_renderer, _color, _material)
 {
 	renderer = _renderer;
 
@@ -62,10 +83,9 @@ Plane::~Plane() {}
 
 void Plane::draw()
 {
-	int uniformLocation = glGetUniformLocation(renderer->getShaderProgram(), "textureActive");
-	glUniform1i(uniformLocation, 0);
+	Entity::draw();
 
-	renderer->setBufferData(PLANE_VERTEX_COMPONENTS, vertexBuffer);
 	renderer->setModel(renderer->getShaderProgram(), modelMatrix.model);
+	renderer->setBufferData(PLANE_VERTEX_COMPONENTS, vertexBuffer);
 	renderer->drawTriangles(vertexAmount);
 }

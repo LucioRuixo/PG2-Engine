@@ -24,48 +24,55 @@ private:
 	unsigned int VBO;
 	unsigned int EBO;
 	unsigned int shaderProgram;
-	unsigned int positionAttribute;
+	unsigned int positionAttributeLocation;
 	unsigned int colorAttribute;
-	unsigned int normalAttribute;
+	unsigned int normalAttributeLocation;
 	unsigned int texture;
 
 	vec3 backgroundColor;
 
-	matrixVP _VP;
+	matrixVP _VP; //TODO: cambiar nombre
 public:
 	Renderer();
 	~Renderer();
-	unsigned int& getShaderProgram();
-	void createVBO();
-	void createEBO();
-	void bindVBO(unsigned int _VBO);
-	void bindEBO(unsigned int _EBO);
-	unsigned int getVBO();
-	unsigned int getEBO();
-	void setBufferData(int tam, float* verterBuffer);
-	void clearBackground();
-	void setShader();
-	//---------------
-	void generateTexture();
-	void setParameterTexture();
-	//---------------
-	unsigned int compileShader(unsigned int type, const char* source);
-	int createShaderProgram(const char * vertexPath, const char * fragmentPath);
-	void setModel(unsigned int _shaderProgram, mat4 model);
-	void setProjection(unsigned int _shaderProgram, mat4 projection);
-	void updateProjection(mat4 &projection);
-	void setView(unsigned int _shaderProgram, mat4 view);
-	//void updateView(mat4 view);
-	//mat4 getView();
-	mat4 getProjection();
-	//vec3 getCameraPos();
-	//vec3 getCameraFront();
-	//vec3 getCameraUp();
-	void setVertexAttributes();
-	void updateUnifornTexture();
-	void drawTriangles(int vertexAmount);
+
+#pragma region Background
 	void setBackgroundColor(vec3 value);
 	vec3 getBackgroundColor();
+	void clearBackground();
+#pragma endregion
+
+#pragma region Vertices
+	void createVBO();
+	void bindVBO(unsigned int _VBO);
+	unsigned int getVBO();
+	void createEBO();
+	void bindEBO(unsigned int _EBO);
+	unsigned int getEBO();
+	void setBufferData(int tam, float* verterBuffer);
+	void setVertexAttributes();
+	void drawTriangles(int vertexAmount);
+#pragma endregion
+
+#pragma region MVP
+	void setModel(unsigned int _shaderProgram, mat4 model);
+	void setView(unsigned int _shaderProgram, mat4 view);
+	void setProjection(unsigned int _shaderProgram, mat4 projection);
+	mat4 getProjection();
+	void updateProjection(mat4 &projection);
+#pragma endregion
+
+#pragma region Textures
+	void generateTexture();
+	void setParameterTexture();
+#pragma endregion
+
+#pragma region Shaders
+	void setShader();
+	unsigned int compileShader(unsigned int type, const char* source);
+	int createShaderProgram(const char * vertexPath, const char * fragmentPath);
+	unsigned int& getShaderProgram();
+#pragma endregion
 };
 
 #endif // !RENDERER_H

@@ -4,6 +4,35 @@ using namespace glm;
 
 Sprite::Sprite(Renderer* _renderer) : Plane(renderer)
 {
+	textureActive = true;
+
+	renderer = _renderer;
+	type = GL_QUADS;
+	animation = NULL;
+}
+
+Sprite::Sprite(Renderer* _renderer, vec3 _color) : Plane(_renderer, _color)
+{
+	textureActive = true;
+
+	renderer = _renderer;
+	type = GL_QUADS;
+	animation = NULL;
+}
+
+Sprite::Sprite(Renderer* _renderer, Material _material) : Plane(_renderer, _material)
+{
+	textureActive = true;
+
+	renderer = _renderer;
+	type = GL_QUADS;
+	animation = NULL;
+}
+
+Sprite::Sprite(Renderer* _renderer, vec3 _color, Material _material) : Plane(_renderer, _color, _material)
+{
+	textureActive = true;
+
 	renderer = _renderer;
 	type = GL_QUADS;
 	animation = NULL;
@@ -52,17 +81,15 @@ void Sprite::updateAnimation()
 		vertexBuffer[46] = frame.frameCoords[0].u;
 		vertexBuffer[47] = frame.frameCoords[0].v;
 
-		//setBufferData();
 		renderer->setBufferData(PLANE_VERTEX_COMPONENTS, vertexBuffer);
 	}
 }
 
 void Sprite::draw()
 {
-	int uniformLocation = glGetUniformLocation(renderer->getShaderProgram(), "textureActive");
-	glUniform1i(uniformLocation, 1);
+	Entity::draw();
 
-	renderer->setBufferData(PLANE_VERTEX_COMPONENTS, vertexBuffer);
 	renderer->setModel(renderer->getShaderProgram(), modelMatrix.model);
+	renderer->setBufferData(PLANE_VERTEX_COMPONENTS, vertexBuffer);
 	renderer->drawTriangles(vertexAmount);
 }

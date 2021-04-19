@@ -9,8 +9,10 @@ vec3 cameraRotation;
 
 Sprite* sprite1;
 Sprite* sprite2;
-Cube* cube1;
-Cube* cube2;
+Cube* cube;
+Cube* rubyCube;
+Cube* emeraldCube;
+Cube* goldCube;
 
 Game::Game() {}
 
@@ -33,18 +35,43 @@ int Game::initialize()
 	sprite2 = new Sprite(renderer);
 	sprite2->setTexture("res/Assets/gato 2.jpg", GL_RGB);
 	sprite2->setPosition(-1.0f, 0.0f, -3.0f);
+	
+	//Cube
+	cube = new Cube(renderer, vec3(1.0f, 0.1f, 0.1f));
+	cube->setPosition(-1.0f, 1.5f, -3.5f);
 
-	//Cube 1
-	cube1 = new Cube(renderer);
-	cube1->setPosition(-1.0f, 1.5f, -3.5f);
+	//Material cubes
+	Material ruby;
+	ruby.ambient = vec3(0.1745f, 0.01175f, 0.01175f);
+	ruby.diffuse = vec3(0.61424f, 0.04136f, 0.04136f);
+	ruby.specular = vec3(0.727811f, 0.626959f, 0.626959f);
+	ruby.shininess = 0.6f;
+	rubyCube = new Cube(renderer, vec3(0.607f, 0.066f, 0.117f), ruby);
+	rubyCube->setPosition(-1.0f, 1.0f, -10.0f);
+	rubyCube->setScale(1.0f, 3.0f, 1.0f);
 
-	//Cube 2
-	cube2 = new Cube(renderer);
-	cube2->setPosition(2.5f, 0.5f, -10.0f);
-	cube2->setScale(2.0f, 2.0f, 2.0f);
+	Material emerald;
+	emerald.ambient = vec3(0.0215f, 0.1745f, 0.0215f);
+	emerald.diffuse = vec3(0.07568f, 0.61424f, 0.07568f);
+	emerald.specular = vec3(0.633f, 0.727811f, 0.633f);
+	emerald.shininess = 0.6f;
+	emeraldCube = new Cube(renderer, vec3(0.031f, 0.396f, 0.133f), emerald);
+	emeraldCube->setPosition(0.0f, 1.0f, -10.0f);
+	emeraldCube->setScale(1.0f, 3.0f, 1.0f);
+
+	Material gold;
+	gold.ambient = vec3(0.24725f, 0.1995f, 0.0745f);
+	gold.diffuse = vec3(0.75164f, 0.60648f, 0.22648f);
+	gold.specular = vec3(0.628281f, 0.555802f, 0.366065f);
+	gold.shininess = 0.4f;
+	goldCube = new Cube(renderer, vec3(0.905f, 0.741f, 0.258f), gold);
+	goldCube->setPosition(1.0f, 1.0f, -10.0f);
+	goldCube->setScale(1.0f, 3.0f, 1.0f);
 
 	//Lighting
-	lighting->enableLightSource(vec3(0.75f, 0.75f, 0.75f), vec3(0.0f, 2.0f, -4.5f));
+	Light lightSource;
+	lightSource.position = vec3(0.0f, 2.0f, -4.5f);
+	lighting->enableLightSource(lightSource);
 
 	return 0;
 }
@@ -73,69 +100,27 @@ void Game::update()
 	if (input->getKeyPress(FunctionKey::RIGHT)) camera->rotate(0.0f, cameraRotationSpeed * time->DeltaTime(), 0.0f);
 	if (input->getKeyPress(FunctionKey::LEFT)) camera->rotate(0.0f, -cameraRotationSpeed * time->DeltaTime(), 0.0f);
 	//-----------
-	
-	//Scale sprite 1
-	//if (input->getKeyPress(FunctionKey::UP))
-	//	sprite1->setScale(sprite1->transform->scale.x + spriteScaleAddition, sprite1->transform->scale.y + spriteScaleAddition, sprite1->transform->scale.z + spriteScaleAddition);
-	//if (input->getKeyPress(FunctionKey::DOWN))
-	//	sprite1->setScale(sprite1->transform->scale.x - spriteScaleAddition, sprite1->transform->scale.y - spriteScaleAddition, sprite1->transform->scale.z - spriteScaleAddition);
 
-	//------
-	//Tile Map
-	//tileMap->draw(renderer);
-
-	//------
-	//Player
-	//playerSprite->Translate(transX, transY, transZ);
-
-	sprite1->loadTexture();
+	sprite1->loadTexture(); //TODO: que el loadTexture() se haga solo dentro del draw() de Sprite
 	sprite1->draw();
 
 	sprite2->loadTexture();
 	sprite2->draw();
 
-	cube1->draw();
-	cube2->draw();
-
-	//------
-	//Sprite
-	//Sprite load texture
-	//sprite->loadTexture("res/assets/AprobamePorfa.jpg", RGB);
-	//
-	////Model
-	//renderer->setModel(renderer->getShaderProgram(), sprite->getModel());
-	//renderer->drawTr();
-
-	//------
-	//Sprite2
-	//Sprite load texture
-	//sprite2->loadTexture("res/assets/dragon.png", RGBA);
-
-	//Model
-	//renderer->setModel(renderer->getShaderProgram(), sprite2->getModel());
-	//renderer->drawTr();
-
-	//------
-	//Collision detection
-	//tileMap->detectCollisions(playerSprite);
-
-	//if (sprite->getBounds().min.x < sprite2->getBounds().max.x
-	//	&&
-	//	sprite->getBounds().max.x > sprite2->getBounds().min.x
-	//	&&
-	//	sprite->getBounds().min.y < sprite2->getBounds().max.y
-	//	&&
-	//	sprite->getBounds().max.y > sprite2->getBounds().min.y)
-	//	std::cout << "Colliding: YES" << std::endl;
-	//else std::cout << "Colliding: NO" << std::endl;
+	cube->draw();
+	rubyCube->draw();
+	emeraldCube->draw();
+	goldCube->draw();
 }
 
 int Game::terminate()
 {
 	if (sprite1) delete sprite1;
 	if (sprite2) delete sprite2;
-	if (cube1) delete cube1;
-	if (cube2) delete cube2;
+	if (cube) delete cube;
+	if (rubyCube) delete rubyCube;
+	if (emeraldCube) delete emeraldCube;
+	if (goldCube) delete goldCube;
 
 	return 0;
 }

@@ -21,7 +21,7 @@ public:
 	float getTileHeight();
 	Tile* getTile(int x, int y);
 	void draw(Renderer* renderer);
-	void detectCollisions(Sprite* other);
+	//void detectCollisions(Sprite* other);
 };
 
 #endif //!TILE_MAP_H

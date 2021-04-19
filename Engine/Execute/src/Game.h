@@ -3,7 +3,7 @@
 
 #include "Gamebase/Gamebase.h"
 #include "Entity/Cube/Cube.h"
-#include "Entity/Entity2D/Plane/Sprite/Sprite.h"
+#include "Entity/Plane/Sprite/Sprite.h"
 
 class Game : public GameBase
 {

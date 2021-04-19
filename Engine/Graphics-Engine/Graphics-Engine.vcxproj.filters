@@ -56,20 +56,17 @@
     <Filter Include="res\Shaders">
       <UniqueIdentifier>{9624e130-453a-44ed-a639-3f5905f8ee68}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Entity\Entity2D">
-      <UniqueIdentifier>{26d6cf91-07ae-4fc1-a6eb-38f455b4cb0c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Entity\Entity2D\Plane">
-      <UniqueIdentifier>{8bdc16bd-f481-453e-973d-5a161bce6208}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Entity\Entity2D\Plane\Sprite">
-      <UniqueIdentifier>{d45a8175-87b3-4a1b-acdb-2ae289a7631e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Entity\Cube">
       <UniqueIdentifier>{acd3d751-c15a-4422-9c30-3c33f025833f}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Transform">
       <UniqueIdentifier>{f1d8c50c-d0e8-4995-9752-aad7f3ecb381}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Entity\Plane">
+      <UniqueIdentifier>{8bdc16bd-f481-453e-973d-5a161bce6208}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Entity\Plane\Sprite">
+      <UniqueIdentifier>{d45a8175-87b3-4a1b-acdb-2ae289a7631e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -120,20 +117,17 @@
     <ClCompile Include="src\Window\Window.cpp">
       <Filter>src\Window</Filter>
     </ClCompile>
-    <ClCompile Include="src\Entity\Entity2D\Entity2D.cpp">
-      <Filter>src\Entity\Entity2D</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\Entity2D\Plane\Plane.cpp">
-      <Filter>src\Entity\Entity2D\Plane</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\Entity2D\Plane\Sprite\Sprite.cpp">
-      <Filter>src\Entity\Entity2D\Plane\Sprite</Filter>
-    </ClCompile>
     <ClCompile Include="src\Entity\Cube\Cube.cpp">
       <Filter>src\Entity\Cube</Filter>
     </ClCompile>
     <ClCompile Include="src\Transform\Transform.cpp">
       <Filter>src\Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Entity\Plane\Plane.cpp">
+      <Filter>src\Entity\Plane</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Entity\Plane\Sprite\Sprite.cpp">
+      <Filter>src\Entity\Plane\Sprite</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -185,20 +179,17 @@
     <ClInclude Include="src\Animation\Frame.h">
       <Filter>src\Animation</Filter>
     </ClInclude>
-    <ClInclude Include="src\Entity\Entity2D\Entity2D.h">
-      <Filter>src\Entity\Entity2D</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Entity\Entity2D\Plane\Plane.h">
-      <Filter>src\Entity\Entity2D\Plane</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Entity\Entity2D\Plane\Sprite\Sprite.h">
-      <Filter>src\Entity\Entity2D\Plane\Sprite</Filter>
-    </ClInclude>
     <ClInclude Include="src\Entity\Cube\Cube.h">
       <Filter>src\Entity\Cube</Filter>
     </ClInclude>
     <ClInclude Include="src\Transform\Transform.h">
       <Filter>src\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Entity\Plane\Plane.h">
+      <Filter>src\Entity\Plane</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Entity\Plane\Sprite\Sprite.h">
+      <Filter>src\Entity\Plane\Sprite</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

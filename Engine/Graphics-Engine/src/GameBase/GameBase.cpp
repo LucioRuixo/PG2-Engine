@@ -48,11 +48,6 @@ GameBase::GameBase()
 
 	//Camera
 	camera->setPosition(0.0f, 0.0f, 0.0f);
-
-	//Ambient light
-	lighting->setAmbientLightColor(lighting->getAmbientLightColor());
-	lighting->setAmbientLightStrength(lighting->getAmbientLightStrength());
-	lighting->setSpecularStrength(lighting->getSpecularStrength());
 }
  
 GameBase::~GameBase()

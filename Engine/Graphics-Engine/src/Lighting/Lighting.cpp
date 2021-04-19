@@ -5,66 +5,56 @@ Lighting::Lighting(Renderer* _renderer)
 	renderer = _renderer;
 }
 
-Lighting::Lighting(Renderer* _renderer, vec3 _ambientLightColor, float _ambientLightStrength)
+Lighting::Lighting(Renderer* _renderer, Light _lightSource/*, float _ambientLightStrength*/)
 {
 	renderer = _renderer;
 
-	ambientLightStrength = _ambientLightStrength;
-	ambientLightColor = _ambientLightColor;
+	//ambientLightStrength = _ambientLightStrength;
+	lightSource = _lightSource;
 }
 
 Lighting::~Lighting() { if (lightSourceIcon) delete lightSourceIcon; }
 
-//Ambient light
-//-----------------
-
-void Lighting::setAmbientLightStrength(float value)
-{
-	ambientLightStrength = value;
-
-	int uniformLocation = glGetUniformLocation(renderer->getShaderProgram(), "ambientLightStrength");
-	glUniform1f(uniformLocation, ambientLightStrength);
-}
-
-void Lighting::setAmbientLightColor(vec3 value)
-{
-	ambientLightColor = value;
-
-	int uniformLocation = glGetUniformLocation(renderer->getShaderProgram(), "ambientLightColor");
-	glUniform3f(uniformLocation, ambientLightColor.r, ambientLightColor.g, ambientLightColor.b);
-}
-
-float Lighting::getAmbientLightStrength() { return ambientLightStrength; }
-
-vec3 Lighting::getAmbientLightColor() { return ambientLightColor; }
-
-//Light source
-//-----------------
-
-void Lighting::enableLightSource(vec3 color, vec3 position)
+#pragma region Light Source
+void Lighting::enableLightSource(Light _lightSource)
 {
 	lightSourceActive = true;
+	lightSource = _lightSource;
 
-	lightSourceColor = color;
-	lightSourcePosition = position;
-
+	//Active
 	int uniformLocation = glGetUniformLocation(renderer->getShaderProgram(), "lightSourceActive");
 	glUniform1i(uniformLocation, lightSourceActive);
 
-	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(), "lightSourceColor");
-	glUniform3f(uniformLocation, lightSourceColor.r, lightSourceColor.g, lightSourceColor.b);
+	//Position
+	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(), "light.position");
+	glUniform3f(uniformLocation, lightSource.position.x, lightSource.position.y, lightSource.position.z);
 
-	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(), "lightSourcePosition");
-	glUniform3f(uniformLocation, lightSourcePosition.x, lightSourcePosition.y, lightSourcePosition.z);
+	//Ambient
+	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(), "light.ambient");
+	glUniform3f(uniformLocation, lightSource.ambient.r, lightSource.ambient.g, lightSource.ambient.b);
+
+	//Diffuse
+	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(), "light.diffuse");
+	glUniform3f(uniformLocation, lightSource.diffuse.r, lightSource.diffuse.g, lightSource.diffuse.b);
+
+	//Specular
+	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(), "light.specular");
+	glUniform3f(uniformLocation, lightSource.specular.r, lightSource.specular.g, lightSource.specular.b);
 
 	if (!lightSourceIcon)
 	{
 		lightSourceIconPath = "../Graphics-Engine/res/Assets/Light Icon White.png";
-		lightSourceIcon = new Sprite(renderer);
+
+		Material lightSourceMaterial; //TODO: hacer que las fuentes de luz tengan su propio shader
+		lightSourceMaterial.ambient = vec3(1.0f);
+		lightSourceMaterial.diffuse = vec3(0.0f);
+		lightSourceMaterial.specular = vec3(0.0f);
+		lightSourceIcon = new Sprite(renderer, vec3(1.0f), lightSourceMaterial);
 		lightSourceIcon->setTexture(lightSourceIconPath, GL_RGBA);
+
 		lightSourceIcon->setScale(0.25f, 0.25f, 0.0f);
 	}
-	lightSourceIcon->setPosition(lightSourcePosition);
+	lightSourceIcon->setPosition(lightSource.position.x, lightSource.position.y, lightSource.position.z);
 }
 
 void Lighting::disableLightSource()
@@ -79,23 +69,21 @@ void Lighting::setLightSourceActive(bool value) { lightSourceActive = value; }
 
 bool Lighting::getLightSourceActive() { return lightSourceActive; }
 
-void Lighting::setLightSourcePosition(vec3 value) { lightSourcePosition = value; }
+void Lighting::setLightSourcePosition(vec3 value) { lightSource.position = value; }
 
-vec3 Lighting::getLightSourcePosition() { return lightSourcePosition; }
+vec3 Lighting::getLightSourcePosition() { return lightSource.position; }
 
 Sprite* Lighting::getLightSourceIcon() { return lightSourceIcon; }
+#pragma endregion
 
-//Specular
-//-----------------
-
-void Lighting::setSpecularStrength(float value)
-{
-	specularStrength = value;
-
-	int uniformLocation = glGetUniformLocation(renderer->getShaderProgram(), "specularStrength");
-	glUniform1f(uniformLocation, specularStrength);
-
-	std::cout << "specularStrength: " << specularStrength << std::endl;
-}
-
-float Lighting::getSpecularStrength() { return specularStrength; }
+#pragma region Specular
+//void Lighting::setSpecularStrength(float value)
+//{
+//	specularStrength = value;
+//
+//	int uniformLocation = glGetUniformLocation(renderer->getShaderProgram(), "specularStrength");
+//	glUniform1f(uniformLocation, specularStrength);
+//}
+//
+//float Lighting::getSpecularStrength() { return specularStrength; }
+#pragma endregion

@@ -1,20 +1,34 @@
 #version 330 core
 
+struct Light
+{
+	vec3 position;
+
+	vec3 ambient;
+	vec3 diffuse;
+	vec3 specular;
+};
+
+struct Material
+{
+	vec3 ambient;
+	vec3 diffuse;
+	vec3 specular;
+	float shininess;
+};
+
 in vec3 FragmentPosition;
-in vec3 Color;
 in vec3 Normal;
 in vec2 TextureCoordinates;
 
 out vec4 FragColor;
 
-uniform float ambientLightStrength;
-uniform vec3 ambientLightColor;
+uniform vec3 color;
+uniform Light light;
+uniform Material material;
 
 uniform bool lightSourceActive = false;
-uniform vec3 lightSourceColor;
-uniform vec3 lightSourcePosition;
 
-uniform float specularStrength;
 uniform vec3 viewPosition;
 
 uniform bool textureActive;
@@ -22,38 +36,16 @@ uniform sampler2D textureData;
 
 void main()
 {
-	//Vertex color
-	//FragColor = vec4(Color, 1.0);
-
-	//Vertex color affected by ambient light
-	//FragColor = vec4(Color * lightColor, 1.0f);
-
-	//Texture
-	//FragColor = texture(textureData, TextureCoordinates);
-
-	//Texture affected by vertex color
-	//FragColor = texture(textureData, TextureCoordinates) * vec4(Color, 1.0);
-
-	//Texture affected by ambient lighting
-	//FragColor.x = texture(textureData, TextureCoordinates).x * ambientLightColor.x * ambientLightStrength;
-	//FragColor.y = texture(textureData, TextureCoordinates).y * ambientLightColor.y * ambientLightStrength;
-	//FragColor.z = texture(textureData, TextureCoordinates).z * ambientLightColor.z * ambientLightStrength;
-	//FragColor.w = 1.0f;
-
-	//Texture affected by vertex color and ambient light
-	//FragColor = texture(textureData, TextureCoordinates) * vec4(Color, 1.0) * vec4(lightColor, 1.0);
-
-	//Texture affected by ambient and diffuse lighting
 	vec3 objectColor;
 	if (textureActive) objectColor = vec3(texture(textureData, TextureCoordinates));
-	else objectColor = Color;
+	else objectColor = color;
 
 	//Ambient
 	//-------
-	vec3 ambient = ambientLightColor * ambientLightStrength;
+	vec3 ambient = light.ambient * material.ambient;
 	//-------
 	
-	vec3 lightSourceDirection = normalize(lightSourcePosition - FragmentPosition);
+	vec3 lightSourceDirection = normalize(light.position - FragmentPosition);
 	vec3 nNormal = normalize(Normal);
 
 	//Diffuse
@@ -64,7 +56,7 @@ void main()
 		//float diffuseImpact = max(dot(nNormal, lightSourceDirection), 0.0f);
 		float diffuseImpact = max(dot(nNormal, lightSourceDirection), 0.0f);
 
-		diffuse = diffuseImpact * lightSourceColor;
+		diffuse = light.diffuse * (material.specular * diffuseImpact);
 	}
 	else diffuse = vec3(0.0f, 0.0f, 0.0f);
 	//-------
@@ -77,16 +69,12 @@ void main()
 		vec3 viewDirection = normalize(viewPosition - FragmentPosition);
 		vec3 reflectDirection = reflect(-lightSourceDirection, nNormal);
 	
-		float specularImpact = pow(max(dot(viewDirection, reflectDirection), 0.0f), 32);
-		specular = specularStrength * specularImpact * lightSourceColor;
+		float specularImpact = pow(max(dot(viewDirection, reflectDirection), 0.0f), material.shininess * 128.0f);
+		specular = light.specular * (material.specular * specularImpact);
 	}
 	else specular = vec3(0.0f, 0.0f, 0.0f);
 
 	vec3 lighting = vec3(ambient + diffuse + specular);
-
-	FragColor.r = objectColor.r * lighting.r;
-	FragColor.g = objectColor.g * lighting.g;
-	FragColor.b = objectColor.b * lighting.b;
-	FragColor.a = 1.0f;
+	FragColor = vec4(objectColor * lighting, 1.0f);
 	//-------
 }
