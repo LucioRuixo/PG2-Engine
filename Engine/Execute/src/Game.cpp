@@ -66,7 +66,8 @@ int Game::initialize()
 	goldCube->setScale(1.0f, 3.0f, 1.0f);
 
 	//Lighting
-	lighting->enableLightSource(lightSourcePosition);
+	lighting->getLightSource()->setPosition(0.0f, 2.0f, -4.5f);
+	lighting->setLightSourceActive(true);
 
 	return 0;
 }
@@ -103,15 +104,15 @@ void Game::update()
 	{
 		spacePressed = true;
 
-		if (lighting->getLightSourceActive()) lighting->disableLightSource();
-		else lighting->enableLightSource(lightSourcePosition);
+		if (lighting->getLightSourceActive()) lighting->setLightSourceActive(false);
+		else lighting->setLightSourceActive(true);
 	}
 	else if (input->getKeyRelease(PrintableKey::SPACE)) spacePressed = false;
 	//-----------
 #pragma endregion
 
 #pragma region Rendering
-	sprite1->loadTexture(); //TODO: que el loadTexture() se haga solo dentro del draw() de Sprite
+	sprite1->loadTexture(); //TODO: que el loadTexture() se haga dentro del draw() de Sprite
 	sprite1->draw();
 
 	sprite2->loadTexture();

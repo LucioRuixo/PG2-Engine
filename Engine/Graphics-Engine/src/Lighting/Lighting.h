@@ -17,15 +17,12 @@ public:
 	Lighting(Renderer* _renderer);
 	~Lighting();
 
-#pragma region Light Source
-	void enableLightSource(vec3 _position);
-	void enableLightSource(vec3 _position, vec3 _ambient, vec3 _diffuse, vec3 _specular);
+	void createLightSource();
 	Light* getLightSource();
-	void disableLightSource();
+	void setLightSourceActive(bool value);
 	bool getLightSourceActive();
 	void setLightSourcePosition(vec3 value);
 	vec3 getLightSourcePosition();
-#pragma endregion
 };
 
 #endif // !LIGHTING_H

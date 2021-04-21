@@ -2,66 +2,34 @@
 
 Entity::Entity(Renderer *_renderer)
 {
-	renderer = _renderer;
-	transform = new Transform();
-
-	modelMatrix.model = mat4(1.0f);
-	modelMatrix.rotationX = mat4(1.0f);
-	modelMatrix.rotationY = mat4(1.0f);
-	modelMatrix.rotationZ = mat4(1.0f);
-	modelMatrix.scale = mat4(1.0f);
-	modelMatrix.translation = mat4(1.0f);
-
-	setPosition(0.0f, 0.0f, 0.0f);
-	setRotationX(0.0f);
-	setRotationY(0.0f);
-	setRotationZ(0.0f);
-	setScale(1.0f, 1.0f, 1.0f);
+	construct(_renderer);
 }
 
 Entity::Entity(Renderer *_renderer, vec3 _color)
 {
-	renderer = _renderer;
-	transform = new Transform();
-
-	modelMatrix.model = mat4(1.0f);
-	modelMatrix.rotationX = mat4(1.0f);
-	modelMatrix.rotationY = mat4(1.0f);
-	modelMatrix.rotationZ = mat4(1.0f);
-	modelMatrix.scale = mat4(1.0f);
-	modelMatrix.translation = mat4(1.0f);
-
-	setPosition(0.0f, 0.0f, 0.0f);
-	setRotationX(0.0f);
-	setRotationY(0.0f);
-	setRotationZ(0.0f);
-	setScale(1.0f, 1.0f, 1.0f);
+	construct(_renderer);
 
 	setColor(_color);
 }
 
 Entity::Entity(Renderer* _renderer, Material _material)
 {
-	renderer = _renderer;
-	transform = new Transform();
-
-	modelMatrix.model = mat4(1.0f);
-	modelMatrix.rotationX = mat4(1.0f);
-	modelMatrix.rotationY = mat4(1.0f);
-	modelMatrix.rotationZ = mat4(1.0f);
-	modelMatrix.scale = mat4(1.0f);
-	modelMatrix.translation = mat4(1.0f);
-
-	setPosition(0.0f, 0.0f, 0.0f);
-	setRotationX(0.0f);
-	setRotationY(0.0f);
-	setRotationZ(0.0f);
-	setScale(1.0f, 1.0f, 1.0f);
+	construct(_renderer);
 
 	setMaterial(_material);
 }
 
 Entity::Entity(Renderer* _renderer, vec3 _color, Material _material)
+{
+	construct(_renderer);
+
+	setColor(_color);
+	setMaterial(_material);
+}
+
+Entity::~Entity() { if (transform) delete transform; }
+
+void Entity::construct(Renderer * _renderer)
 {
 	renderer = _renderer;
 	transform = new Transform();
@@ -74,16 +42,9 @@ Entity::Entity(Renderer* _renderer, vec3 _color, Material _material)
 	modelMatrix.translation = mat4(1.0f);
 
 	setPosition(0.0f, 0.0f, 0.0f);
-	setRotationX(0.0f);
-	setRotationY(0.0f);
-	setRotationZ(0.0f);
+	setRotation(0.0f, 0.0f, 0.0f);
 	setScale(1.0f, 1.0f, 1.0f);
-
-	setColor(_color);
-	setMaterial(_material);
 }
-
-Entity::~Entity() { if (transform) delete transform; }
 
 void Entity::updateModelMatrix()
 {
@@ -110,32 +71,47 @@ void Entity::translate(float x, float y, float z)
 	setPosition(position.x + x, position.y + y, position.z + z);
 }
 
-void Entity::setRotationX(float x)
+void Entity::setRotation(float x, float y, float z)
 {
-	transform->setRotation(x, transform->getRotation().y, transform->getRotation().z);
-	vec3 axis = vec3(1.0f, 0.0f, 0.0f);
+	transform->setRotation(x, y, z);
 
-	modelMatrix.rotationX = rotate(mat4(1.0f), x, axis);
+	vec3 xAxis = vec3(1.0f, 0.0f, 0.0f);
+	vec3 yAxis = vec3(0.0f, 1.0f, 0.0f);
+	vec3 zAxis = vec3(0.0f, 0.0f, 1.0f);
+
+	modelMatrix.rotationX = rotate(mat4(1.0f), x, xAxis);
+	modelMatrix.rotationY = rotate(mat4(1.0f), y, yAxis);
+	modelMatrix.rotationZ = rotate(mat4(1.0f), z, zAxis);
+
 	updateModelMatrix();
 }
 
-void Entity::setRotationY(float y)
-{
-	transform->setRotation(transform->getRotation().x, y, transform->getRotation().z);
-	vec3 axis = vec3(0.0f, 1.0f, 0.0f);
-
-	modelMatrix.rotationY = rotate(mat4(1.0f), y, axis);
-	updateModelMatrix();
-}
-
-void Entity::setRotationZ(float z)
-{
-	transform->setRotation(transform->getRotation().x, transform->getRotation().y, z);
-	vec3 axis = vec3(0.0f, 0.0f, 1.0f);
-
-	modelMatrix.rotationZ = rotate(mat4(1.0f), z, axis);
-	updateModelMatrix();
-}
+//void Entity::setRotationX(float x)
+//{
+//	transform->setRotation(x, transform->getRotation().y, transform->getRotation().z);
+//	vec3 axis = vec3(1.0f, 0.0f, 0.0f);
+//
+//	modelMatrix.rotationX = rotate(mat4(1.0f), x, axis);
+//	updateModelMatrix();
+//}
+//
+//void Entity::setRotationY(float y)
+//{
+//	transform->setRotation(transform->getRotation().x, y, transform->getRotation().z);
+//	vec3 axis = vec3(0.0f, 1.0f, 0.0f);
+//
+//	modelMatrix.rotationY = rotate(mat4(1.0f), y, axis);
+//	updateModelMatrix();
+//}
+//
+//void Entity::setRotationZ(float z)
+//{
+//	transform->setRotation(transform->getRotation().x, transform->getRotation().y, z);
+//	vec3 axis = vec3(0.0f, 0.0f, 1.0f);
+//
+//	modelMatrix.rotationZ = rotate(mat4(1.0f), z, axis);
+//	updateModelMatrix();
+//}
 
 void Entity::setColor(vec3 value) { color = value; }
 vec3 Entity::getColor() { return color; }

@@ -1,8 +1,14 @@
 #version 330 core
 
+//Light types:
+const int Directional = 0;
+const int Point       = 1;
+const int Spot        = 2;
+
 struct Light
 {
 	vec3 position;
+	vec3 direction;
 
 	vec3 ambient;
 	vec3 diffuse;
@@ -23,14 +29,19 @@ in vec2 TextureCoordinates;
 
 out vec4 FragColor;
 
+//Object
 uniform vec3 color;
+
+//Light source
+uniform bool lightSourceActive = false;
+uniform uint type;
 uniform Light light;
 uniform Material material;
 
-uniform bool lightSourceActive = false;
-
+//Camera
 uniform vec3 viewPosition;
 
+//Texture
 uniform bool textureActive;
 uniform sampler2D textureData;
 
@@ -46,6 +57,7 @@ void main()
 	//-------
 	
 	vec3 lightSourceDirection = normalize(light.position - FragmentPosition);
+	//vec3 lightSourceDirection = -light.direction;
 	vec3 nNormal = normalize(Normal);
 
 	//Diffuse

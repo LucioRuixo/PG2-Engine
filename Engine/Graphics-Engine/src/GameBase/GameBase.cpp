@@ -32,6 +32,7 @@ GameBase::GameBase()
 	//Shader program
 	renderer->setShaderProgram(ShaderType::Main, "../Graphics-Engine/res/shaders/MainShader_VS.shader", "../Graphics-Engine/res/shaders/MainShader_FS.shader");
 	renderer->setShaderProgram(ShaderType::LightSource, "../Graphics-Engine/res/shaders/LightSourceShader_VS.shader", "../Graphics-Engine/res/shaders/LightSourceShader_FS.shader");
+	renderer->useShader(ShaderType::Main);
 
 	//Create VBO
 	renderer->createVBO();
@@ -45,8 +46,10 @@ GameBase::GameBase()
 	//Projection
 	for (int i = 0; i < ShaderType::Size; i++) renderer->setProjection(renderer->getProjection());
 
+	//Lighting
+	lighting->createLightSource();
+
 	//Camera
-	renderer->useShader(ShaderType::Main);
 	camera->setPosition(0.0f, 0.0f, 0.0f);
 }
 
