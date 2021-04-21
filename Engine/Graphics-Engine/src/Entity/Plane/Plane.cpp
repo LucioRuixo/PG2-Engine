@@ -85,7 +85,7 @@ void Plane::draw()
 {
 	Entity::draw();
 
-	renderer->setModel(renderer->getShaderProgram(), modelMatrix.model);
+	renderer->setModel(renderer->getShaderProgram(ShaderType::Main), modelMatrix.model);
 	renderer->setBufferData(PLANE_VERTEX_COMPONENTS, vertexBuffer);
 	renderer->drawTriangles(vertexAmount);
 }

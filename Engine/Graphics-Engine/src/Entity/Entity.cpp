@@ -158,24 +158,24 @@ void Entity::draw()
 	//Color
 	if (!textureActive)
 	{
-		uniformLocation = glGetUniformLocation(renderer->getShaderProgram(), "color");
+		uniformLocation = glGetUniformLocation(renderer->getShaderProgram(ShaderType::Main), "color");
 		glUniform3f(uniformLocation, color.r, color.g, color.b);
 	}
 
 	//Material
-	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(), "material.ambient");
+	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(ShaderType::Main), "material.ambient");
 	glUniform3f(uniformLocation, material.ambient.r, material.ambient.g, material.ambient.b);
 
-	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(), "material.diffuse");
+	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(ShaderType::Main), "material.diffuse");
 	glUniform3f(uniformLocation, material.diffuse.r, material.diffuse.g, material.diffuse.b);
 
-	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(), "material.specular");
+	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(ShaderType::Main), "material.specular");
 	glUniform3f(uniformLocation, material.specular.r, material.specular.g, material.specular.b);
 
-	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(), "material.shininess");
+	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(ShaderType::Main), "material.shininess");
 	glUniform1f(uniformLocation, material.shininess);
 
 	//Texture
-	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(), "textureActive");
+	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(ShaderType::Main), "textureActive");
 	glUniform1i(uniformLocation, textureActive);
 }

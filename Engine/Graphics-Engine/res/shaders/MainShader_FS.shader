@@ -53,7 +53,6 @@ void main()
 	vec3 diffuse;
 	if (lightSourceActive)
 	{
-		//float diffuseImpact = max(dot(nNormal, lightSourceDirection), 0.0f);
 		float diffuseImpact = max(dot(nNormal, lightSourceDirection), 0.0f);
 
 		diffuse = light.diffuse * (material.specular * diffuseImpact);

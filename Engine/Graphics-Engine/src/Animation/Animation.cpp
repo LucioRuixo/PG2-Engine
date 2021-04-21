@@ -1,31 +1,36 @@
 #include"Animation.h"
 
-Animation::Animation() {
+Animation::Animation()
+{
 	currentTime = 0;
 	currentFrame = 0;
 	length = 200;
 }
-Animation::~Animation() {
-	if (animations.size() > 0)
-		animations.clear();
-	if (totalFrames.size() > 0)
-		totalFrames.clear();
+
+Animation::~Animation()
+{
+	if (animations.size() > 0) animations.clear();
+	if (totalFrames.size() > 0) totalFrames.clear();
 }
-void Animation::update() {
+
+void Animation::update()
+{
 	currentTime += (Time::DeltaTime());
 
-	while (currentTime >= length) {
+	while (currentTime >= length)
+	{
 		currentTime -= length;
 	}
 
 	float frameLength = length / animations[currentAnimation].size();
 	currentFrame = static_cast<int>(currentTime / frameLength);
 }
+
 void Animation::addFrame(float frameX, float frameY,
 	int spriteWidth, int spriteHeigth,
 	int textureWidth, int textureHeigth,
-	float timeToAnim, int _totalFrames, int framesPerRow) {
-	//---
+	float timeToAnim, int _totalFrames, int framesPerRow)
+{
 	length = timeToAnim;
 
 	float index_X = 0;
@@ -55,22 +60,29 @@ void Animation::addFrame(float frameX, float frameY,
 		}
 	}
 }
-int Animation::getCurrentFrame() {
+
+int Animation::getCurrentFrame()
+{
 	return currentFrame;
 }
-std::vector<Frame>& Animation::getAnimation() {
+
+vector<Frame>& Animation::getAnimation()
+{
 	if (currentAnimation < animations.size())
 		return animations[currentAnimation];
 
 	return animations[animations.size() - 1];
 }
-void Animation::setCurrentAnimation(int _currentAnimation) {
+
+void Animation::setCurrentAnimation(int _currentAnimation)
+{
 	currentAnimation = _currentAnimation;
 }
+
 void Animation::addFrame(float frameX, float frameY,
 	int spriteWidth, int spriteHeigth,
-	int textureWidth, int textureHeigth, float timeToAnim) {
-	//---
+	int textureWidth, int textureHeigth, float timeToAnim)
+{
 	length = timeToAnim;
 
 	Frame frame;
@@ -89,7 +101,9 @@ void Animation::addFrame(float frameX, float frameY,
 	//--------
 	totalFrames.push_back(frame);
 }
-void Animation::addAnimation() {
+
+void Animation::addAnimation()
+{
 	if (totalFrames.size() > 0)
 	{
 		animations.push_back(totalFrames);

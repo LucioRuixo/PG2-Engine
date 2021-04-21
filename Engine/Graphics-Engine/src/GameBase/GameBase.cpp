@@ -29,30 +29,33 @@ GameBase::GameBase()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	//Shader program
+	renderer->setShaderProgram(ShaderType::Main, "../Graphics-Engine/res/shaders/MainShader_VS.shader", "../Graphics-Engine/res/shaders/MainShader_FS.shader");
+	renderer->setShaderProgram(ShaderType::LightSource, "../Graphics-Engine/res/shaders/LightSourceShader_VS.shader", "../Graphics-Engine/res/shaders/LightSourceShader_FS.shader");
+
 	//Create VBO
 	renderer->createVBO();
 	renderer->bindVBO(renderer->getVBO());
 	renderer->setVertexAttributes();
 
-	//Shader
-	renderer->setShader();
-
 	//Set texture
 	renderer->generateTexture();
 	renderer->setParameterTexture();
-	//------
-	glUseProgram(renderer->getShaderProgram());
 
 	//Projection
-	renderer->setProjection(renderer->getShaderProgram(), renderer->getProjection());
+	for (int i = 0; i < ShaderType::Size; i++) renderer->setProjection(renderer->getProjection());
 
 	//Camera
+	renderer->useShader(ShaderType::Main);
 	camera->setPosition(0.0f, 0.0f, 0.0f);
 }
- 
+
 GameBase::~GameBase()
 {
-	glDeleteProgram(renderer->getShaderProgram());
+	for (int i = 0; i < ShaderType::Size; i++)
+	{
+		glDeleteProgram(renderer->getShaderProgram((ShaderType)i));
+	}
 	window->glfwTerminate();
 
 	if (window) delete window;
@@ -74,13 +77,11 @@ void GameBase::run()
 	{
 		renderer->clearBackground();
 
+		renderer->useShader(ShaderType::Main);
 		update();
 
-		if (lighting->getLightSourceActive())
-		{
-			lighting->getLightSourceIcon()->loadTexture();
-			lighting->getLightSourceIcon()->draw();
-		}
+		renderer->useShader(ShaderType::LightSource);
+		if (lighting->getLightSourceActive()) lighting->getLightSource()->draw();
 
 		time->Tick();
 		elapsedTime += time->DeltaTime();

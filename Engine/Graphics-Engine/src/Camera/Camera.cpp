@@ -16,7 +16,7 @@ Camera::~Camera() { if (transform) delete transform; }
 
 void Camera::updateViewMatrix()
 {
-	renderer->setView(renderer->getShaderProgram(), view);
+	renderer->setView(view);
 }
 
 void Camera::setPosition(float x, float y, float z)
@@ -26,7 +26,7 @@ void Camera::setPosition(float x, float y, float z)
 	view = lookAt(transform->getPosition(), transform->getPosition() + forward, upVector);
 	updateViewMatrix();
 
-	int uniformLocation = glGetUniformLocation(renderer->getShaderProgram(), "viewPosition");
+	int uniformLocation = glGetUniformLocation(renderer->getShaderProgram(ShaderType::Main), "viewPosition");
 	glUniform3f(uniformLocation, transform->getPosition().x, transform->getPosition().y, transform->getPosition().z);
 }
 

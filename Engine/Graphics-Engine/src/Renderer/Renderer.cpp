@@ -6,6 +6,12 @@ Renderer::Renderer()
 	unsigned int _colorAttrib = 1;
 
 	backgroundColor = vec3(0.025f, 0.025f, 0.025f);
+
+	for (int i = 0; i < ShaderType::Size; i++)
+	{
+		shaders[i].type = (ShaderType)i;
+		shaders[i].programID = 0;
+	}
 }
 
 Renderer::~Renderer()
@@ -58,25 +64,28 @@ void Renderer::setBufferData(int size, float* vertexBuffer)
 
 void Renderer::setVertexAttributes()
 {
-	//Position
-	positionAttributeLocation = glGetAttribLocation(shaderProgram, "aPosition");
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), 0);
-	glEnableVertexAttribArray(0);
+	for (int i = 0; i < ShaderType::Size; i++)
+	{
+		//Position
+		positionAttributeLocation = glGetAttribLocation(getShaderProgram((ShaderType)i), "aPosition");
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), 0);
+		glEnableVertexAttribArray(0);
 
-	//Color
-	//colorAttribute = glGetAttribLocation(shaderProgram, "aColor");
-	//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(float), (void*)(3 * sizeof(float)));
-	//glEnableVertexAttribArray(1);
+		//Color
+		//colorAttribute = glGetAttribLocation(getShaderProgram((ShaderType)i), "aColor");
+		//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(float), (void*)(3 * sizeof(float)));
+		//glEnableVertexAttribArray(1);
 
-	//Normal
-	normalAttributeLocation = glGetAttribLocation(shaderProgram, "aNormal");
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
+		//Normal
+		normalAttributeLocation = glGetAttribLocation(getShaderProgram((ShaderType)i), "aNormal");
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+		glEnableVertexAttribArray(1);
 
-	//Texture coordinates
-	glUniform1i(glGetUniformLocation(shaderProgram, "textureData"), 0);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
+		//Texture coordinates
+		glUniform1i(glGetUniformLocation(getShaderProgram((ShaderType)i), "textureData"), 0);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+		glEnableVertexAttribArray(2);
+	}
 }
 
 void Renderer::drawTriangles(int vertexAmount)
@@ -86,31 +95,45 @@ void Renderer::drawTriangles(int vertexAmount)
 #pragma endregion
 
 #pragma region MVP
-void Renderer::setModel(unsigned int _shaderProgram, mat4 model)
+void Renderer::setModel(unsigned int shaderProgram, mat4 model)
 {
-	unsigned int modelLocation = glGetUniformLocation(_shaderProgram, "model");
-
+	unsigned int modelLocation = glGetUniformLocation(shaderProgram, "model");
 	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, value_ptr(model));
 }
 
-void Renderer::setView(unsigned int _shaderProgram, mat4 view)
+void Renderer::setView(mat4 view)
 {
-	unsigned int viewLocation = glGetUniformLocation(_shaderProgram, "view");
-	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, value_ptr(view));
+	ShaderType currentShaderAux = getCurrentShader();
+
+	for (int i = 0; i < ShaderType::Size; i++)
+	{
+		useShader((ShaderType)i);
+
+		unsigned int viewLocation = glGetUniformLocation(shaders[i].programID, "view");
+		glUniformMatrix4fv(viewLocation, 1, GL_FALSE, value_ptr(view));
+	}
+
+	useShader(currentShaderAux);
 }
 
-void Renderer::setProjection(unsigned int _shaderProgram, mat4 projection)
+void Renderer::setProjection(mat4 projection)
 {
-	unsigned int projectionLocation = glGetUniformLocation(_shaderProgram, "projection");
-
+	ShaderType currentShaderAux = getCurrentShader();
 	updateProjection(projection);
 
-	glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, value_ptr(projection));
-}
+	for (int i = 0; i < ShaderType::Size; i++)
+	{
+		useShader((ShaderType)i);
 
+		unsigned int projectionLocation = glGetUniformLocation(shaders[i].programID, "projection");
+		glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, value_ptr(projection));
+	}
+
+	useShader(currentShaderAux);
+}
 mat4 Renderer::getProjection() { return _VP.projection; }
 
-void Renderer::updateProjection(mat4& projection)
+void Renderer::updateProjection(mat4 &projection)
 {
 	projection = perspective(radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
 	//projection = ortho(0.0f, 1280.0f, 0.0f, 720.0f);
@@ -136,17 +159,11 @@ void Renderer::setParameterTexture()
 #pragma endregion
 
 #pragma region Shaders
-void Renderer::setShader()
-{
-	shaderProgram = createShaderProgram("../Graphics-Engine/res/shaders/shader-vs.shader", "../Graphics-Engine/res/shaders/shader-fs.shader");
-}
-
 unsigned int Renderer::compileShader(unsigned int type, const char* source)
 {
 	unsigned int id = glCreateShader(type);
 
 	std::string sourceShaderCode;
-
 	std::ifstream sourceShaderFile;
 
 	sourceShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
@@ -172,22 +189,43 @@ unsigned int Renderer::compileShader(unsigned int type, const char* source)
 	return id;
 }
 
-int Renderer::createShaderProgram(const char* vertexPath, const char* fragmentPath)
+unsigned int Renderer::createShaderProgram(const char* vertexPath, const char* fragmentPath)
 {
-	unsigned int sProgram = glCreateProgram();
+	unsigned int programID = glCreateProgram();
 	unsigned int vertex = compileShader(GL_VERTEX_SHADER, vertexPath);
 	unsigned int fragment = compileShader(GL_FRAGMENT_SHADER, fragmentPath);
 
-	glAttachShader(sProgram, vertex);
-	glAttachShader(sProgram, fragment);
-	glLinkProgram(sProgram);
-	glValidateProgram(sProgram);
+	glAttachShader(programID, vertex);
+	glAttachShader(programID, fragment);
+	glLinkProgram(programID);
+	glValidateProgram(programID);
 
 	glDeleteShader(vertex);
 	glDeleteShader(fragment);
 
-	return sProgram;
+	return programID;
 }
 
-unsigned int& Renderer::getShaderProgram() { return shaderProgram; }
+void Renderer::setShaderProgram(ShaderType type, const char* vertexPath, const char* fragmentPath)
+{
+	//mainShaderProgram = createShaderProgram("../Graphics-Engine/res/shaders/shader-vs.shader", "../Graphics-Engine/res/shaders/shader-fs.shader");
+	unsigned int shaderProgram = createShaderProgram(vertexPath, fragmentPath);
+	shaders[type].programID = shaderProgram;
+}
+
+unsigned int Renderer::getShaderProgram(ShaderType type)
+{
+	if (type == ShaderType::Size) return 0;
+	else return shaders[type].programID;
+}
+
+void Renderer::useShader(ShaderType type)
+{
+	if (type == ShaderType::Size) return;
+
+	currentShader = type;
+	glUseProgram(shaders[type].programID);
+}
+
+ShaderType Renderer::getCurrentShader() { return (ShaderType)currentShader; }
 #pragma endregion

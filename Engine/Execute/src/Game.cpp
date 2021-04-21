@@ -1,9 +1,12 @@
 #include "Game.h"
 
+bool spacePressed = false;
+
 float cameraMovementSpeed = 1.0f;
 float cameraRotationSpeed = 50.0f;
 float spriteScaleAddition = 0.1f;
 
+vec3 lightSourcePosition = vec3(0.0f, 2.0f, -4.5f);
 vec3 cameraMovement;
 vec3 cameraRotation;
 
@@ -24,12 +27,6 @@ int Game::initialize()
 	sprite1 = new Sprite(renderer);
 	sprite1->setTexture("res/Assets/gato 1.jpg", GL_RGB);
 	sprite1->setPosition(1.0f, 0.0f, -6.0f);
-
-	//Animation* animation = new Animation();
-	//animation->addFrame(0.0f, 0.0f, 640.0f, 360.0f, 1280.0f, 720.0f, 4.0f, 4, 2);
-	//animation->addAnimation();
-	//animation->setCurrentAnimation(0);
-	//sprite1->setAnimation(animation);
 
 	//Sprite 2
 	sprite2 = new Sprite(renderer);
@@ -69,15 +66,14 @@ int Game::initialize()
 	goldCube->setScale(1.0f, 3.0f, 1.0f);
 
 	//Lighting
-	Light lightSource;
-	lightSource.position = vec3(0.0f, 2.0f, -4.5f);
-	lighting->enableLightSource(lightSource);
+	lighting->enableLightSource(lightSourcePosition);
 
 	return 0;
 }
 
 void Game::update()
 {
+#pragma region Input
 	if (input->getKeyPress(FunctionKey::ESCAPE)) window->setWindowShouldClose(true);
 
 	//Move camera
@@ -101,6 +97,20 @@ void Game::update()
 	if (input->getKeyPress(FunctionKey::LEFT)) camera->rotate(0.0f, -cameraRotationSpeed * time->DeltaTime(), 0.0f);
 	//-----------
 
+	//Turn on/off light
+	//-----------
+	if (input->getKeyPress(PrintableKey::SPACE) && !spacePressed)
+	{
+		spacePressed = true;
+
+		if (lighting->getLightSourceActive()) lighting->disableLightSource();
+		else lighting->enableLightSource(lightSourcePosition);
+	}
+	else if (input->getKeyRelease(PrintableKey::SPACE)) spacePressed = false;
+	//-----------
+#pragma endregion
+
+#pragma region Rendering
 	sprite1->loadTexture(); //TODO: que el loadTexture() se haga solo dentro del draw() de Sprite
 	sprite1->draw();
 
@@ -111,6 +121,7 @@ void Game::update()
 	rubyCube->draw();
 	emeraldCube->draw();
 	goldCube->draw();
+#pragma endregion
 }
 
 int Game::terminate()

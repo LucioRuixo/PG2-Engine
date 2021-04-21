@@ -8,6 +8,7 @@ const int CUBE_VERTEX_COMPONENTS = /*396*/288;
 
 class GENGINE_API Cube : public Entity
 {
+protected:
 	const int vertexAmount = 36;
 	static float vertices[CUBE_VERTEX_COMPONENTS];
 public:
@@ -16,7 +17,7 @@ public:
 	Cube(Renderer* _renderer, Material _material);
 	Cube(Renderer* _renderer, vec3 _color, Material _material);
 	~Cube();
-	void draw();
+	virtual void draw();
 };
 
 #endif // !CUBE_H

@@ -58,7 +58,6 @@ void Sprite::loadTexture()
 }
 
 void Sprite::setAnimation(Animation* _animation) { animation = _animation; }
-
 Animation* Sprite::getAnimation() { return animation; }
 
 void Sprite::updateAnimation()
@@ -89,7 +88,7 @@ void Sprite::draw()
 {
 	Entity::draw();
 
-	renderer->setModel(renderer->getShaderProgram(), modelMatrix.model);
+	renderer->setModel(renderer->getShaderProgram(ShaderType::Main), modelMatrix.model);
 	renderer->setBufferData(PLANE_VERTEX_COMPONENTS, vertexBuffer);
 	renderer->drawTriangles(vertexAmount);
 }

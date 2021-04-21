@@ -9,6 +9,19 @@
 
 using namespace glm;
 
+enum ShaderType
+{
+	Main,
+	LightSource,
+	Size
+};
+
+struct Shader
+{
+	ShaderType type;
+	unsigned int programID;
+};
+
 struct matrixVP
 {
 	mat4 view;
@@ -20,16 +33,18 @@ struct matrixVP
 
 class GENGINE_API Renderer
 {
-private:
 	unsigned int VBO;
 	unsigned int EBO;
-	unsigned int shaderProgram;
+
 	unsigned int positionAttributeLocation;
 	unsigned int colorAttribute;
 	unsigned int normalAttributeLocation;
 	unsigned int texture;
 
 	vec3 backgroundColor;
+
+	int currentShader = -1;
+	Shader shaders[ShaderType::Size];
 
 	matrixVP _VP; //TODO: cambiar nombre
 public:
@@ -56,8 +71,8 @@ public:
 
 #pragma region MVP
 	void setModel(unsigned int _shaderProgram, mat4 model);
-	void setView(unsigned int _shaderProgram, mat4 view);
-	void setProjection(unsigned int _shaderProgram, mat4 projection);
+	void setView(mat4 view);
+	void setProjection(mat4 projection);
 	mat4 getProjection();
 	void updateProjection(mat4 &projection);
 #pragma endregion
@@ -68,10 +83,12 @@ public:
 #pragma endregion
 
 #pragma region Shaders
-	void setShader();
 	unsigned int compileShader(unsigned int type, const char* source);
-	int createShaderProgram(const char * vertexPath, const char * fragmentPath);
-	unsigned int& getShaderProgram();
+	unsigned int createShaderProgram(const char * vertexPath, const char * fragmentPath);
+	void setShaderProgram(ShaderType type, const char* vertexPath, const char* fragmentPath);
+	unsigned int getShaderProgram(ShaderType type);
+	void useShader(ShaderType type);
+	ShaderType getCurrentShader();
 #pragma endregion
 };
 
