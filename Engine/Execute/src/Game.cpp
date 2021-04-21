@@ -1,6 +1,9 @@
 #include "Game.h"
 
 bool spacePressed = false;
+bool onePressed = false;
+bool twoPressed = false;
+bool threePressed = false;
 
 float cameraMovementSpeed = 1.0f;
 float cameraRotationSpeed = 50.0f;
@@ -108,6 +111,30 @@ void Game::update()
 		else lighting->setLightSourceActive(true);
 	}
 	else if (input->getKeyRelease(PrintableKey::SPACE)) spacePressed = false;
+	//-----------
+
+	//Change light type
+	//-----------
+	if (input->getKeyPress(FunctionKey::KP_1) && !onePressed)
+	{
+		onePressed = true;
+		lighting->getLightSource()->setType(LightType::Directional);
+	}
+	else if (input->getKeyRelease(FunctionKey::KP_1)) onePressed = false;
+
+	if (input->getKeyPress(FunctionKey::KP_2) && !twoPressed)
+	{
+		twoPressed = true;
+		lighting->getLightSource()->setType(LightType::Point);
+	}
+	else if (input->getKeyRelease(FunctionKey::KP_2)) twoPressed = false;
+
+	if (input->getKeyPress(FunctionKey::KP_3) && !threePressed)
+	{
+		threePressed = true;
+		lighting->getLightSource()->setType(LightType::Spot);
+	}
+	else if (input->getKeyRelease(FunctionKey::KP_3)) threePressed = false;
 	//-----------
 #pragma endregion
 

@@ -84,7 +84,11 @@ void GameBase::run()
 		update();
 
 		renderer->useShader(ShaderType::LightSource);
-		if (lighting->getLightSourceActive()) lighting->getLightSource()->draw();
+		if (lighting->getLightSourceActive())
+		{
+			if (!lighting->getLightSource()->getType() == LightType::Directional)
+				lighting->getLightSource()->draw();
+		}
 
 		time->Tick();
 		elapsedTime += time->DeltaTime();

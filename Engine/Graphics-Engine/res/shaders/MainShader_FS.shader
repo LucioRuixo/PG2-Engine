@@ -7,6 +7,8 @@ const int Spot        = 2;
 
 struct Light
 {
+	int type;
+
 	vec3 position;
 	vec3 direction;
 
@@ -34,7 +36,6 @@ uniform vec3 color;
 
 //Light source
 uniform bool lightSourceActive = false;
-uniform uint type;
 uniform Light light;
 uniform Material material;
 
@@ -56,8 +57,18 @@ void main()
 	vec3 ambient = light.ambient * material.ambient;
 	//-------
 	
-	vec3 lightSourceDirection = normalize(light.position - FragmentPosition);
-	//vec3 lightSourceDirection = -light.direction;
+	vec3 lightSourceDirection;
+	switch (light.type)
+	{
+	case Directional:
+		lightSourceDirection = -light.direction;
+		break;
+	case Point:
+	case Spot:
+		lightSourceDirection = normalize(light.position - FragmentPosition);
+		break;
+	}
+
 	vec3 nNormal = normalize(Normal);
 
 	//Diffuse
