@@ -2,8 +2,8 @@
 
 //Light types:
 const int Directional = 0;
-const int Point       = 1;
-const int Spot        = 2;
+const int Point = 1;
+const int Spot = 2;
 
 struct Light
 {
@@ -15,6 +15,13 @@ struct Light
 	vec3 ambient;
 	vec3 diffuse;
 	vec3 specular;
+
+	float constant;
+	float linear;
+	float quadratic;
+
+	float innerCutOff;
+	float outerCutOff;
 };
 
 struct Material
@@ -56,47 +63,60 @@ void main()
 	//-------
 	vec3 ambient = light.ambient * material.ambient;
 	//-------
-	
-	vec3 lightSourceDirection;
-	switch (light.type)
+
+	if (!lightSourceActive)
 	{
-	case Directional:
-		lightSourceDirection = -light.direction;
-		break;
-	case Point:
-	case Spot:
-		lightSourceDirection = normalize(light.position - FragmentPosition);
-		break;
+		FragColor = vec4(objectColor * ambient, 1.0f);
+		return;
 	}
+
+	vec3 lightSourceDirection;
+	if (light.type == Directional) lightSourceDirection = -light.direction;
+	else lightSourceDirection = normalize(light.position - FragmentPosition);
 
 	vec3 nNormal = normalize(Normal);
 
 	//Diffuse
 	//-------
-	vec3 diffuse;
-	if (lightSourceActive)
-	{
-		float diffuseImpact = max(dot(nNormal, lightSourceDirection), 0.0f);
-
-		diffuse = light.diffuse * (material.specular * diffuseImpact);
-	}
-	else diffuse = vec3(0.0f, 0.0f, 0.0f);
+	float diffuseImpact = max(dot(nNormal, lightSourceDirection), 0.0f);
+	vec3 diffuse = light.diffuse * (material.specular * diffuseImpact);
 	//-------
 
 	//Specular
 	//-------
-	vec3 specular;
-	if (lightSourceActive)
+	vec3 viewDirection = normalize(viewPosition - FragmentPosition);
+	vec3 reflectDirection = reflect(-lightSourceDirection, nNormal);
+
+	float specularImpact = pow(max(dot(viewDirection, reflectDirection), 0.0f), material.shininess * 128.0f);
+	vec3 specular = light.specular * (material.specular * specularImpact);
+	//-------
+
+	//Point light
+	//-------
+	if (light.type == Point)
 	{
-		vec3 viewDirection = normalize(viewPosition - FragmentPosition);
-		vec3 reflectDirection = reflect(-lightSourceDirection, nNormal);
-	
-		float specularImpact = pow(max(dot(viewDirection, reflectDirection), 0.0f), material.shininess * 128.0f);
-		specular = light.specular * (material.specular * specularImpact);
+		float distance = length(light.position - FragmentPosition);
+		float attenuation = 1.0f / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
+
+		ambient *= attenuation;
+		diffuse *= attenuation;
+		specular *= attenuation;
 	}
-	else specular = vec3(0.0f, 0.0f, 0.0f);
+	//-------
+
+	//Spotlight
+	//-------
+	if (light.type == Spot)
+	{
+		float theta = dot(lightSourceDirection, -light.direction);
+		float epsilon = light.innerCutOff - light.outerCutOff;
+		float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0f, 1.0f);
+
+		diffuse *= intensity;
+		specular *= intensity;
+	}
+	//-------
 
 	vec3 lighting = vec3(ambient + diffuse + specular);
 	FragColor = vec4(objectColor * lighting, 1.0f);
-	//-------
 }

@@ -16,6 +16,7 @@ vec3 cameraRotation;
 Sprite* sprite1;
 Sprite* sprite2;
 Cube* cube;
+Cube* cube2;
 Cube* rubyCube;
 Cube* emeraldCube;
 Cube* goldCube;
@@ -29,7 +30,7 @@ int Game::initialize()
 	//Sprite 1
 	sprite1 = new Sprite(renderer);
 	sprite1->setTexture("res/Assets/gato 1.jpg", GL_RGB);
-	sprite1->setPosition(1.0f, 0.0f, -6.0f);
+	sprite1->setPosition(1.0f, -0.5f, -10.0f);
 
 	//Sprite 2
 	sprite2 = new Sprite(renderer);
@@ -38,7 +39,12 @@ int Game::initialize()
 	
 	//Cube
 	cube = new Cube(renderer, vec3(1.0f, 0.1f, 0.1f));
-	cube->setPosition(-1.0f, 1.5f, -3.5f);
+	cube->setPosition(0.75f, 0.0f, -6.5f);
+
+	//Cube 2
+	cube2 = new Cube(renderer, vec3(0.1f, 0.1f, 1.0f));
+	cube2->setPosition(-1.5f, -3.0f, -9.5f);
+	cube2->setScale(3.0f, 3.0f, 3.0f);
 
 	//Material cubes
 	Material ruby;
@@ -47,7 +53,7 @@ int Game::initialize()
 	ruby.specular = vec3(0.727811f, 0.626959f, 0.626959f);
 	ruby.shininess = 0.6f;
 	rubyCube = new Cube(renderer, vec3(0.607f, 0.066f, 0.117f), ruby);
-	rubyCube->setPosition(-1.0f, 1.0f, -10.0f);
+	rubyCube->setPosition(-1.0f, 1.0f, -15.0f);
 	rubyCube->setScale(1.0f, 3.0f, 1.0f);
 
 	Material emerald;
@@ -56,7 +62,7 @@ int Game::initialize()
 	emerald.specular = vec3(0.633f, 0.727811f, 0.633f);
 	emerald.shininess = 0.6f;
 	emeraldCube = new Cube(renderer, vec3(0.031f, 0.396f, 0.133f), emerald);
-	emeraldCube->setPosition(0.0f, 1.0f, -10.0f);
+	emeraldCube->setPosition(0.0f, 1.0f, -15.0f);
 	emeraldCube->setScale(1.0f, 3.0f, 1.0f);
 
 	Material gold;
@@ -65,7 +71,7 @@ int Game::initialize()
 	gold.specular = vec3(0.628281f, 0.555802f, 0.366065f);
 	gold.shininess = 0.4f;
 	goldCube = new Cube(renderer, vec3(0.905f, 0.741f, 0.258f), gold);
-	goldCube->setPosition(1.0f, 1.0f, -10.0f);
+	goldCube->setPosition(1.0f, 1.0f, -15.0f);
 	goldCube->setScale(1.0f, 3.0f, 1.0f);
 
 	//Lighting
@@ -146,6 +152,7 @@ void Game::update()
 	sprite2->draw();
 
 	cube->draw();
+	cube2->draw();
 	rubyCube->draw();
 	emeraldCube->draw();
 	goldCube->draw();
