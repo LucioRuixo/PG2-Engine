@@ -75,9 +75,14 @@ int Game::initialize()
 	goldCube->setScale(1.0f, 3.0f, 1.0f);
 
 	//Lighting
-	lighting->getLightSource()->setPosition(0.0f, 2.0f, -4.5f);
-	lighting->setLightSourceActive(true);
+	lighting->addDirectionalLight(vec3(1.0f, 0.0f, -0.25f));
 
+	lighting->addPointLight(1, vec3(0.0f, 0.0f, -2.5f));
+	lighting->addPointLight(2, vec3(0.0f, 0.0f, -8.0f));
+
+	lighting->addSpotlight(1, vec3(0.0f, 1.0f, -4.5f), vec3(0.0f, -1.0f, -1.0f));
+	lighting->addSpotlight(2, vec3(0.0f, 1.0f, -12.0f), vec3(0.0f, 0.0f, -1.0f));
+	
 	return 0;
 }
 
@@ -109,38 +114,38 @@ void Game::update()
 
 	//Turn on/off light
 	//-----------
-	if (input->getKeyPress(PrintableKey::SPACE) && !spacePressed)
-	{
-		spacePressed = true;
-
-		if (lighting->getLightSourceActive()) lighting->setLightSourceActive(false);
-		else lighting->setLightSourceActive(true);
-	}
-	else if (input->getKeyRelease(PrintableKey::SPACE)) spacePressed = false;
+	//if (input->getKeyPress(PrintableKey::SPACE) && !spacePressed)
+	//{
+	//	spacePressed = true;
+	//
+	//	if (lighting->getLightSourceActive()) lighting->setLightSourceActive(false);
+	//	else lighting->setLightSourceActive(true);
+	//}
+	//else if (input->getKeyRelease(PrintableKey::SPACE)) spacePressed = false;
 	//-----------
 
 	//Change light type
 	//-----------
-	if (input->getKeyPress(FunctionKey::KP_1) && !onePressed)
-	{
-		onePressed = true;
-		lighting->getLightSource()->setType(LightType::Directional);
-	}
-	else if (input->getKeyRelease(FunctionKey::KP_1)) onePressed = false;
-
-	if (input->getKeyPress(FunctionKey::KP_2) && !twoPressed)
-	{
-		twoPressed = true;
-		lighting->getLightSource()->setType(LightType::Point);
-	}
-	else if (input->getKeyRelease(FunctionKey::KP_2)) twoPressed = false;
-
-	if (input->getKeyPress(FunctionKey::KP_3) && !threePressed)
-	{
-		threePressed = true;
-		lighting->getLightSource()->setType(LightType::Spot);
-	}
-	else if (input->getKeyRelease(FunctionKey::KP_3)) threePressed = false;
+	//if (input->getKeyPress(FunctionKey::KP_1) && !onePressed)
+	//{
+	//	onePressed = true;
+	//	lighting->getLightSource()->setType(LightType::Directional);
+	//}
+	//else if (input->getKeyRelease(FunctionKey::KP_1)) onePressed = false;
+	//
+	//if (input->getKeyPress(FunctionKey::KP_2) && !twoPressed)
+	//{
+	//	twoPressed = true;
+	//	lighting->getLightSource()->setType(LightType::Point);
+	//}
+	//else if (input->getKeyRelease(FunctionKey::KP_2)) twoPressed = false;
+	//
+	//if (input->getKeyPress(FunctionKey::KP_3) && !threePressed)
+	//{
+	//	threePressed = true;
+	//	lighting->getLightSource()->setType(LightType::Spot);
+	//}
+	//else if (input->getKeyRelease(FunctionKey::KP_3)) threePressed = false;
 	//-----------
 #pragma endregion
 

@@ -47,7 +47,7 @@ GameBase::GameBase()
 	for (int i = 0; i < ShaderType::Size; i++) renderer->setProjection(renderer->getProjection());
 
 	//Lighting
-	lighting->createLightSource();
+	lighting->initializeShaderValues();
 
 	//Camera
 	camera->setPosition(0.0f, 0.0f, 0.0f);
@@ -84,10 +84,13 @@ void GameBase::run()
 		update();
 
 		renderer->useShader(ShaderType::LightSource);
-		if (lighting->getLightSourceActive())
+		for (int i = 0; i < MAX_POINT_LIGHT_AMOUNT; i++)
 		{
-			if (!lighting->getLightSource()->getType() == LightType::Directional)
-				lighting->getLightSource()->draw();
+			if (lighting->getPointLight(i)) lighting->getPointLight(i)->draw();
+		}
+		for (int i = 0; i < MAX_SPOTLIGHT_AMOUNT; i++)
+		{
+			if (lighting->getSpotlight(i)) lighting->getSpotlight(i)->draw();
 		}
 
 		time->Tick();

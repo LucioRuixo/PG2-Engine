@@ -68,8 +68,20 @@
     <Filter Include="src\Entity\Plane\Sprite">
       <UniqueIdentifier>{d45a8175-87b3-4a1b-acdb-2ae289a7631e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Entity\Cube\Light">
+    <Filter Include="src\Lighting\Light">
       <UniqueIdentifier>{199a02a2-d642-4f70-8685-594b92aa3e80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Entity\Cube\Light Cube">
+      <UniqueIdentifier>{ae6016fd-c677-4260-860a-a70cbde70b10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Lighting\Light\Directional Light">
+      <UniqueIdentifier>{901324eb-78e6-41ed-bb24-3e5e060bd584}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Lighting\Light\Point Light">
+      <UniqueIdentifier>{a1c9243f-e4d5-4fba-8d7d-4d3aa642c2d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Lighting\Light\Spot Light">
+      <UniqueIdentifier>{85eb172e-d1ce-4a33-8ff0-0c6b1a82f8d3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -138,8 +150,20 @@
     <ClCompile Include="src\Entity\Plane\Sprite\Sprite.cpp">
       <Filter>src\Entity\Plane\Sprite</Filter>
     </ClCompile>
-    <ClCompile Include="src\Entity\Cube\Light\Light.cpp">
-      <Filter>src\Entity\Cube\Light</Filter>
+    <ClCompile Include="src\Lighting\Light\Light.cpp">
+      <Filter>src\Lighting\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Lighting\Light\Point Light\PointLight.cpp">
+      <Filter>src\Lighting\Light\Point Light</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Lighting\Light\Directional Light\DirectionalLight.cpp">
+      <Filter>src\Lighting\Light\Directional Light</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Entity\Cube\Light Cube\LightCube.cpp">
+      <Filter>src\Entity\Cube\Light Cube</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Lighting\Light\Spotlight\Spotlight.cpp">
+      <Filter>src\Lighting\Light\Spot Light</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -203,8 +227,20 @@
     <ClInclude Include="src\Entity\Plane\Sprite\Sprite.h">
       <Filter>src\Entity\Plane\Sprite</Filter>
     </ClInclude>
-    <ClInclude Include="src\Entity\Cube\Light\Light.h">
-      <Filter>src\Entity\Cube\Light</Filter>
+    <ClInclude Include="src\Lighting\Light\Light.h">
+      <Filter>src\Lighting\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Lighting\Light\Point Light\PointLight.h">
+      <Filter>src\Lighting\Light\Point Light</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Lighting\Light\Directional Light\DirectionalLight.h">
+      <Filter>src\Lighting\Light\Directional Light</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Entity\Cube\Light Cube\LightCube.h">
+      <Filter>src\Entity\Cube\Light Cube</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Lighting\Light\Spotlight\Spotlight.h">
+      <Filter>src\Lighting\Light\Spot Light</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
