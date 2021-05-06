@@ -31,35 +31,26 @@ void Renderer::clearBackground()
 #pragma endregion
 
 #pragma region Vertices
-void Renderer::createVBO()
+void Renderer::createVAO() { glGenVertexArrays(1, &vao); }
+void Renderer::bindVAO(unsigned int _vao) { glBindVertexArray(vao); }
+unsigned int Renderer::getVAO() { return vao; }
+
+void Renderer::createVBO() { glGenBuffers(1, &vbo); }
+void Renderer::bindVBO(unsigned int _vbo) { glBindBuffer(GL_ARRAY_BUFFER, vbo); }
+unsigned int Renderer::getVBO() { return vbo; }
+
+void Renderer::createEBO() { glGenBuffers(1, &ebo); }
+void Renderer::bindEBO(unsigned int _ebo) { glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo); }
+unsigned int Renderer::getEBO() { return ebo; }
+
+void Renderer::setVertexBufferData(int size, float* vertexBuffer)
 {
-	glGenBuffers(1, &VBO);
+	glBufferData(GL_ARRAY_BUFFER, size * sizeof(float), vertexBuffer, GL_STATIC_DRAW);
 }
 
-void Renderer::bindVBO(unsigned int _VBO)
+void Renderer::setIndexBufferData(int size, unsigned int* indexBuffer)
 {
-	VBO = _VBO;
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-}
-
-unsigned int Renderer::getVBO() { return VBO; }
-
-void Renderer::createEBO()
-{
-	glGenVertexArrays(1, &EBO);
-}
-
-void Renderer::bindEBO(unsigned int _EBO)
-{
-	EBO = _EBO;
-	glBindVertexArray(EBO);
-}
-
-unsigned int Renderer::getEBO() { return EBO; }
-
-void Renderer::setBufferData(int size, float* vertexBuffer)
-{
-	glBufferData(GL_ARRAY_BUFFER, size * sizeof(float), vertexBuffer, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, size * sizeof(unsigned int), indexBuffer, GL_STATIC_DRAW);
 }
 
 void Renderer::setVertexAttributes()
@@ -70,11 +61,6 @@ void Renderer::setVertexAttributes()
 		positionAttributeLocation = glGetAttribLocation(getShaderProgram((ShaderType)i), "aPosition");
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), 0);
 		glEnableVertexAttribArray(0);
-
-		//Color
-		//colorAttribute = glGetAttribLocation(getShaderProgram((ShaderType)i), "aColor");
-		//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(float), (void*)(3 * sizeof(float)));
-		//glEnableVertexAttribArray(1);
 
 		//Normal
 		normalAttributeLocation = glGetAttribLocation(getShaderProgram((ShaderType)i), "aNormal");
@@ -88,9 +74,14 @@ void Renderer::setVertexAttributes()
 	}
 }
 
-void Renderer::drawTriangles(int vertexAmount)
+void Renderer::drawArrays(int vertexAmount)
 {
 	glDrawArrays(GL_TRIANGLES, 0, vertexAmount);
+}
+
+void Renderer::drawElements(int indexAmount)
+{
+	glDrawElements(GL_TRIANGLES, indexAmount, GL_UNSIGNED_INT, nullptr);
 }
 #pragma endregion
 
@@ -131,7 +122,7 @@ void Renderer::setProjection(mat4 projection)
 
 	useShader(currentShaderAux);
 }
-mat4 Renderer::getProjection() { return _VP.projection; }
+mat4 Renderer::getProjection() { return vpMatrix.projection; }
 
 void Renderer::updateProjection(mat4 &projection)
 {

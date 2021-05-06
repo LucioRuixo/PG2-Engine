@@ -59,8 +59,6 @@ out vec4 FragColor;
 uniform vec3 color;
 
 //Light
-//uniform bool lightSourceActive = false;
-//uniform Light light;
 uniform vec3 lightingAmbient;
 
 uniform DirectionalLight directionalLight;

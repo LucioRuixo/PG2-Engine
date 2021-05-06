@@ -31,6 +31,7 @@ protected:
 	Renderer* renderer;
 
 	void updateModelMatrix();
+	void setUniformValues();
 public:
 	Transform* transform;
 
@@ -55,8 +56,6 @@ public:
 	vec3 getColor();
 	void setMaterial(Material value);
 	Material getMaterial();
-
-	void draw();
 };
 
 #endif // !ENTITY

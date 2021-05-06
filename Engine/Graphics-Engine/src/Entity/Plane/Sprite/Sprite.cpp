@@ -80,15 +80,6 @@ void Sprite::updateAnimation()
 		vertexBuffer[46] = frame.frameCoords[0].u;
 		vertexBuffer[47] = frame.frameCoords[0].v;
 
-		renderer->setBufferData(PLANE_VERTEX_COMPONENTS, vertexBuffer);
+		renderer->setVertexBufferData(PLANE_VERTEX_COMPONENTS, vertexBuffer);
 	}
-}
-
-void Sprite::draw()
-{
-	Entity::draw();
-
-	renderer->setModel(renderer->getShaderProgram(ShaderType::Main), modelMatrix.model);
-	renderer->setBufferData(PLANE_VERTEX_COMPONENTS, vertexBuffer);
-	renderer->drawTriangles(vertexAmount);
 }

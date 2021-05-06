@@ -1,64 +1,50 @@
 #include"window.h"
 
-GLFWwindow* win;
-
-Window::Window() {
+Window::Window()
+{
 	setWidth(1280);
 	setHeight(720);
-	win = glfwCreateWindow(width, height, "Unreal Engine 6", NULL, NULL);
+	window = glfwCreateWindow(width, height, "Unreal Engine 6", NULL, NULL);
 }
 
-GLFWwindow* Window::getWin() {
-	return win;
+Window::Window(int _width, int _height)
+{
+	setWidth(_width);
+	setHeight(_height);
+	window = glfwCreateWindow(width, height, "Unreal Engine 6", NULL, NULL);
 }
 
-void Window::setWidth(int _width) {
-	width = _width;
-}
+GLFWwindow* Window::getWindow() { return window; }
 
-void Window::setHeight(int _height) {
-	height = _height;
-}
+void Window::setWidth(int _width) { width = _width; }
+int Window::getWigth() { return width; }
 
-int Window::getWigth() {
-	return width;
-}
+void Window::setHeight(int _height) { height = _height; }
+int Window::getHeight() { return height; }
 
-int Window::getHeight() {
-	return height;
-}
+void Window::setWindowShouldClose(bool state) { glfwSetWindowShouldClose(window, state); }
+bool Window::getWindowShouldClose() { return glfwWindowShouldClose(window); }
 
-int Window::createWindowValidate() {
-	if (!win) {
+int Window::validateWindow()
+{
+	if (!window)
+	{
 		glfwTerminate();
 		return -1;
 	}
 }
 
-void Window::createContexCurrent() {
-	glfwMakeContextCurrent(win);
-}
+void Window::makeContextCurrent() { glfwMakeContextCurrent(window); }
 
-void Window::initGLEW() {
+void Window::initializeGLEW()
+{
 	glewInit();
+	
+	std::cout << glGetString(GL_VERSION) << std::endl << std::endl;
 }
 
-bool Window::detecWindowShouldClose() {
-	return glfwWindowShouldClose(win);
-}
+void Window::swapBuffers() { glfwSwapBuffers(window); }
 
-void Window::setWindowShouldClose(bool state) {
-	glfwSetWindowShouldClose(win, state);
-}
+void Window::pollEvents() { glfwPollEvents(); }
 
-void Window::swapBuffers() {
-	glfwSwapBuffers(win);
-}
-
-void Window::pollEvents() {
-	glfwPollEvents();
-}
-
-void Window::glfwTerminate() {
-	glfwTerminate();
-}
+void Window::terminateGLFW() { glfwTerminate(); }

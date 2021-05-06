@@ -3,25 +3,30 @@
 
 #include "Tools/Includes.h"
 
-class GENGINE_API Window {
-private:
+class GENGINE_API Window
+{
 	int width;
 	int height;
+
+	GLFWwindow* window;
 public:
 	Window();
-	GLFWwindow* getWin();
+	Window(int _width, int _height);
+
+	GLFWwindow* getWindow();
 	void setWidth(int _width);
-	void setHeight(int _height);
 	int getWigth();
+	void setHeight(int _height);
 	int getHeight();
-	int createWindowValidate();
-	void createContexCurrent();
-	void initGLEW();
-	bool detecWindowShouldClose();
+	bool getWindowShouldClose();
 	void setWindowShouldClose(bool state);
+
+	int validateWindow();
+	void makeContextCurrent();
+	void initializeGLEW();
 	void swapBuffers();
 	void pollEvents();
-	void glfwTerminate();
+	void terminateGLFW();
 };
 
 #endif // !WINDOW_H

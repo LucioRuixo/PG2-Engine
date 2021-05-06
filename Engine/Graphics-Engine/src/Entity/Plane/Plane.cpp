@@ -13,16 +13,16 @@ vec2 boundsMax = TR;
 
 float Plane::vertices[] =
 {
-	//Position           //Color              //Normal             //UV       
+	//Position           //Normal             //UV       
 	//--------------									      
 	//With TBLR							      
-	TL.x, TL.y, 0.0f,    /*1.0f, 0.0f, 0.0f,*/    0.0f, 0.0f, 1.0f,    0.0f, 1.0f,
-	TR.x, TR.y, 0.0f,    /*0.0f, 1.0f, 0.0f,*/    0.0f, 0.0f, 1.0f,    1.0f, 1.0f,
-	BR.x, BR.y, 0.0f,    /*0.0f, 0.0f, 1.0f,*/    0.0f, 0.0f, 1.0f,    1.0f, 0.0f,
-						 /*					*/
-	BR.x, BR.y, 0.0f,    /*0.0f, 0.0f, 1.0f,*/    0.0f, 0.0f, 1.0f,    1.0f, 0.0f,
-	BL.x, BL.y, 0.0f,    /*1.0f, 1.0f, 1.0f,*/    0.0f, 0.0f, 1.0f,    0.0f, 0.0f,
-	TL.x, TL.y, 0.0f,    /*1.0f, 0.0f, 0.0f,*/    0.0f, 0.0f, 1.0f,    0.0f, 1.0f
+	TL.x, TL.y, 0.0f,    0.0f, 0.0f, 1.0f,    0.0f, 1.0f,
+	TR.x, TR.y, 0.0f,    0.0f, 0.0f, 1.0f,    1.0f, 1.0f,
+	BR.x, BR.y, 0.0f,    0.0f, 0.0f, 1.0f,    1.0f, 0.0f,
+					
+	BR.x, BR.y, 0.0f,    0.0f, 0.0f, 1.0f,    1.0f, 0.0f,
+	BL.x, BL.y, 0.0f,    0.0f, 0.0f, 1.0f,    0.0f, 0.0f,
+	TL.x, TL.y, 0.0f,    0.0f, 0.0f, 1.0f,    0.0f, 1.0f
 
 	//Without TBLR
 	//-0.5f,  0.5f, 0.0f,	   1.0f, 0.0f, 0.0f,    1.0f, 1.0f,
@@ -35,21 +35,23 @@ float Plane::vertices[] =
 	//--------------									      
 };
 
-/*
-float indexedVertices[] =
+float Plane::indexedVertices[] =
 {
-	 0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 1.0f,   0.0f, 0.0f,
-	 0.5f, -0.5f, 0.0f,   1.0f, 1.0f, 1.0f,   0.0f, 0.0f,
-	-0.5f, -0.5f, 0.0f,   1.0f, 1.0f, 1.0f,   1.0f, 0.0f,
-	-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 1.0f,   1.0f, 1.0f
+	//Position           //Normal             //UV       
+	//--------------									 
+	//With TBLR							      
+	TL.x, TL.y, 0.0f,    0.0f, 0.0f, 1.0f,    0.0f, 1.0f,
+	TR.x, TR.y, 0.0f,    0.0f, 0.0f, 1.0f,    1.0f, 1.0f,
+	BR.x, BR.y, 0.0f,    0.0f, 0.0f, 1.0f,    1.0f, 0.0f,
+	BL.x, BL.y, 0.0f,    0.0f, 0.0f, 1.0f,    0.0f, 0.0f
+	//--------------									 
 };
 
-unsigned int indices[] =
+unsigned int Plane::indices[] =
 {
 	0, 1, 3,   //1st triangle
 	1, 2, 3    //2nd triangle
 };
-*/
 
 Plane::Plane(Renderer* _renderer) : Entity(_renderer)
 {
@@ -83,9 +85,10 @@ Plane::~Plane() {}
 
 void Plane::draw()
 {
-	Entity::draw();
-
+	setUniformValues();
 	renderer->setModel(renderer->getShaderProgram(ShaderType::Main), modelMatrix.model);
-	renderer->setBufferData(PLANE_VERTEX_COMPONENTS, vertexBuffer);
-	renderer->drawTriangles(vertexAmount);
+
+	renderer->setVertexBufferData(PLANE_INDEXED_VERTEX_COMPONENTS, indexedVertices);
+	renderer->setIndexBufferData(PLANE_INDICES, indices);
+	renderer->drawElements(PLANE_INDICES);
 }

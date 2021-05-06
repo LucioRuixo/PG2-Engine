@@ -10,6 +10,8 @@ LightCube::~LightCube() {}
 void LightCube::draw()
 {
 	renderer->setModel(renderer->getShaderProgram(ShaderType::LightSource), modelMatrix.model);
-	renderer->setBufferData(CUBE_VERTEX_COMPONENTS, vertexBuffer);
-	renderer->drawTriangles(vertexAmount);
+
+	renderer->setVertexBufferData(CUBE_VERTEX_COMPONENTS, vertexBuffer);
+	renderer->setIndexBufferData(CUBE_INDICES, indices);
+	renderer->drawElements(CUBE_INDICES);
 }

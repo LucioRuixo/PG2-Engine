@@ -22,7 +22,7 @@ struct Shader
 	unsigned int programID;
 };
 
-struct matrixVP
+struct VPMatrix
 {
 	mat4 view;
 	mat4 projection;
@@ -33,8 +33,9 @@ struct matrixVP
 
 class GENGINE_API Renderer
 {
-	unsigned int VBO;
-	unsigned int EBO;
+	unsigned int vao;
+	unsigned int vbo;
+	unsigned int ebo;
 
 	unsigned int positionAttributeLocation;
 	unsigned int colorAttribute;
@@ -46,7 +47,7 @@ class GENGINE_API Renderer
 	int currentShader = -1;
 	Shader shaders[ShaderType::Size];
 
-	matrixVP _VP; //TODO: cambiar nombre
+	VPMatrix vpMatrix;
 public:
 	Renderer();
 	~Renderer();
@@ -58,15 +59,23 @@ public:
 #pragma endregion
 
 #pragma region Vertices
+	void createVAO();
+	void bindVAO(unsigned int _vao);
+	unsigned int getVAO();
+
 	void createVBO();
-	void bindVBO(unsigned int _VBO);
+	void bindVBO(unsigned int _vbo);
 	unsigned int getVBO();
+
 	void createEBO();
-	void bindEBO(unsigned int _EBO);
+	void bindEBO(unsigned int _ebo);
 	unsigned int getEBO();
-	void setBufferData(int tam, float* verterBuffer);
+
+	void setVertexBufferData(int size, float* verterBuffer);
+	void setIndexBufferData(int size, unsigned int* indexBuffer);
 	void setVertexAttributes();
-	void drawTriangles(int vertexAmount);
+	void drawArrays(int vertexAmount);
+	void drawElements(int indexAmount);
 #pragma endregion
 
 #pragma region MVP

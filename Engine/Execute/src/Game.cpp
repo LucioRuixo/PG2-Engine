@@ -75,7 +75,7 @@ int Game::initialize()
 	goldCube->setScale(1.0f, 3.0f, 1.0f);
 
 	//Lighting
-	lighting->addDirectionalLight(vec3(1.0f, 0.0f, -0.25f));
+	lighting->addDirectionalLight(vec3(1.0f, -1.0f, 0.0f));
 
 	lighting->addPointLight(1, vec3(0.0f, 0.0f, -2.5f));
 	lighting->addPointLight(2, vec3(0.0f, 0.0f, -8.0f));
