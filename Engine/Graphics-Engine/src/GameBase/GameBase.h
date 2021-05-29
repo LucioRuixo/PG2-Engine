@@ -1,6 +1,7 @@
 #ifndef GAMEBASE_H
 #define GAMEBASE_H
 
+#include <assimp/Importer.hpp>
 #include "Tools/Includes.h"
 #include "Camera/Camera.h"
 #include "Input/Input.h"
@@ -19,6 +20,9 @@ protected:
 	Lighting* lighting;
 	Input* input;
 	Time* time;
+
+	Assimp::Importer importer;
+	
 public:
 	GameBase();
 	~GameBase();

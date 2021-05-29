@@ -131,6 +131,7 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(ProjectDir)bin\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(ProjectDir)obj\$(Platform)\$(Configuration)\</IntDir>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)lib\Assimp\include\</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -153,14 +154,14 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)src\;$(ProjectDir)lib\GLFW\include\;$(ProjectDir)lib\GLEW\include\;$(ProyectDir)lib\glm\;$(ProjectDir)lib\Assimp\include\assimp</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src\;$(ProjectDir)lib\GLFW\include\;$(ProjectDir)lib\GLEW\include\;$(ProjectDir)lib\glm\;$(ProjectDir)lib\Assimp\include\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalLibraryDirectories>$(ProjectDir)lib\GLFW\lib-vc2017\;$(ProjectDir)lib\GLEW\lib\Release\Win32\;$(ProjectDir)lib\Assimp\lib\x86\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>assimp.lib;glew32.lib;glfw3.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)lib\GLFW\lib-vc2017\;$(ProjectDir)lib\GLEW\lib\Release\Win32\;$(ProjectDir)lib\Assimp\lib\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>assimp-vc140-mt.lib;glew32.lib;glfw3.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>"$(ProjectDir)tools\copy.bat" "$(SolutionDir)Execute" "$(ProjectDir)bin\Debug\Win32\Graphics-Engine.dll" "$(ProjectDir)lib\GLEW\dll\glew32.dll" "$(ProjectDir)lib\Assimp\bin\x86\assimp-vc140-mt.dll"</Command>

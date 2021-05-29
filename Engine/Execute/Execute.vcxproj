@@ -120,13 +120,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Graphics-Engine\lib\GLFW\include\;$(SolutionDir)Graphics-Engine\lib\GLEW\include\;$(SolutionDir)Graphics-Engine\src;$(SolutionDir)Graphics-Engine\lib\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Graphics-Engine\lib\GLFW\include\;$(SolutionDir)Graphics-Engine\lib\GLEW\include\;$(SolutionDir)Graphics-Engine\src\;$(SolutionDir)Graphics-Engine\lib\glm\;$(SolutionDir)Graphics-Engine\lib\Assimp\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)Graphics-Engine\bin\Debug\Win32</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;Graphics-Engine.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Graphics-Engine\bin\Debug\Win32;$(SolutionDir)Graphics-Engine\lib\Assimp\lib\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>assimp-vc140-mt.lib;opengl32.lib;Graphics-Engine.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>
