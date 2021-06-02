@@ -69,28 +69,24 @@ unsigned int Cube::indices[] =
 Cube::Cube(Renderer* _renderer) : Entity(_renderer)
 {
 	renderer = _renderer;
-
 	for (int i = 0; i < CUBE_VERTEX_COMPONENTS; i++) vertexBuffer[i] = vertices[i];
 }
 
 Cube::Cube(Renderer* _renderer, vec3 _color) : Entity(_renderer, _color)
 {
 	renderer = _renderer;
-
 	for (int i = 0; i < CUBE_VERTEX_COMPONENTS; i++) vertexBuffer[i] = vertices[i];
 }
 
 Cube::Cube(Renderer* _renderer, Material _material) : Entity(_renderer, _material)
 {
 	renderer = _renderer;
-
 	for (int i = 0; i < CUBE_VERTEX_COMPONENTS; i++) vertexBuffer[i] = vertices[i];
 }
 
 Cube::Cube(Renderer* _renderer, vec3 _color, Material _material) : Entity(_renderer, _color, _material)
 {
 	renderer = _renderer;
-
 	for (int i = 0; i < CUBE_VERTEX_COMPONENTS; i++) vertexBuffer[i] = vertices[i];
 }
 

@@ -2,60 +2,64 @@
 
 using namespace glm;
 
-Sprite::Sprite(Renderer* _renderer) : Plane(renderer)
+Sprite::Sprite(Renderer* _renderer, TextureManager* _textureManager) : Plane(renderer)
 {
 	textureActive = true;
 
 	renderer = _renderer;
-	type = GL_QUADS;
+	textureManager = _textureManager;
 	animation = NULL;
 }
 
-Sprite::Sprite(Renderer* _renderer, vec3 _color) : Plane(_renderer, _color)
+Sprite::Sprite(Renderer * _renderer, TextureManager * _textureManager, const char* texturePath, int textureFormat, string textureName) : Plane(renderer)
 {
 	textureActive = true;
 
 	renderer = _renderer;
-	type = GL_QUADS;
+	textureManager = _textureManager;
+	animation = NULL;
+
+	setTexture(texturePath, textureFormat, textureName);
+}
+
+Sprite::Sprite(Renderer* _renderer, TextureManager* _textureManager, vec3 _color) : Plane(_renderer, _color)
+{
+	textureActive = true;
+
+	renderer = _renderer;
+	textureManager = _textureManager;
 	animation = NULL;
 }
 
-Sprite::Sprite(Renderer* _renderer, Material _material) : Plane(_renderer, _material)
+Sprite::Sprite(Renderer* _renderer, TextureManager* _textureManager, Material _material) : Plane(_renderer, _material)
 {
 	textureActive = true;
 
 	renderer = _renderer;
-	type = GL_QUADS;
+	textureManager = _textureManager;
 	animation = NULL;
 }
 
-Sprite::Sprite(Renderer* _renderer, vec3 _color, Material _material) : Plane(_renderer, _color, _material)
+Sprite::Sprite(Renderer* _renderer, TextureManager* _textureManager, vec3 _color, Material _material) : Plane(_renderer, _color, _material)
 {
 	textureActive = true;
 
 	renderer = _renderer;
-	type = GL_QUADS;
+	textureManager = _textureManager;
 	animation = NULL;
 }
 
 Sprite::~Sprite() { if (animation) delete animation; }
 
-TextureData Sprite::setTexture(const char* filePath, int _type)
+Texture Sprite::setTexture(const char* path, int format, string name)
 {
-	textureData = texture.importTexture(filePath, _type);
-	type = _type;
+	texture = textureManager->createTextureFromFile(path, format, name);
 
 	updateAnimation();
 
-	return textureData;
+	return texture;
 }
-
-void Sprite::loadTexture()
-{
-	texture.loadTexture(textureData, type);
-
-	updateAnimation();
-}
+Texture Sprite::getTexture() { return texture; }
 
 void Sprite::setAnimation(Animation* _animation) { animation = _animation; }
 Animation* Sprite::getAnimation() { return animation; }
@@ -82,4 +86,10 @@ void Sprite::updateAnimation()
 
 		renderer->setVertexBufferData(PLANE_VERTEX_COMPONENTS, vertexBuffer);
 	}
+}
+
+void Sprite::draw()
+{
+	glBindTexture(GL_TEXTURE_2D, texture.id);
+	Plane::draw();
 }

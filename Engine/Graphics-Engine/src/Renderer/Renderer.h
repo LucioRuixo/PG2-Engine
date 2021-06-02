@@ -31,7 +31,7 @@ struct VPMatrix
 	vec3 cameraUp = vec3(0.0f, 1.0f, 0.0f);
 };
 
-class GENGINE_API Renderer
+class GENGINE_API Renderer //TODO: que algunas funciones sean estaticas para no tener que pasarle una referencia a todos los objetos que se creen
 {
 	unsigned int vao;
 	unsigned int vbo;
@@ -87,8 +87,7 @@ public:
 #pragma endregion
 
 #pragma region Textures
-	void generateTexture();
-	void setParameterTexture();
+	void setTextureParameters();
 #pragma endregion
 
 #pragma region Shaders

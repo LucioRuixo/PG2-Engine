@@ -23,7 +23,7 @@ public:
 	Plane(Renderer* _renderer, vec3 _color, Material _material);
 	~Plane();
 
-	void draw();
+	virtual void draw();
 };
 
 #endif // !PLANE_H

@@ -7,6 +7,7 @@
 #include "Input/Input.h"
 #include "Lighting/Lighting.h"
 #include "Renderer/Renderer.h"
+#include "TextureManager/TextureManager.h"
 #include "TileMap/TileMap.h"
 #include "Time/Time.h"
 #include "Window/Window.h"
@@ -17,6 +18,7 @@ protected:
 	Window* window;
 	Renderer* renderer;
 	Camera* camera;
+	TextureManager* textureManager;
 	Lighting* lighting;
 	Input* input;
 	Time* time;

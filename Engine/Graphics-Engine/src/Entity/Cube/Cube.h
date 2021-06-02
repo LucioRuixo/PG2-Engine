@@ -23,6 +23,7 @@ public:
 	Cube(Renderer* _renderer, Material _material);
 	Cube(Renderer* _renderer, vec3 _color, Material _material);
 	~Cube();
+
 	virtual void draw();
 };
 

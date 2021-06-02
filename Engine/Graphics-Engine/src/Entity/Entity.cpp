@@ -57,6 +57,10 @@ void Entity::setUniformValues()
 {
 	int uniformLocation;
 
+	//Texture
+	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(ShaderType::Main), "textureActive");
+	glUniform1i(uniformLocation, textureActive);
+
 	//Color
 	if (!textureActive)
 	{
@@ -76,10 +80,6 @@ void Entity::setUniformValues()
 
 	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(ShaderType::Main), "material.shininess");
 	glUniform1f(uniformLocation, material.shininess);
-
-	//Texture
-	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(ShaderType::Main), "textureActive");
-	glUniform1i(uniformLocation, textureActive);
 }
 
 Renderer* Entity::getRenderer() { return renderer; }
@@ -114,33 +114,6 @@ void Entity::setRotation(float x, float y, float z)
 
 	updateModelMatrix();
 }
-
-//void Entity::setRotationX(float x)
-//{
-//	transform->setRotation(x, transform->getRotation().y, transform->getRotation().z);
-//	vec3 axis = vec3(1.0f, 0.0f, 0.0f);
-//
-//	modelMatrix.rotationX = rotate(mat4(1.0f), x, axis);
-//	updateModelMatrix();
-//}
-//
-//void Entity::setRotationY(float y)
-//{
-//	transform->setRotation(transform->getRotation().x, y, transform->getRotation().z);
-//	vec3 axis = vec3(0.0f, 1.0f, 0.0f);
-//
-//	modelMatrix.rotationY = rotate(mat4(1.0f), y, axis);
-//	updateModelMatrix();
-//}
-//
-//void Entity::setRotationZ(float z)
-//{
-//	transform->setRotation(transform->getRotation().x, transform->getRotation().y, z);
-//	vec3 axis = vec3(0.0f, 0.0f, 1.0f);
-//
-//	modelMatrix.rotationZ = rotate(mat4(1.0f), z, axis);
-//	updateModelMatrix();
-//}
 
 void Entity::setColor(vec3 value) { color = value; }
 vec3 Entity::getColor() { return color; }

@@ -30,6 +30,8 @@
     <ClCompile Include="src\Entity\Cube\Cube.cpp" />
     <ClCompile Include="src\Entity\Cube\Light Cube\LightCube.cpp" />
     <ClCompile Include="src\Entity\Entity.cpp" />
+    <ClCompile Include="src\Entity\Model\Mesh\Mesh.cpp" />
+    <ClCompile Include="src\Entity\Model\Model.cpp" />
     <ClCompile Include="src\Entity\Plane\Plane.cpp" />
     <ClCompile Include="src\Entity\Plane\Sprite\Sprite.cpp" />
     <ClCompile Include="src\GameBase\GameBase.cpp" />
@@ -41,7 +43,7 @@
     <ClCompile Include="src\Lighting\Light\Spotlight\Spotlight.cpp" />
     <ClCompile Include="src\Renderer\Renderer.cpp" />
     <ClCompile Include="src\stb_image\stb_image.cpp" />
-    <ClCompile Include="src\TextureImporter\TextureImporter.cpp" />
+    <ClCompile Include="src\TextureManager\TextureManager.cpp" />
     <ClCompile Include="src\TileMap\TileMap.cpp" />
     <ClCompile Include="src\Tile\Tile.cpp" />
     <ClCompile Include="src\Time\Time.cpp" />
@@ -55,6 +57,8 @@
     <ClInclude Include="src\Entity\Cube\Cube.h" />
     <ClInclude Include="src\Entity\Cube\Light Cube\LightCube.h" />
     <ClInclude Include="src\Entity\Entity.h" />
+    <ClInclude Include="src\Entity\Model\Mesh\Mesh.h" />
+    <ClInclude Include="src\Entity\Model\Model.h" />
     <ClInclude Include="src\Entity\Plane\Plane.h" />
     <ClInclude Include="src\Entity\Plane\Sprite\Sprite.h" />
     <ClInclude Include="src\GameBase\GameBase.h" />
@@ -66,7 +70,7 @@
     <ClInclude Include="src\Lighting\Light\Spotlight\Spotlight.h" />
     <ClInclude Include="src\Renderer\Renderer.h" />
     <ClInclude Include="src\stb_image\stb_image.h" />
-    <ClInclude Include="src\TextureImporter\TextureImporter.h" />
+    <ClInclude Include="src\TextureManager\TextureManager.h" />
     <ClInclude Include="src\TileMap\TileMap.h" />
     <ClInclude Include="src\Tile\Tile.h" />
     <ClInclude Include="src\Time\Time.h" />

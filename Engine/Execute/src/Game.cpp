@@ -28,13 +28,13 @@ Game::~Game() {}
 int Game::initialize()
 {
 	//Sprite 1
-	sprite1 = new Sprite(renderer);
-	sprite1->setTexture("res/Assets/gato 1.jpg", GL_RGB);
+	sprite1 = new Sprite(renderer, textureManager, "res/Assets/gato 1.jpg", GL_RGB, "gato 1");
+	//sprite1->setTexture("res/Assets/gato 1.jpg", GL_RGB);
 	sprite1->setPosition(1.0f, -0.5f, -10.0f);
 
 	//Sprite 2
-	sprite2 = new Sprite(renderer);
-	sprite2->setTexture("res/Assets/gato 2.jpg", GL_RGB);
+	sprite2 = new Sprite(renderer, textureManager, "res/Assets/gato 2.jpg", GL_RGB, "gato 2");
+	//sprite2->setTexture("res/Assets/gato 2.jpg", GL_RGB);
 	sprite2->setPosition(-1.0f, 0.0f, -3.0f);
 	
 	//Cube
@@ -150,17 +150,23 @@ void Game::update()
 #pragma endregion
 
 #pragma region Rendering
-	sprite1->loadTexture(); //TODO: que el loadTexture() se haga dentro del draw() de Sprite
 	sprite1->draw();
-
-	sprite2->loadTexture();
 	sprite2->draw();
 
 	cube->draw();
 	cube2->draw();
+
 	rubyCube->draw();
 	emeraldCube->draw();
 	goldCube->draw();
+
+	//string gato1 = "gato 1";
+	//string gato2 = "gato 2";
+	//cout << "texture: " << gato1 << endl;
+	//cout << "id: " << textureManager->getTexture(gato1).id << endl; //TODO: consultar por qué esta línea y la de abajo no funcionan
+	//cout << endl;
+	//cout << "texture: " << gato2 << endl;
+	//cout << "id: " << textureManager->getTexture(gato2).id << endl;
 #pragma endregion
 }
 

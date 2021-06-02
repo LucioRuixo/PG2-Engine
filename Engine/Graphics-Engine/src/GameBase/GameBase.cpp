@@ -80,6 +80,8 @@ void APIENTRY debugMessageCallback(GLenum source, GLenum type, GLuint id,
 		break;
 	}
 
+	if (_severity == "NOTIFICATION") return;
+
 	printf("%d: %s of %s severity, raised from %s: %s\n",
 		id, _type, _severity, _source, message);
 }
@@ -95,6 +97,7 @@ GameBase::GameBase()
 	window = new Window(1280, 720);
 	renderer = new Renderer();
 	camera = new Camera(renderer);
+	textureManager = new TextureManager();
 	lighting = new Lighting(renderer);
 	input = new Input(window);
 	time = new Time();
@@ -137,8 +140,8 @@ GameBase::GameBase()
 	renderer->setVertexAttributes();
 
 	//Set texture
-	renderer->generateTexture();
-	renderer->setParameterTexture();
+	//renderer->generateTexture();
+	renderer->setTextureParameters();
 
 	//Projection
 	for (int i = 0; i < ShaderType::Size; i++) renderer->setProjection(renderer->getProjection());
@@ -200,6 +203,14 @@ void GameBase::run()
 			elapsedTime = 0.0f;
 			framesInSecond = 0;
 		}
+
+		string gato1 = "gato 1";
+		string gato2 = "gato 2";
+		cout << "texture: " << gato1 << endl;
+		cout << "id: " << textureManager->getTexture(gato1).id << endl;
+		cout << endl;
+		cout << "texture: " << gato2 << endl;
+		cout << "id: " << textureManager->getTexture(gato2).id << endl;
 
 		window->swapBuffers();
 		window->pollEvents();

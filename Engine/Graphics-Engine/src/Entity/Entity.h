@@ -47,9 +47,6 @@ public:
 	virtual void setPosition(float x, float y, float z);
 	virtual void translate(float x, float y, float z);
 	void setRotation(float x, float y, float z);
-	//void setRotationX(float x);
-	//void setRotationY(float y);
-	//void setRotationZ(float z);
 	virtual void setScale(float x, float y, float z);
 
 	void setColor(vec3 value);

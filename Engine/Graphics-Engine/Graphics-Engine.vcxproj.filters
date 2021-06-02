@@ -14,9 +14,6 @@
     <Filter Include="src\stb_image">
       <UniqueIdentifier>{5e4b0989-ca2e-4d54-9f3f-7ad048a2567b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\TextureImporter">
-      <UniqueIdentifier>{77038600-71db-44ac-8996-5303ecb106db}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Time">
       <UniqueIdentifier>{bd680321-65e8-41f5-807f-f1f30f9dd036}</UniqueIdentifier>
     </Filter>
@@ -83,6 +80,15 @@
     <Filter Include="src\Lighting\Light\Spot Light">
       <UniqueIdentifier>{85eb172e-d1ce-4a33-8ff0-0c6b1a82f8d3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Entity\Model">
+      <UniqueIdentifier>{5cc05f8d-1045-4ee4-b1a1-bebcda298ae8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Entity\Model\Mesh">
+      <UniqueIdentifier>{e8367717-8988-4c84-a771-033f6253b230}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\TextureManager">
+      <UniqueIdentifier>{77038600-71db-44ac-8996-5303ecb106db}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\Shaders\LightSourceShader_FS.shader">
@@ -123,9 +129,6 @@
     <ClCompile Include="src\stb_image\stb_image.cpp">
       <Filter>src\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\TextureImporter\TextureImporter.cpp">
-      <Filter>src\TextureImporter</Filter>
-    </ClCompile>
     <ClCompile Include="src\Tile\Tile.cpp">
       <Filter>src\Tile</Filter>
     </ClCompile>
@@ -165,6 +168,15 @@
     <ClCompile Include="src\Lighting\Light\Spotlight\Spotlight.cpp">
       <Filter>src\Lighting\Light\Spot Light</Filter>
     </ClCompile>
+    <ClCompile Include="src\Entity\Model\Model.cpp">
+      <Filter>src\Entity\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Entity\Model\Mesh\Mesh.cpp">
+      <Filter>src\Entity\Model\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TextureManager\TextureManager.cpp">
+      <Filter>src\TextureManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Animation\Animation.h">
@@ -190,9 +202,6 @@
     </ClInclude>
     <ClInclude Include="src\stb_image\stb_image.h">
       <Filter>src\stb_image</Filter>
-    </ClInclude>
-    <ClInclude Include="src\TextureImporter\TextureImporter.h">
-      <Filter>src\TextureImporter</Filter>
     </ClInclude>
     <ClInclude Include="src\Tile\Tile.h">
       <Filter>src\Tile</Filter>
@@ -241,6 +250,15 @@
     </ClInclude>
     <ClInclude Include="src\Lighting\Light\Spotlight\Spotlight.h">
       <Filter>src\Lighting\Light\Spot Light</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Entity\Model\Model.h">
+      <Filter>src\Entity\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Entity\Model\Mesh\Mesh.h">
+      <Filter>src\Entity\Model\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TextureManager\TextureManager.h">
+      <Filter>src\TextureManager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
