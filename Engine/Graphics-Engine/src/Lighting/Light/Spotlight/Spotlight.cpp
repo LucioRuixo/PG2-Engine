@@ -2,7 +2,7 @@
 
 Spotlight::Spotlight(int _number, Renderer* _renderer) : Light(_renderer)
 {
-	lightCube = new LightCube(_renderer);
+	lightCube = new LightCube();
 
 	number = _number;
 	setPosition(vec3(0.0f, 0.0f, 0.0f));
@@ -14,7 +14,7 @@ Spotlight::Spotlight(int _number, Renderer* _renderer) : Light(_renderer)
 
 Spotlight::Spotlight(int _number, Renderer* _renderer, vec3 _position, vec3 _direction) : Light(_renderer)
 {
-	lightCube = new LightCube(_renderer);
+	lightCube = new LightCube();
 
 	number = _number;
 	setPosition(_position);

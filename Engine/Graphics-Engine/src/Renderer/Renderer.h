@@ -8,6 +8,7 @@
 #define TRPOS3 3
 
 using namespace glm;
+using namespace std;
 
 enum ShaderType
 {
@@ -33,14 +34,9 @@ struct VPMatrix
 
 class GENGINE_API Renderer //TODO: que algunas funciones sean estaticas para no tener que pasarle una referencia a todos los objetos que se creen
 {
-	unsigned int vao;
-	unsigned int vbo;
-	unsigned int ebo;
-
 	unsigned int positionAttributeLocation;
 	unsigned int colorAttribute;
 	unsigned int normalAttributeLocation;
-	unsigned int texture;
 
 	vec3 backgroundColor;
 
@@ -59,23 +55,8 @@ public:
 #pragma endregion
 
 #pragma region Vertices
-	void createVAO();
-	void bindVAO(unsigned int _vao);
-	unsigned int getVAO();
-
-	void createVBO();
-	void bindVBO(unsigned int _vbo);
-	unsigned int getVBO();
-
-	void createEBO();
-	void bindEBO(unsigned int _ebo);
-	unsigned int getEBO();
-
-	void setVertexBufferData(int size, float* verterBuffer);
-	void setIndexBufferData(int size, unsigned int* indexBuffer);
-	void setVertexAttributes();
-	void drawArrays(int vertexAmount);
-	void drawElements(int indexAmount);
+	void drawArrays(unsigned int vao, unsigned int vbo, int vertexAmount);
+	void drawElements(unsigned int vao, unsigned int vbo, unsigned int ebo, int indexAmount);
 #pragma endregion
 
 #pragma region MVP

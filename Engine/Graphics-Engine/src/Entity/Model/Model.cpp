@@ -1,13 +1,21 @@
 #include "Model.h"
 
-Model::Model(const char* path, Renderer* _renderer) : Entity(_renderer)
+Model::Model(TextureManager* _textureManager, const char* path) : Entity()
 {
+	textureManager = _textureManager;
+
 	loadModel(path);
+}
+
+Model::~Model()
+{
+	meshes.clear();
 }
 
 void Model::loadModel(string path)
 {
 	Importer importer;
+	cout << "importing model from " << path << endl;
 	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
 
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
@@ -16,8 +24,9 @@ void Model::loadModel(string path)
 		return;
 	}
 	directory = path.substr(0, path.find_last_of('/'));
-
+	
 	processNode(scene, scene->mRootNode);
+	cout << "model loaded from " << path << endl;
 }
 
 void Model::processNode(const aiScene* scene, aiNode* node)
@@ -28,10 +37,12 @@ void Model::processNode(const aiScene* scene, aiNode* node)
 		meshes.push_back(processMesh(scene, mesh));
 	}
 
+	cout << "processing node " << node->mName.C_Str() << endl;
 	for (unsigned int i = 0; i < node->mNumChildren; i++)
 	{
 		processNode(scene, node->mChildren[i]);
 	}
+	cout << "successfully processed node " << node->mName.C_Str() << " and all its children" << endl;
 }
 
 Mesh Model::processMesh(const aiScene* scene, aiMesh* mesh)
@@ -84,7 +95,7 @@ Mesh Model::processMesh(const aiScene* scene, aiMesh* mesh)
 		textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
 	}
 
-	return Mesh(vertices, indices, textures);
+	return Mesh(renderer, vertices, indices, textures);
 }
 
 vector<Texture> Model::loadMaterialTextures(aiMaterial* material, aiTextureType type, string typeName)
@@ -93,18 +104,22 @@ vector<Texture> Model::loadMaterialTextures(aiMaterial* material, aiTextureType 
 
 	for (unsigned int i = 0; i < material->GetTextureCount(type); i++)
 	{
-		//aiString str;
-		//material->GetTexture(type, i, &str);
-		//Texture texture;
-		//texture.id = TextureFromFile(str.C_Str(), directory);
-		//texture.type = typeName;
-		//texture.path = str;
-		//textures.push_back(texture);
+		aiString relativePath;
+		material->GetTexture(type, i, &relativePath);
+
+		string sRelativePath = relativePath.C_Str();
+		string path = directory + '/' + sRelativePath;
+
+		Texture texture;
+		texture.id = textureManager->createTextureFromFile(path.c_str(), sRelativePath).id;
+		texture.type = typeName;
+
+		textures.push_back(texture);
 	}
 	return textures;
 }
 
 void Model::draw()
 {
-	for (unsigned int i = 0; i < meshes.size(); i++) meshes[i].draw();
+	for (unsigned int i = 0; i < meshes.size(); i++) meshes[i].draw(modelMatrix.model);
 }

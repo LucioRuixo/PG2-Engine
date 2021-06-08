@@ -14,10 +14,7 @@ Renderer::Renderer()
 	}
 }
 
-Renderer::~Renderer()
-{
-	glDeleteTextures(1, &texture);
-}
+Renderer::~Renderer() {}
 
 #pragma region Background
 void Renderer::setBackgroundColor(vec3 value) { backgroundColor = value; }
@@ -31,56 +28,20 @@ void Renderer::clearBackground()
 #pragma endregion
 
 #pragma region Vertices
-void Renderer::createVAO() { glGenVertexArrays(1, &vao); }
-void Renderer::bindVAO(unsigned int _vao) { glBindVertexArray(vao); }
-unsigned int Renderer::getVAO() { return vao; }
-
-void Renderer::createVBO() { glGenBuffers(1, &vbo); }
-void Renderer::bindVBO(unsigned int _vbo) { glBindBuffer(GL_ARRAY_BUFFER, vbo); }
-unsigned int Renderer::getVBO() { return vbo; }
-
-void Renderer::createEBO() { glGenBuffers(1, &ebo); }
-void Renderer::bindEBO(unsigned int _ebo) { glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo); }
-unsigned int Renderer::getEBO() { return ebo; }
-
-void Renderer::setVertexBufferData(int size, float* vertexBuffer)
+void Renderer::drawArrays(unsigned int vao, unsigned int vbo, int vertexAmount)
 {
-	glBufferData(GL_ARRAY_BUFFER, size * sizeof(float), vertexBuffer, GL_STATIC_DRAW);
-}
+	glBindVertexArray(vao);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-void Renderer::setIndexBufferData(int size, unsigned int* indexBuffer)
-{
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, size * sizeof(unsigned int), indexBuffer, GL_STATIC_DRAW);
-}
-
-void Renderer::setVertexAttributes()
-{
-	for (int i = 0; i < ShaderType::Size; i++)
-	{
-		//Position
-		positionAttributeLocation = glGetAttribLocation(getShaderProgram((ShaderType)i), "aPosition");
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), 0);
-		glEnableVertexAttribArray(0);
-
-		//Normal
-		normalAttributeLocation = glGetAttribLocation(getShaderProgram((ShaderType)i), "aNormal");
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-		glEnableVertexAttribArray(1);
-
-		//Texture coordinates
-		glUniform1i(glGetUniformLocation(getShaderProgram((ShaderType)i), "textureData"), 0);
-		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-		glEnableVertexAttribArray(2);
-	}
-}
-
-void Renderer::drawArrays(int vertexAmount)
-{
 	glDrawArrays(GL_TRIANGLES, 0, vertexAmount);
 }
 
-void Renderer::drawElements(int indexAmount)
+void Renderer::drawElements(unsigned int vao, unsigned int vbo, unsigned int ebo, int indexAmount)
 {
+	glBindVertexArray(vao);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+
 	glDrawElements(GL_TRIANGLES, indexAmount, GL_UNSIGNED_INT, nullptr);
 }
 #pragma endregion
@@ -136,8 +97,8 @@ void Renderer::setTextureParameters()
 {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glActiveTexture(GL_TEXTURE0);
 
 	stbi_set_flip_vertically_on_load(1);
@@ -194,14 +155,17 @@ unsigned int Renderer::createShaderProgram(const char* vertexPath, const char* f
 
 void Renderer::setShaderProgram(ShaderType type, const char* vertexPath, const char* fragmentPath)
 {
-	//mainShaderProgram = createShaderProgram("../Graphics-Engine/res/shaders/shader-vs.shader", "../Graphics-Engine/res/shaders/shader-fs.shader");
 	unsigned int shaderProgram = createShaderProgram(vertexPath, fragmentPath);
 	shaders[type].programID = shaderProgram;
 }
 
 unsigned int Renderer::getShaderProgram(ShaderType type)
 {
-	if (type == ShaderType::Size) return 0;
+	if (type == ShaderType::Size)
+	{
+		cout << "Invalid shader type" << endl;
+		return 0;
+	}
 	else return shaders[type].programID;
 }
 

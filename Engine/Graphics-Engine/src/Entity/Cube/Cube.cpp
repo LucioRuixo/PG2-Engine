@@ -2,6 +2,10 @@
 
 vec3 cubeColor = vec3(1.0f, 0.75f, 0.1f);
 
+unsigned int Cube::vao = 0;
+unsigned int Cube::vbo = 0;
+unsigned int Cube::ebo = 0;
+
 float Cube::vertices[] =
 {
 	//Position              //Normal               //UV       
@@ -66,29 +70,45 @@ unsigned int Cube::indices[] =
 	33, 34, 35
 };
 
-Cube::Cube(Renderer* _renderer) : Entity(_renderer)
+void Cube::initializeRenderingObjects()
 {
-	renderer = _renderer;
-	for (int i = 0; i < CUBE_VERTEX_COMPONENTS; i++) vertexBuffer[i] = vertices[i];
+	glGenVertexArrays(1, &vao);
+	glGenBuffers(1, &vbo);
+	glGenBuffers(1, &ebo);
+
+	glBindVertexArray(vao);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBufferData(GL_ARRAY_BUFFER, CUBE_VERTEX_COMPONENTS * sizeof(float), vertices, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, CUBE_INDICES * sizeof(unsigned int), indices, GL_STATIC_DRAW);
+
+	//Position
+	unsigned int positionAttributeLocation = glGetAttribLocation(renderer->getShaderProgram(ShaderType::Main), "aPosition");
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), 0);
+	glEnableVertexAttribArray(0);
+
+	//Normal
+	unsigned int normalAttributeLocation = glGetAttribLocation(renderer->getShaderProgram(ShaderType::Main), "aNormal");
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+
+	//Texture coordinates
+	glUniform1i(glGetUniformLocation(renderer->getShaderProgram(ShaderType::Main), "textureData"), 0);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(2);
+
+	glBindVertexArray(0);
 }
 
-Cube::Cube(Renderer* _renderer, vec3 _color) : Entity(_renderer, _color)
-{
-	renderer = _renderer;
-	for (int i = 0; i < CUBE_VERTEX_COMPONENTS; i++) vertexBuffer[i] = vertices[i];
-}
+Cube::Cube() : Entity() {}
 
-Cube::Cube(Renderer* _renderer, Material _material) : Entity(_renderer, _material)
-{
-	renderer = _renderer;
-	for (int i = 0; i < CUBE_VERTEX_COMPONENTS; i++) vertexBuffer[i] = vertices[i];
-}
+Cube::Cube(vec3 _color) : Entity(_color) {}
 
-Cube::Cube(Renderer* _renderer, vec3 _color, Material _material) : Entity(_renderer, _color, _material)
-{
-	renderer = _renderer;
-	for (int i = 0; i < CUBE_VERTEX_COMPONENTS; i++) vertexBuffer[i] = vertices[i];
-}
+Cube::Cube(Material _material) : Entity(_material) {}
+
+Cube::Cube(vec3 _color, Material _material) : Entity(_color, _material) {}
 
 Cube::~Cube() {}
 
@@ -96,8 +116,5 @@ void Cube::draw()
 {
 	setUniformValues();
 	renderer->setModel(renderer->getShaderProgram(ShaderType::Main), modelMatrix.model);
-
-	renderer->setVertexBufferData(CUBE_VERTEX_COMPONENTS, vertexBuffer);
-	renderer->setIndexBufferData(CUBE_INDICES, indices);
-	renderer->drawElements(CUBE_INDICES);
+	renderer->drawElements(vao, vbo, ebo, CUBE_INDICES);
 }

@@ -17,14 +17,14 @@ public:
 	PointLight(int _number, Renderer* _renderer, vec3 _position);
 	~PointLight();
 
-	void setPosition(vec3 _position);
-	vec3 getPosition();
-	void setDirection(vec3 _direction);
-	vec3 getDirection();
+	void setPosition(vec3 _position) override;
+	vec3 getPosition() override;
+	void setDirection(vec3 _direction) override;
+	vec3 getDirection() override;
 
-	void setLightingComponents(vec3 _diffuse, vec3 _specular);
-	void setDiffuse(vec3 value);
-	void setSpecular(vec3 value);
+	void setLightingComponents(vec3 _diffuse, vec3 _specular) override;
+	void setDiffuse(vec3 value) override;
+	void setSpecular(vec3 value) override;
 
 	void setTerms(float _constant, float _linear, float _quadratic);
 	void setConstant(float _constant);
@@ -34,7 +34,7 @@ public:
 	void setQuadratic(float _quadratic);
 	float getQuadratic();
 
-	void draw();
+	void draw() override;
 };
 
 #endif // !POINT_LIGHT_H

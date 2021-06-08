@@ -28,7 +28,7 @@ public:
 	TextureManager();
 	~TextureManager();
 
-	Texture createTextureFromFile(const char* path, int format, string name);
+	Texture createTextureFromFile(const char* path, string name);
 	Texture getTexture(string name);
 };
 

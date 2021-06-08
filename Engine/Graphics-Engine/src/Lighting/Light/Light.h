@@ -1,5 +1,5 @@
-#ifndef LIGHT_SOURCE_H
-#define LIGHT_SOURCE_H
+#ifndef LIGHT_H
+#define LIGHT_H
 
 #include "Tools/Includes.h"
 #include "Entity/Cube/Cube.h"
@@ -42,4 +42,4 @@ public:
 	virtual void draw() = 0;
 };
 
-#endif // !LIGHT_SOURCE_H
+#endif // !LIGHT_H

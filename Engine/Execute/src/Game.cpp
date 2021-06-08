@@ -15,11 +15,17 @@ vec3 cameraRotation;
 
 Sprite* sprite1;
 Sprite* sprite2;
+
 Cube* cube;
 Cube* cube2;
 Cube* rubyCube;
 Cube* emeraldCube;
 Cube* goldCube;
+
+Model* tree;
+Model* sofa;
+Model* sniperRifle;
+Model* car;
 
 Game::Game() {}
 
@@ -28,51 +34,60 @@ Game::~Game() {}
 int Game::initialize()
 {
 	//Sprite 1
-	sprite1 = new Sprite(renderer, textureManager, "res/Assets/gato 1.jpg", GL_RGB, "gato 1");
-	//sprite1->setTexture("res/Assets/gato 1.jpg", GL_RGB);
+	sprite1 = new Sprite(textureManager, "res/Assets/gato 1.jpg", "gato 1");
 	sprite1->setPosition(1.0f, -0.5f, -10.0f);
-
+	
 	//Sprite 2
-	sprite2 = new Sprite(renderer, textureManager, "res/Assets/gato 2.jpg", GL_RGB, "gato 2");
-	//sprite2->setTexture("res/Assets/gato 2.jpg", GL_RGB);
+	sprite2 = new Sprite(textureManager, "res/Assets/gato 2.jpg", "gato 2");
 	sprite2->setPosition(-1.0f, 0.0f, -3.0f);
 	
 	//Cube
-	cube = new Cube(renderer, vec3(1.0f, 0.1f, 0.1f));
+	cube = new Cube(vec3(1.0f, 0.1f, 0.1f));
 	cube->setPosition(0.75f, 0.0f, -6.5f);
-
+	
 	//Cube 2
-	cube2 = new Cube(renderer, vec3(0.1f, 0.1f, 1.0f));
+	cube2 = new Cube(vec3(0.1f, 0.1f, 1.0f));
 	cube2->setPosition(-1.5f, -3.0f, -9.5f);
 	cube2->setScale(3.0f, 3.0f, 3.0f);
-
+	
 	//Material cubes
 	Material ruby;
-	ruby.ambient = vec3(0.1745f, 0.01175f, 0.01175f);
 	ruby.diffuse = vec3(0.61424f, 0.04136f, 0.04136f);
 	ruby.specular = vec3(0.727811f, 0.626959f, 0.626959f);
 	ruby.shininess = 0.6f;
-	rubyCube = new Cube(renderer, vec3(0.607f, 0.066f, 0.117f), ruby);
+	rubyCube = new Cube(vec3(0.607f, 0.066f, 0.117f), ruby);
 	rubyCube->setPosition(-1.0f, 1.0f, -15.0f);
 	rubyCube->setScale(1.0f, 3.0f, 1.0f);
-
+	
 	Material emerald;
-	emerald.ambient = vec3(0.0215f, 0.1745f, 0.0215f);
 	emerald.diffuse = vec3(0.07568f, 0.61424f, 0.07568f);
 	emerald.specular = vec3(0.633f, 0.727811f, 0.633f);
 	emerald.shininess = 0.6f;
-	emeraldCube = new Cube(renderer, vec3(0.031f, 0.396f, 0.133f), emerald);
+	emeraldCube = new Cube(vec3(0.031f, 0.396f, 0.133f), emerald);
 	emeraldCube->setPosition(0.0f, 1.0f, -15.0f);
 	emeraldCube->setScale(1.0f, 3.0f, 1.0f);
-
+	
 	Material gold;
-	gold.ambient = vec3(0.24725f, 0.1995f, 0.0745f);
 	gold.diffuse = vec3(0.75164f, 0.60648f, 0.22648f);
 	gold.specular = vec3(0.628281f, 0.555802f, 0.366065f);
 	gold.shininess = 0.4f;
-	goldCube = new Cube(renderer, vec3(0.905f, 0.741f, 0.258f), gold);
+	goldCube = new Cube(vec3(0.905f, 0.741f, 0.258f), gold);
 	goldCube->setPosition(1.0f, 1.0f, -15.0f);
 	goldCube->setScale(1.0f, 3.0f, 1.0f);
+
+	//Models
+	tree = new Model(textureManager, "res/Assets/Modelos/low_poly_tree/Lowpoly_tree_sample.lxo");
+	tree->setPosition(1.5f, -1.5f, -3.0f);
+	tree->setScale(0.1f, 0.1f, 0.1f);
+
+	//sofa = new Model(textureManager, "res/Assets/Modelos/Koltuk/Koltuk.obj");
+	//sofa->setPosition(1.5f, 0.0f, -3.0f);
+	//
+	//sniperRifle = new Model(textureManager, "res/Assets/Modelos/Sniper_Rifle/Sniper_Rifle.obj");
+	//sniperRifle->setPosition(1.5f, 0.0f, -3.0f);
+
+	//car = new Model(textureManager, "res/Assets/Modelos/Mustang/Mustang.obj");
+	//car->setPosition(1.5f, 0.0f, -3.0f);
 
 	//Lighting
 	lighting->addDirectionalLight(vec3(1.0f, -1.0f, 0.0f));
@@ -152,21 +167,18 @@ void Game::update()
 #pragma region Rendering
 	sprite1->draw();
 	sprite2->draw();
-
+	
 	cube->draw();
 	cube2->draw();
-
+	
 	rubyCube->draw();
 	emeraldCube->draw();
 	goldCube->draw();
 
-	//string gato1 = "gato 1";
-	//string gato2 = "gato 2";
-	//cout << "texture: " << gato1 << endl;
-	//cout << "id: " << textureManager->getTexture(gato1).id << endl; //TODO: consultar por qué esta línea y la de abajo no funcionan
-	//cout << endl;
-	//cout << "texture: " << gato2 << endl;
-	//cout << "id: " << textureManager->getTexture(gato2).id << endl;
+	tree->draw();
+	//sofa->draw();
+	//sniperRifle->draw();
+	//car->draw();
 #pragma endregion
 }
 
@@ -178,6 +190,7 @@ int Game::terminate()
 	if (rubyCube) delete rubyCube;
 	if (emeraldCube) delete emeraldCube;
 	if (goldCube) delete goldCube;
+	if (tree) delete tree;
 
 	return 0;
 }

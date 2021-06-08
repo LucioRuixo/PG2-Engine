@@ -125,23 +125,13 @@ GameBase::GameBase()
 	renderer->setShaderProgram(ShaderType::LightSource, "../Graphics-Engine/res/shaders/LightSourceShader_VS.shader", "../Graphics-Engine/res/shaders/LightSourceShader_FS.shader");
 	renderer->useShader(ShaderType::Main);
 
-	//VAO
-	renderer->createVAO();
-	renderer->bindVAO(renderer->getVAO());
-
-	//VBO
-	renderer->createVBO();
-	renderer->bindVBO(renderer->getVBO());
-
-	//EBO
-	renderer->createEBO();
-	renderer->bindEBO(renderer->getEBO());
-
-	renderer->setVertexAttributes();
-
-	//Set texture
-	//renderer->generateTexture();
+	//Textures
 	renderer->setTextureParameters();
+
+	//Entities
+	Entity::setRenderer(renderer);
+	Plane::initializeRenderingObjects();
+	Cube::initializeRenderingObjects();
 
 	//Projection
 	for (int i = 0; i < ShaderType::Size; i++) renderer->setProjection(renderer->getProjection());
@@ -155,10 +145,7 @@ GameBase::GameBase()
 
 GameBase::~GameBase()
 {
-	for (int i = 0; i < ShaderType::Size; i++)
-	{
-		glDeleteProgram(renderer->getShaderProgram((ShaderType)i));
-	}
+	for (int i = 0; i < ShaderType::Size; i++) glDeleteProgram(renderer->getShaderProgram((ShaderType)i));
 	window->terminateGLFW();
 
 	if (window) delete window;
@@ -198,19 +185,11 @@ void GameBase::run()
 		framesInSecond++;
 		if (elapsedTime >= 1.0f)
 		{
-			std::cout << "FPS: " << (int)(1.0f / (elapsedTime / framesInSecond)) << std::endl;
+			std::cout << "FPS: " << round(1.0f / (elapsedTime / framesInSecond)) << std::endl;
 
 			elapsedTime = 0.0f;
 			framesInSecond = 0;
 		}
-
-		string gato1 = "gato 1";
-		string gato2 = "gato 2";
-		cout << "texture: " << gato1 << endl;
-		cout << "id: " << textureManager->getTexture(gato1).id << endl;
-		cout << endl;
-		cout << "texture: " << gato2 << endl;
-		cout << "id: " << textureManager->getTexture(gato2).id << endl;
 
 		window->swapBuffers();
 		window->pollEvents();

@@ -2,58 +2,53 @@
 
 using namespace glm;
 
-Sprite::Sprite(Renderer* _renderer, TextureManager* _textureManager) : Plane(renderer)
+Sprite::Sprite(TextureManager* _textureManager) : Plane()
 {
-	textureActive = true;
+	spriteTextureActive = true;
 
-	renderer = _renderer;
 	textureManager = _textureManager;
 	animation = NULL;
 }
 
-Sprite::Sprite(Renderer * _renderer, TextureManager * _textureManager, const char* texturePath, int textureFormat, string textureName) : Plane(renderer)
+Sprite::Sprite(TextureManager * _textureManager, const char* texturePath, string textureName) : Plane()
 {
-	textureActive = true;
+	spriteTextureActive = true;
 
-	renderer = _renderer;
 	textureManager = _textureManager;
 	animation = NULL;
 
-	setTexture(texturePath, textureFormat, textureName);
+	setTexture(texturePath, textureName);
 }
 
-Sprite::Sprite(Renderer* _renderer, TextureManager* _textureManager, vec3 _color) : Plane(_renderer, _color)
+Sprite::Sprite(TextureManager* _textureManager, vec3 _color) : Plane(_color)
 {
-	textureActive = true;
+	spriteTextureActive = true;
 
-	renderer = _renderer;
-	textureManager = _textureManager;
-	animation = NULL;
-}
-
-Sprite::Sprite(Renderer* _renderer, TextureManager* _textureManager, Material _material) : Plane(_renderer, _material)
-{
-	textureActive = true;
-
-	renderer = _renderer;
 	textureManager = _textureManager;
 	animation = NULL;
 }
 
-Sprite::Sprite(Renderer* _renderer, TextureManager* _textureManager, vec3 _color, Material _material) : Plane(_renderer, _color, _material)
+Sprite::Sprite(TextureManager* _textureManager, Material _material) : Plane(_material)
 {
-	textureActive = true;
+	spriteTextureActive = true;
 
-	renderer = _renderer;
+	textureManager = _textureManager;
+	animation = NULL;
+}
+
+Sprite::Sprite(TextureManager* _textureManager, vec3 _color, Material _material) : Plane(_color, _material)
+{
+	spriteTextureActive = true;
+
 	textureManager = _textureManager;
 	animation = NULL;
 }
 
 Sprite::~Sprite() { if (animation) delete animation; }
 
-Texture Sprite::setTexture(const char* path, int format, string name)
+Texture Sprite::setTexture(const char* path, string name)
 {
-	texture = textureManager->createTextureFromFile(path, format, name);
+	texture = textureManager->createTextureFromFile(path, name);
 
 	updateAnimation();
 
@@ -66,26 +61,26 @@ Animation* Sprite::getAnimation() { return animation; }
 
 void Sprite::updateAnimation()
 {
-	if (animation)
-	{
-		animation->update();
-		Frame frame = animation->getAnimation()[animation->getCurrentFrame()];
-
-		vertexBuffer[6] = frame.frameCoords[0].u;
-		vertexBuffer[7] = frame.frameCoords[0].v;
-		vertexBuffer[14] = frame.frameCoords[1].u;
-		vertexBuffer[15] = frame.frameCoords[1].v;
-		vertexBuffer[22] = frame.frameCoords[2].u;
-		vertexBuffer[23] = frame.frameCoords[2].v;
-		vertexBuffer[30] = frame.frameCoords[2].u;
-		vertexBuffer[31] = frame.frameCoords[2].v;
-		vertexBuffer[38] = frame.frameCoords[3].u;
-		vertexBuffer[39] = frame.frameCoords[3].v;
-		vertexBuffer[46] = frame.frameCoords[0].u;
-		vertexBuffer[47] = frame.frameCoords[0].v;
-
-		renderer->setVertexBufferData(PLANE_VERTEX_COMPONENTS, vertexBuffer);
-	}
+	//if (animation)
+	//{
+	//	animation->update();
+	//	Frame frame = animation->getAnimation()[animation->getCurrentFrame()];
+	//
+	//	vertexBuffer[6] = frame.frameCoords[0].u;
+	//	vertexBuffer[7] = frame.frameCoords[0].v;
+	//	vertexBuffer[14] = frame.frameCoords[1].u;
+	//	vertexBuffer[15] = frame.frameCoords[1].v;
+	//	vertexBuffer[22] = frame.frameCoords[2].u;
+	//	vertexBuffer[23] = frame.frameCoords[2].v;
+	//	vertexBuffer[30] = frame.frameCoords[2].u;
+	//	vertexBuffer[31] = frame.frameCoords[2].v;
+	//	vertexBuffer[38] = frame.frameCoords[3].u;
+	//	vertexBuffer[39] = frame.frameCoords[3].v;
+	//	vertexBuffer[46] = frame.frameCoords[0].u;
+	//	vertexBuffer[47] = frame.frameCoords[0].v;
+	//
+	//	renderer->setVertexBufferData(PLANE_VERTEX_COMPONENTS, vertexBuffer);
+	//}
 }
 
 void Sprite::draw()

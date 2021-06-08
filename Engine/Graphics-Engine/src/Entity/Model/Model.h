@@ -21,12 +21,15 @@ class GENGINE_API Model : public Entity
 
 	vector<Mesh> meshes;
 
+	TextureManager* textureManager;
+
 	void loadModel(string path);
 	void processNode(const aiScene* scene, aiNode* node);
 	Mesh processMesh(const aiScene* scene, aiMesh* mesh);
 	vector<Texture> loadMaterialTextures(aiMaterial* material, aiTextureType type, string typeName);
 public:
-	Model(const char* path, Renderer* _renderer);
+	Model(TextureManager* _textureManager, const char* path);
+	~Model();
 
 	void draw();
 };

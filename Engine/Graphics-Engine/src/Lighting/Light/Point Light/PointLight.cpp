@@ -2,7 +2,7 @@
 
 PointLight::PointLight(int _number, Renderer* _renderer) : Light(_renderer)
 {
-	lightCube = new LightCube(_renderer);
+	lightCube = new LightCube();
 
 	number = _number;
 	setPosition(vec3(0.0f));
@@ -12,7 +12,7 @@ PointLight::PointLight(int _number, Renderer* _renderer) : Light(_renderer)
 
 PointLight::PointLight(int _number, Renderer* _renderer, vec3 _position) : Light(_renderer)
 {
-	lightCube = new LightCube(_renderer);
+	lightCube = new LightCube();
 
 	number = _number;
 	setPosition(_position);

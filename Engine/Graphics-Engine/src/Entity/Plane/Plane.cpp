@@ -11,31 +11,11 @@ vec2 BR = vec2(0.5f, -0.5f);
 vec2 boundsMin = BL;
 vec2 boundsMax = TR;
 
+unsigned int Plane::vao = 0;
+unsigned int Plane::vbo = 0;
+unsigned int Plane::ebo = 0;
+
 float Plane::vertices[] =
-{
-	//Position           //Normal             //UV       
-	//--------------									      
-	//With TBLR							      
-	TL.x, TL.y, 0.0f,    0.0f, 0.0f, 1.0f,    0.0f, 1.0f,
-	TR.x, TR.y, 0.0f,    0.0f, 0.0f, 1.0f,    1.0f, 1.0f,
-	BR.x, BR.y, 0.0f,    0.0f, 0.0f, 1.0f,    1.0f, 0.0f,
-					
-	BR.x, BR.y, 0.0f,    0.0f, 0.0f, 1.0f,    1.0f, 0.0f,
-	BL.x, BL.y, 0.0f,    0.0f, 0.0f, 1.0f,    0.0f, 0.0f,
-	TL.x, TL.y, 0.0f,    0.0f, 0.0f, 1.0f,    0.0f, 1.0f
-
-	//Without TBLR
-	//-0.5f,  0.5f, 0.0f,	   1.0f, 0.0f, 0.0f,    1.0f, 1.0f,
-	// 0.5f,  0.5f, 0.0f,	   0.0f, 1.0f, 0.0f,    0.0f, 1.0f,
-	// 0.5f, -0.5f, 0.0f,	   0.0f, 0.0f, 1.0f,    0.0f, 0.0f,
-	//					   					    
-	// 0.5f, -0.5f, 0.0f,	   0.0f, 0.0f, 1.0f,    0.0f, 0.0f,
-	//-0.5f, -0.5f, 0.0f,	   1.0f, 1.0f, 1.0f,    1.0f, 0.0f,
-	//-0.5f,  0.5f, 0.0f,	   1.0f, 0.0f, 0.0f,    1.0f, 1.0f
-	//--------------									      
-};
-
-float Plane::indexedVertices[] =
 {
 	//Position           //Normal             //UV       
 	//--------------									 
@@ -53,33 +33,46 @@ unsigned int Plane::indices[] =
 	1, 2, 3    //2nd triangle
 };
 
-Plane::Plane(Renderer* _renderer) : Entity(_renderer)
+void Plane::initializeRenderingObjects()
 {
-	renderer = _renderer;
+	glGenVertexArrays(1, &vao);
+	glGenBuffers(1, &vbo);
+	glGenBuffers(1, &ebo);
 
-	for (int i = 0; i < PLANE_VERTEX_COMPONENTS; i++) vertexBuffer[i] = vertices[i];
+	glBindVertexArray(vao);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBufferData(GL_ARRAY_BUFFER, PLANE_VERTEX_COMPONENTS * sizeof(float), vertices, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, PLANE_INDICES * sizeof(unsigned int), indices, GL_STATIC_DRAW);
+
+	//Position
+	unsigned int positionAttributeLocation = glGetAttribLocation(renderer->getShaderProgram(ShaderType::Main), "aPosition");
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), 0);
+	glEnableVertexAttribArray(0);
+
+	//Normal
+	unsigned int normalAttributeLocation = glGetAttribLocation(renderer->getShaderProgram(ShaderType::Main), "aNormal");
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+
+	//Texture coordinates
+	unsigned int textureUniformLocation = glGetUniformLocation(renderer->getShaderProgram(ShaderType::Main), "textureData");
+	glUniform1i(textureUniformLocation, 0);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(2);
+
+	glBindVertexArray(0);
 }
 
-Plane::Plane(Renderer* _renderer, vec3 _color) : Entity(_renderer, _color)
-{
-	renderer = _renderer;
+Plane::Plane() : Entity() {}
 
-	for (int i = 0; i < PLANE_VERTEX_COMPONENTS; i++) vertexBuffer[i] = vertices[i];
-}
+Plane::Plane(vec3 _color) : Entity(_color) {}
 
-Plane::Plane(Renderer* _renderer, Material _material) : Entity(_renderer, _material)
-{
-	renderer = _renderer;
+Plane::Plane(Material _material) : Entity(_material) {}
 
-	for (int i = 0; i < PLANE_VERTEX_COMPONENTS; i++) vertexBuffer[i] = vertices[i];
-}
-
-Plane::Plane(Renderer* _renderer, vec3 _color, Material _material) : Entity(_renderer, _color, _material)
-{
-	renderer = _renderer;
-
-	for (int i = 0; i < PLANE_VERTEX_COMPONENTS; i++) vertexBuffer[i] = vertices[i];
-}
+Plane::Plane(vec3 _color, Material _material) : Entity(_color, _material) {}
 
 Plane::~Plane() {}
 
@@ -87,8 +80,5 @@ void Plane::draw()
 {
 	setUniformValues();
 	renderer->setModel(renderer->getShaderProgram(ShaderType::Main), modelMatrix.model);
-
-	renderer->setVertexBufferData(PLANE_INDEXED_VERTEX_COMPONENTS, indexedVertices);
-	renderer->setIndexBufferData(PLANE_INDICES, indices);
-	renderer->drawElements(PLANE_INDICES);
+	renderer->drawElements(vao, vbo, ebo, PLANE_INDICES);
 }

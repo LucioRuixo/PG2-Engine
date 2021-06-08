@@ -9,36 +9,34 @@ using namespace glm;
 
 struct Material
 {
-	vec3 ambient = vec3(0.1f, 0.1f, 0.1f);
 	vec3 diffuse = vec3(1.0f, 1.0f, 1.0f);
 	vec3 specular = vec3(1.0f, 1.0f, 1.0f);
 	float shininess = 0.25f;
 };
 
-const int VERTEX_BUFFER_SIZE = 396;
-
 class GENGINE_API Entity
 {
-	void construct(Renderer *_renderer);
+	void construct();
 protected:
-	float vertexBuffer[VERTEX_BUFFER_SIZE];
+	static Renderer* renderer;
 
-	float textureActive = false;
+	float spriteTextureActive = false;
 	vec3 color = vec3(0.5f, 0.5f, 0.5f);
 	Material material;
 
 	ModelMatrixData modelMatrix;
-	Renderer* renderer;
 
 	void updateModelMatrix();
 	void setUniformValues();
 public:
+	static void setRenderer(Renderer* _renderer);
+
 	Transform* transform;
 
-	Entity(Renderer* _renderer);
-	Entity(Renderer* _renderer, vec3 _color);
-	Entity(Renderer* _renderer, Material _material);
-	Entity(Renderer* _renderer, vec3 _color, Material _material);
+	Entity();
+	Entity(vec3 _color);
+	Entity(Material _material);
+	Entity(vec3 _color, Material _material);
 	~Entity();
 
 	Renderer* getRenderer();
@@ -55,4 +53,4 @@ public:
 	Material getMaterial();
 };
 
-#endif // !ENTITY
+#endif // !ENTITY_H

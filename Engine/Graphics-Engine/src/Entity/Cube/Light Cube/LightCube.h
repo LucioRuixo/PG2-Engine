@@ -7,9 +7,9 @@
 class GENGINE_API LightCube : public Cube
 {
 public:
-	LightCube(Renderer* _renderer);
+	LightCube();
 	~LightCube();
-	void draw();
+	void draw() override;
 };
 
 #endif // !LIGHT_CUBE_H

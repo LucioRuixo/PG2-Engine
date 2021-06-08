@@ -5,23 +5,24 @@
 #include "../Entity.h"
 
 const int CUBE_VERTEX_COMPONENTS = 288;
-const int CUBE_VERTICES = 36;
-
-const int CUBE_INDEXED_VERTEX_COMPONENTS = 288;
 const int CUBE_INDICES = 36;
 
 class GENGINE_API Cube : public Entity
 {
 protected:
-	static float vertices[CUBE_VERTEX_COMPONENTS];
+	static unsigned int vao;
+	static unsigned int vbo;
+	static unsigned int ebo;
 
-	//static float indexedVertices[CUBE_INDEXED_VERTEX_COMPONENTS];
+	static float vertices[CUBE_VERTEX_COMPONENTS];
 	static unsigned int indices[CUBE_INDICES];
 public:
-	Cube(Renderer* _renderer);
-	Cube(Renderer* _renderer, vec3 _color);
-	Cube(Renderer* _renderer, Material _material);
-	Cube(Renderer* _renderer, vec3 _color, Material _material);
+	static void initializeRenderingObjects();
+
+	Cube();
+	Cube(vec3 _color);
+	Cube(Material _material);
+	Cube(vec3 _color, Material _material);
 	~Cube();
 
 	virtual void draw();
