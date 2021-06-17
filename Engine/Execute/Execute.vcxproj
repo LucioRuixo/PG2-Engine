@@ -82,6 +82,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(ProjectDir)bin\$(Configuration)\$(Platform)\</OutDir>
+    <IntDir>$(ProjectDir)obj\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -120,12 +122,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Graphics-Engine\lib\GLFW\include\;$(SolutionDir)Graphics-Engine\lib\GLEW\include\;$(SolutionDir)Graphics-Engine\src\;$(SolutionDir)Graphics-Engine\lib\glm\;$(SolutionDir)Graphics-Engine\lib\Assimp\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Graphics-Engine\lib\GLFW\include\;$(SolutionDir)Graphics-Engine\lib\GLEW\include\;$(SolutionDir)Graphics-Engine\src\;$(SolutionDir)Graphics-Engine\lib\glm\;$(SolutionDir)Graphics-Engine\lib\Assimp\assimp-3.3.1\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)Graphics-Engine\bin\Debug\Win32;$(SolutionDir)Graphics-Engine\lib\Assimp\lib\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Graphics-Engine\bin\Debug\Win32;$(SolutionDir)Graphics-Engine\lib\Assimp\assimp-3.3.1\lib\</AdditionalLibraryDirectories>
       <AdditionalDependencies>assimp-vc140-mt.lib;opengl32.lib;Graphics-Engine.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
@@ -142,10 +144,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)Graphics-Engine\lib\GLFW\include\;$(SolutionDir)Graphics-Engine\lib\GLEW\include\;$(SolutionDir)Graphics-Engine\src\;$(SolutionDir)Graphics-Engine\lib\glm\;$(SolutionDir)Graphics-Engine\lib\Assimp\assimp-5.0.1\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)Graphics-Engine\bin\Debug\Win32;$(SolutionDir)Graphics-Engine\lib\Assimp\assimp-5.0.1\lib\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>assimp-vc142-mtd.lib;opengl32.lib;Graphics-Engine.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

@@ -92,19 +92,6 @@ void Renderer::updateProjection(mat4 &projection)
 }
 #pragma endregion
 
-#pragma region Textures
-void Renderer::setTextureParameters()
-{
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glActiveTexture(GL_TEXTURE0);
-
-	stbi_set_flip_vertically_on_load(1);
-}
-#pragma endregion
-
 #pragma region Shaders
 unsigned int Renderer::compileShader(unsigned int type, const char* source)
 {

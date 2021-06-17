@@ -67,10 +67,6 @@ public:
 	void updateProjection(mat4 &projection);
 #pragma endregion
 
-#pragma region Textures
-	void setTextureParameters();
-#pragma endregion
-
 #pragma region Shaders
 	unsigned int compileShader(unsigned int type, const char* source);
 	unsigned int createShaderProgram(const char * vertexPath, const char * fragmentPath);

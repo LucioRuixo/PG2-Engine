@@ -75,10 +75,10 @@ void Entity::setUniformValues()
 	}
 
 	//Material
-	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(ShaderType::Main), "material.diffuseTexturesOn");
+	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(ShaderType::Main), "material.diffuseTexturesActive");
 	glUniform1i(uniformLocation, 0);
 
-	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(ShaderType::Main), "material.specularTexturesOn");
+	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(ShaderType::Main), "material.specularTexturesActive");
 	glUniform1i(uniformLocation, 0);
 
 	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(ShaderType::Main), "material.diffuse");
@@ -117,9 +117,9 @@ void Entity::setRotation(float x, float y, float z)
 	vec3 yAxis = vec3(0.0f, 1.0f, 0.0f);
 	vec3 zAxis = vec3(0.0f, 0.0f, 1.0f);
 
-	modelMatrix.rotationX = rotate(mat4(1.0f), x, xAxis);
-	modelMatrix.rotationY = rotate(mat4(1.0f), y, yAxis);
-	modelMatrix.rotationZ = rotate(mat4(1.0f), z, zAxis);
+	modelMatrix.rotationX = rotate(mat4(1.0f), radians(x), xAxis);
+	modelMatrix.rotationY = rotate(mat4(1.0f), radians(y), yAxis);
+	modelMatrix.rotationZ = rotate(mat4(1.0f), radians(z), zAxis);
 
 	updateModelMatrix();
 }

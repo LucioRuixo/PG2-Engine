@@ -23,9 +23,14 @@ Cube* emeraldCube;
 Cube* goldCube;
 
 Model* tree;
-Model* sofa;
+Model* couch;
 Model* sniperRifle;
 Model* car;
+Model* dagger;
+Model* plant;
+Model* bottle;
+Model* pistol2;
+Model* phone;
 
 Game::Game() {}
 
@@ -34,12 +39,12 @@ Game::~Game() {}
 int Game::initialize()
 {
 	//Sprite 1
-	sprite1 = new Sprite(textureManager, "res/Assets/gato 1.jpg", "gato 1");
-	sprite1->setPosition(1.0f, -0.5f, -10.0f);
+	//sprite1 = new Sprite(textureManager, "res/Assets/gato 1.jpg", "gato 1");
+	//sprite1->setPosition(1.0f, -0.5f, -10.0f);
 	
 	//Sprite 2
-	sprite2 = new Sprite(textureManager, "res/Assets/gato 2.jpg", "gato 2");
-	sprite2->setPosition(-1.0f, 0.0f, -3.0f);
+	//sprite2 = new Sprite(textureManager, "res/Assets/gato 2.jpg", "gato 2");
+	//sprite2->setPosition(-1.0f, 0.0f, -3.0f);
 	
 	//Cube
 	cube = new Cube(vec3(1.0f, 0.1f, 0.1f));
@@ -76,18 +81,36 @@ int Game::initialize()
 	goldCube->setScale(1.0f, 3.0f, 1.0f);
 
 	//Models
-	tree = new Model(textureManager, "res/Assets/Modelos/low_poly_tree/Lowpoly_tree_sample.lxo");
-	tree->setPosition(1.5f, -1.5f, -3.0f);
-	tree->setScale(0.1f, 0.1f, 0.1f);
-
-	//sofa = new Model(textureManager, "res/Assets/Modelos/Koltuk/Koltuk.obj");
-	//sofa->setPosition(1.5f, 0.0f, -3.0f);
-	//
+	//tree = new Model(textureManager, "res/Assets/Modelos/Tree/Lowpoly_tree_sample.obj");
+	//tree->setPosition(-2.0f, -0.25f, -1.0f);
+	//tree->setScale(0.1f, 0.1f, 0.1f);
+	
+	//couch = new Model(textureManager, "res/Assets/Modelos/Couch/Couch.obj");
+	//couch->setPosition(0.0f, 0.0f, -3.0f);
+	
 	//sniperRifle = new Model(textureManager, "res/Assets/Modelos/Sniper_Rifle/Sniper_Rifle.obj");
 	//sniperRifle->setPosition(1.5f, 0.0f, -3.0f);
 
 	//car = new Model(textureManager, "res/Assets/Modelos/Mustang/Mustang.obj");
 	//car->setPosition(1.5f, 0.0f, -3.0f);
+
+	dagger = new Model(textureManager, "res/Assets/Modelos/Dagger/source/Dagger.obj");
+	dagger->setPosition(0.0f, 0.0f, -3.0f);
+	dagger->setScale(0.01f, 0.01f, 0.01f);
+
+	plant = new Model(textureManager, "res/Assets/Modelos/Plant/A1.obj");
+	plant->setPosition(1.5f, 0.0f, -3.0f);
+	
+	//bottle = new Model(textureManager, "res/Assets/Modelos/Bottle/Jack Daniel Bottle.obj");
+	//bottle->setPosition(1.0f, -0.25f, -1.0f);
+	//bottle->setRotation(-90.0f, 0.0f, 0.0f);
+	//bottle->setScale(0.1f, 0.1f, 0.1f);
+
+	//pistol2 = new Model(textureManager, "res/Assets/Modelos/Pistol 2/source/drakefire_pistol_low.obj");
+	//pistol2->setPosition(1.5f, 0.0f, -3.0f);
+
+	//phone = new Model(textureManager, "res/Assets/Modelos/Phone/Iphone 12 Pro.obj");
+	//phone->setPosition(1.5f, 0.0f, -3.0f);
 
 	//Lighting
 	lighting->addDirectionalLight(vec3(1.0f, -1.0f, 0.0f));
@@ -165,8 +188,8 @@ void Game::update()
 #pragma endregion
 
 #pragma region Rendering
-	sprite1->draw();
-	sprite2->draw();
+	//sprite1->draw();
+	//sprite2->draw();
 	
 	cube->draw();
 	cube2->draw();
@@ -175,10 +198,15 @@ void Game::update()
 	emeraldCube->draw();
 	goldCube->draw();
 
-	tree->draw();
-	//sofa->draw();
+	//tree->draw();
+	//couch->draw();
 	//sniperRifle->draw();
 	//car->draw();
+	dagger->draw();
+	//bottle->draw();
+	//pistol2->draw();
+	//phone->draw();
+	plant->draw();
 #pragma endregion
 }
 

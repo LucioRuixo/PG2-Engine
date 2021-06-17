@@ -85,6 +85,7 @@ void Sprite::updateAnimation()
 
 void Sprite::draw()
 {
+	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture.id);
 	Plane::draw();
 }

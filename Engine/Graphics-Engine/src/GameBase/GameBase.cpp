@@ -97,7 +97,7 @@ GameBase::GameBase()
 	window = new Window(1280, 720);
 	renderer = new Renderer();
 	camera = new Camera(renderer);
-	textureManager = new TextureManager();
+	textureManager = new TextureManager(renderer);
 	lighting = new Lighting(renderer);
 	input = new Input(window);
 	time = new Time();
@@ -126,7 +126,7 @@ GameBase::GameBase()
 	renderer->useShader(ShaderType::Main);
 
 	//Textures
-	renderer->setTextureParameters();
+	textureManager->initializeTextureValues();
 
 	//Entities
 	Entity::setRenderer(renderer);
@@ -185,7 +185,7 @@ void GameBase::run()
 		framesInSecond++;
 		if (elapsedTime >= 1.0f)
 		{
-			std::cout << "FPS: " << round(1.0f / (elapsedTime / framesInSecond)) << std::endl;
+			//std::cout << "FPS: " << round(1.0f / (elapsedTime / framesInSecond)) << std::endl;
 
 			elapsedTime = 0.0f;
 			framesInSecond = 0;

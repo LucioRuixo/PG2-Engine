@@ -4,6 +4,7 @@
 #include <map>
 #include <string>
 #include "Tools/Includes.h"
+#include "Renderer/Renderer.h"
 #include "stb_image/stb_image.h"
 
 using namespace std;
@@ -24,9 +25,13 @@ struct Texture
 class TextureManager
 {
 	map<string, Texture> textureMap;
+
+	Renderer* renderer;
 public:
-	TextureManager();
+	TextureManager(Renderer* _renderer);
 	~TextureManager();
+
+	void initializeTextureValues();
 
 	Texture createTextureFromFile(const char* path, string name);
 	Texture getTexture(string name);
