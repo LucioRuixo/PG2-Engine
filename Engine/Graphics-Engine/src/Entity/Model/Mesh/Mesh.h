@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include "Tools/Includes.h"
+#include "Entity/Entity.h"
 #include "Renderer/Renderer.h"
 #include "TextureManager/TextureManager.h"
 
@@ -19,7 +20,7 @@ struct Vertex
 
 const int MAX_TEXTURE_AMOUNT_PER_TYPE = 4;
 
-class GENGINE_API Mesh
+class GENGINE_API Mesh : public Entity
 {
 	unsigned int vao, vbo, ebo;
 
@@ -27,11 +28,10 @@ class GENGINE_API Mesh
 	vector<unsigned int> indices;
 	vector<Texture> textures;
 
-	Renderer* renderer;
-
 	void setupMesh();
 public:
-	Mesh(Renderer* _renderer, vector<Vertex> _vertices, vector<unsigned int> _indices, vector<Texture> _textures);
+	Mesh(vector<Vertex> _vertices, vector<unsigned int> _indices, vector<Texture> _textures);
+	Mesh(vector<Vertex> _vertices, vector<unsigned int> _indices, vector<Texture> _textures, Material _material);
 	~Mesh();
 
 	vector<Vertex> getVertices();

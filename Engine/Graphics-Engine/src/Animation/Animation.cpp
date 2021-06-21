@@ -15,7 +15,7 @@ Animation::~Animation()
 
 void Animation::update()
 {
-	currentTime += (Time::DeltaTime());
+	currentTime += (Time::getDeltaTime());
 
 	while (currentTime >= length)
 	{

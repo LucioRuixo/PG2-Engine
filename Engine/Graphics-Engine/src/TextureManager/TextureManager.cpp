@@ -53,7 +53,7 @@ Texture TextureManager::createTextureFromFile(const char* path, string name)
 		glTexImage2D(GL_TEXTURE_2D, 0, format, texture.width, texture.height, 0, format, GL_UNSIGNED_BYTE, texture.data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 
-		std::cout << "successfully loaded texture from path \"" << path << "\"" << std::endl;
+		std::cout << "loaded texture from path \"" << path << "\"" << std::endl;
 	}
 	else std::cout << "failed to load texture from path \"" << path << "\"" << std::endl;
 	stbi_image_free(texture.data);

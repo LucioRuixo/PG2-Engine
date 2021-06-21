@@ -12,6 +12,9 @@ struct Material
 	vec3 diffuse = vec3(1.0f, 1.0f, 1.0f);
 	vec3 specular = vec3(1.0f, 1.0f, 1.0f);
 	float shininess = 0.25f;
+
+	bool diffuseTexturesActive = false;
+	bool specularTexturesActive = false;
 };
 
 class GENGINE_API Entity
@@ -31,7 +34,7 @@ protected:
 public:
 	static void setRenderer(Renderer* _renderer);
 
-	Transform* transform;
+	//Transform* transform;
 
 	Entity();
 	Entity(vec3 _color);

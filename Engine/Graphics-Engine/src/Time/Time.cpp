@@ -3,40 +3,39 @@
 float Time::elapsedTime = 0.0f;
 float Time::deltaTime = 0.0f;
 
+double oldTime = clock();
+
+float Time::getDeltaTime() { return deltaTime; }
+
 Time::Time()
 {
-	Reset();
+	reset();
 	timeScale = 1.0f;
 }
 
 Time::~Time() {}
 
-double oldTime = clock();
-
-void Time::Reset()
-{
-	startTime = std::chrono::system_clock::now();
-}
-
-void Time::SetTimeScale(float value) { timeScale = value; }
-
-float Time::GetTimeScale() { return timeScale; }
-
-float Time::GetSeconds() { return 0; }
-
-void Time::StartTime() {}
-
-void Time::Tick()
+void Time::tick()
 {
 	double time = clock();
 	deltaTime = (float)((time - oldTime) / 1000.0f);
 	oldTime = time;
 }
-float Time::DeltaTime() { return deltaTime; }
 
-void Time::CalculateFPS()
+void Time::reset()
 {
-	elapsedTime += DeltaTime();
+	startTime = std::chrono::system_clock::now();
+}
+
+void Time::setTimeScale(float value) { timeScale = value; }
+
+float Time::getTimeScale() { return timeScale; }
+
+float Time::getSeconds() { return 0; }
+
+void Time::calculateFPS()
+{
+	elapsedTime += deltaTime;
 	frames++;
 	if (elapsedTime >= 1.0f)
 	{
@@ -45,9 +44,9 @@ void Time::CalculateFPS()
 		elapsedTime = 0;
 	}
 }
-float Time::GetFps() { return fps; }
+float Time::getFPS() { return fps; }
 
-void Time::PrintFPS()
+void Time::printFPS()
 {
-	std::cout << "FPS: " << 1.0f / DeltaTime() << std::endl;
+	std::cout << "FPS: " << 1.0f / deltaTime << std::endl;
 }

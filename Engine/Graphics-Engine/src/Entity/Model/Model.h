@@ -27,6 +27,7 @@ class GENGINE_API Model : public Entity
 	void processNode(const aiScene* scene, aiNode* node);
 	Mesh processMesh(const aiScene* scene, aiMesh* mesh);
 	vector<Texture> loadMaterialTextures(aiMaterial* material, aiTextureType type, string typeName);
+	Material loadMaterialColors(aiMaterial* meshMaterial);
 public:
 	Model(TextureManager* _textureManager, const char* path);
 	~Model();

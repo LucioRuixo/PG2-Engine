@@ -1,13 +1,25 @@
 #include "Game.h"
 
-bool spacePressed = false;
 bool onePressed = false;
 bool twoPressed = false;
 bool threePressed = false;
+bool fourPressed = false;
+bool fivePressed = false;
 
 float cameraMovementSpeed = 1.0f;
 float cameraRotationSpeed = 50.0f;
 float spriteScaleAddition = 0.1f;
+
+float treeYRotation = 0.0f;
+float treeRotationSpeed = 50.0f;
+float daggerYRotation = 0.0f;
+float daggerRotationSpeed = 50.0f;
+float sniperRifleYRotation = 0.0f;
+float sniperRifleRotationSpeed = 50.0f;
+float plantYRotation = 0.0f;
+float plantRotationSpeed = 50.0f;
+float alarakYRotation = 0.0f;
+float alarakRotationSpeed = 50.0f;
 
 vec3 lightSourcePosition = vec3(0.0f, 2.0f, -4.5f);
 vec3 cameraMovement;
@@ -23,14 +35,10 @@ Cube* emeraldCube;
 Cube* goldCube;
 
 Model* tree;
-Model* couch;
-Model* sniperRifle;
-Model* car;
 Model* dagger;
+Model* sniperRifle;
 Model* plant;
-Model* bottle;
-Model* pistol2;
-Model* phone;
+Model* alarak;
 
 Game::Game() {}
 
@@ -43,8 +51,8 @@ int Game::initialize()
 	//sprite1->setPosition(1.0f, -0.5f, -10.0f);
 	
 	//Sprite 2
-	//sprite2 = new Sprite(textureManager, "res/Assets/gato 2.jpg", "gato 2");
-	//sprite2->setPosition(-1.0f, 0.0f, -3.0f);
+	sprite2 = new Sprite(textureManager, "res/Assets/gato 2.jpg", "gato 2");
+	sprite2->setPosition(-1.0f, 0.0f, -3.0f);
 	
 	//Cube
 	cube = new Cube(vec3(1.0f, 0.1f, 0.1f));
@@ -81,45 +89,32 @@ int Game::initialize()
 	goldCube->setScale(1.0f, 3.0f, 1.0f);
 
 	//Models
-	//tree = new Model(textureManager, "res/Assets/Modelos/Tree/Lowpoly_tree_sample.obj");
-	//tree->setPosition(-2.0f, -0.25f, -1.0f);
-	//tree->setScale(0.1f, 0.1f, 0.1f);
-	
-	//couch = new Model(textureManager, "res/Assets/Modelos/Couch/Couch.obj");
-	//couch->setPosition(0.0f, 0.0f, -3.0f);
-	
-	//sniperRifle = new Model(textureManager, "res/Assets/Modelos/Sniper_Rifle/Sniper_Rifle.obj");
-	//sniperRifle->setPosition(1.5f, 0.0f, -3.0f);
-
-	//car = new Model(textureManager, "res/Assets/Modelos/Mustang/Mustang.obj");
-	//car->setPosition(1.5f, 0.0f, -3.0f);
+	tree = new Model(textureManager, "res/Assets/Modelos/Tree/Lowpoly_tree_sample.obj");
+	tree->setPosition(-3.0f, -1.0f, -4.0f);
+	tree->setScale(0.075f, 0.075f, 0.075f);
 
 	dagger = new Model(textureManager, "res/Assets/Modelos/Dagger/source/Dagger.obj");
-	dagger->setPosition(0.0f, 0.0f, -3.0f);
-	dagger->setScale(0.01f, 0.01f, 0.01f);
+	dagger->setPosition(-1.5f, 0.0f, -4.0f);
+	dagger->setScale(0.005f, 0.005f, 0.005f);
+	
+	sniperRifle = new Model(textureManager, "res/Assets/Modelos/Sniper Rifle/OBJ/Sniper_Rifle.obj");
+	sniperRifle->setPosition(0.0f, 0.5f, -4.0f);
+	sniperRifle->setScale(0.25f, 0.25f, 0.25f);
 
 	plant = new Model(textureManager, "res/Assets/Modelos/Plant/A1.obj");
-	plant->setPosition(1.5f, 0.0f, -3.0f);
-	
-	//bottle = new Model(textureManager, "res/Assets/Modelos/Bottle/Jack Daniel Bottle.obj");
-	//bottle->setPosition(1.0f, -0.25f, -1.0f);
-	//bottle->setRotation(-90.0f, 0.0f, 0.0f);
-	//bottle->setScale(0.1f, 0.1f, 0.1f);
+	plant->setPosition(1.5f, -1.0f, -4.0f);
 
-	//pistol2 = new Model(textureManager, "res/Assets/Modelos/Pistol 2/source/drakefire_pistol_low.obj");
-	//pistol2->setPosition(1.5f, 0.0f, -3.0f);
-
-	//phone = new Model(textureManager, "res/Assets/Modelos/Phone/Iphone 12 Pro.obj");
-	//phone->setPosition(1.5f, 0.0f, -3.0f);
+	alarak = new Model(textureManager, "res/Assets/Modelos/Alarak/source/Alarak-Protoss/Alarak VR.fbx");
+	alarak->setPosition(-1.5f, -1.0f, -9.0f);
 
 	//Lighting
-	lighting->addDirectionalLight(vec3(1.0f, -1.0f, 0.0f));
+	lightingManager->addDirectionalLight(vec3(1.0f, -1.0f, 0.0f));
 
-	lighting->addPointLight(1, vec3(0.0f, 0.0f, -2.5f));
-	lighting->addPointLight(2, vec3(0.0f, 0.0f, -8.0f));
+	lightingManager->addPointLight(0, vec3(0.0f, 0.0f, -12.0f));
+	lightingManager->addPointLight(1, vec3(0.0f, 0.0f, -8.0f));
 
-	lighting->addSpotlight(1, vec3(0.0f, 1.0f, -4.5f), vec3(0.0f, -1.0f, -1.0f));
-	lighting->addSpotlight(2, vec3(0.0f, 1.0f, -12.0f), vec3(0.0f, 0.0f, -1.0f));
+	lightingManager->addSpotlight(0, vec3(0.0f, 1.0f, -4.5f), vec3(0.0f, -1.0f, -1.0f));
+	lightingManager->addSpotlight(1, vec3(0.0f, 0.0f, 1.0f), vec3(0.0f, 0.0f, -1.0f));
 	
 	return 0;
 }
@@ -131,60 +126,79 @@ void Game::update()
 
 	//Move camera
 	//-----------
-	if (input->getKeyPress(PrintableKey::D)) camera->translate(cameraMovementSpeed * time->DeltaTime(), 0.0f, 0.0f);
-	if (input->getKeyPress(PrintableKey::A)) camera->translate(-cameraMovementSpeed * time->DeltaTime(), 0.0f, 0.0f);
+	if (input->getKeyPress(PrintableKey::D)) camera->translate(cameraMovementSpeed * time->getDeltaTime(), 0.0f, 0.0f);
+	if (input->getKeyPress(PrintableKey::A)) camera->translate(-cameraMovementSpeed * time->getDeltaTime(), 0.0f, 0.0f);
 
-	if (input->getKeyPress(PrintableKey::Z)) camera->translate(0.0f, cameraMovementSpeed * time->DeltaTime(), 0.0f);
-	if (input->getKeyPress(PrintableKey::X)) camera->translate(0.0f, -cameraMovementSpeed * time->DeltaTime(), 0.0f);
+	if (input->getKeyPress(PrintableKey::Z)) camera->translate(0.0f, cameraMovementSpeed * time->getDeltaTime(), 0.0f);
+	if (input->getKeyPress(PrintableKey::X)) camera->translate(0.0f, -cameraMovementSpeed * time->getDeltaTime(), 0.0f);
 
-	if (input->getKeyPress(PrintableKey::S)) camera->translate(0.0f, 0.0f, cameraMovementSpeed * time->DeltaTime());
-	if (input->getKeyPress(PrintableKey::W)) camera->translate(0.0f, 0.0f, -cameraMovementSpeed * time->DeltaTime());
+	if (input->getKeyPress(PrintableKey::S)) camera->translate(0.0f, 0.0f, cameraMovementSpeed * time->getDeltaTime());
+	if (input->getKeyPress(PrintableKey::W)) camera->translate(0.0f, 0.0f, -cameraMovementSpeed * time->getDeltaTime());
 	//-----------
 
 	//Rotate camera
 	//-----------
-	if (input->getKeyPress(FunctionKey::UP)) camera->rotate(cameraRotationSpeed * time->DeltaTime(), 0.0f, 0.0f);
-	if (input->getKeyPress(FunctionKey::DOWN)) camera->rotate(-cameraRotationSpeed * time->DeltaTime(), 0.0f, 0.0f);
+	if (input->getKeyPress(FunctionKey::UP)) camera->rotate(cameraRotationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
+	if (input->getKeyPress(FunctionKey::DOWN)) camera->rotate(-cameraRotationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
 	
-	if (input->getKeyPress(FunctionKey::RIGHT)) camera->rotate(0.0f, cameraRotationSpeed * time->DeltaTime(), 0.0f);
-	if (input->getKeyPress(FunctionKey::LEFT)) camera->rotate(0.0f, -cameraRotationSpeed * time->DeltaTime(), 0.0f);
+	if (input->getKeyPress(FunctionKey::RIGHT)) camera->rotate(0.0f, cameraRotationSpeed * time->getDeltaTime(), 0.0f);
+	if (input->getKeyPress(FunctionKey::LEFT)) camera->rotate(0.0f, -cameraRotationSpeed * time->getDeltaTime(), 0.0f);
 	//-----------
 
 	//Turn on/off light
 	//-----------
-	//if (input->getKeyPress(PrintableKey::SPACE) && !spacePressed)
-	//{
-	//	spacePressed = true;
-	//
-	//	if (lighting->getLightSourceActive()) lighting->setLightSourceActive(false);
-	//	else lighting->setLightSourceActive(true);
-	//}
-	//else if (input->getKeyRelease(PrintableKey::SPACE)) spacePressed = false;
-	//-----------
+	if (input->getKeyPress(PrintableKey::ONE) && !onePressed)
+	{
+		onePressed = true;
+		lightingManager->getDirectionalLight()->setOn(!lightingManager->getDirectionalLight()->getOn());
+	}
+	else if (input->getKeyRelease(PrintableKey::ONE)) onePressed = false;
+	
+	if (input->getKeyPress(PrintableKey::TWO) && !twoPressed)
+	{
+		twoPressed = true;
+		lightingManager->getPointLight(0)->setOn(!lightingManager->getPointLight(0)->getOn());
+	}
+	else if (input->getKeyRelease(PrintableKey::TWO)) twoPressed = false;
+	
+	if (input->getKeyPress(PrintableKey::THREE) && !threePressed)
+	{
+		threePressed = true;
+		lightingManager->getPointLight(1)->setOn(!lightingManager->getPointLight(1)->getOn());
+	}
+	else if (input->getKeyRelease(PrintableKey::THREE)) threePressed = false;
 
-	//Change light type
+	if (input->getKeyPress(PrintableKey::FOUR) && !fourPressed)
+	{
+		fourPressed = true;
+		lightingManager->getSpotlight(0)->setOn(!lightingManager->getSpotlight(0)->getOn());
+	}
+	else if (input->getKeyRelease(PrintableKey::FOUR)) fourPressed = false;
+
+	if (input->getKeyPress(PrintableKey::FIVE) && !fivePressed)
+	{
+		fivePressed = true;
+		lightingManager->getSpotlight(1)->setOn(!lightingManager->getSpotlight(1)->getOn());
+	}
+	else if (input->getKeyRelease(PrintableKey::FIVE)) fivePressed = false;
 	//-----------
-	//if (input->getKeyPress(FunctionKey::KP_1) && !onePressed)
-	//{
-	//	onePressed = true;
-	//	lighting->getLightSource()->setType(LightType::Directional);
-	//}
-	//else if (input->getKeyRelease(FunctionKey::KP_1)) onePressed = false;
-	//
-	//if (input->getKeyPress(FunctionKey::KP_2) && !twoPressed)
-	//{
-	//	twoPressed = true;
-	//	lighting->getLightSource()->setType(LightType::Point);
-	//}
-	//else if (input->getKeyRelease(FunctionKey::KP_2)) twoPressed = false;
-	//
-	//if (input->getKeyPress(FunctionKey::KP_3) && !threePressed)
-	//{
-	//	threePressed = true;
-	//	lighting->getLightSource()->setType(LightType::Spot);
-	//}
-	//else if (input->getKeyRelease(FunctionKey::KP_3)) threePressed = false;
-	//-----------
+#pragma endregion
+
+#pragma region Transformations
+	treeYRotation += treeRotationSpeed * time->getDeltaTime();
+	tree->setRotation(0.0f, treeYRotation, 0.0f);
+
+	daggerYRotation += daggerRotationSpeed * time->getDeltaTime();
+	dagger->setRotation(0.0f, daggerYRotation, -90.0f);
+
+	sniperRifleYRotation += sniperRifleRotationSpeed * time->getDeltaTime();
+	sniperRifle->setRotation(0.0f, sniperRifleYRotation, -90.0f);
+
+	plantYRotation += plantRotationSpeed * time->getDeltaTime();
+	plant->setRotation(0.0f, plantYRotation, 0.0f);
+
+	alarakYRotation += alarakRotationSpeed * time->getDeltaTime();
+	alarak->setRotation(-90.0f, 0.0f, alarakYRotation);
 #pragma endregion
 
 #pragma region Rendering
@@ -198,15 +212,11 @@ void Game::update()
 	emeraldCube->draw();
 	goldCube->draw();
 
-	//tree->draw();
-	//couch->draw();
-	//sniperRifle->draw();
-	//car->draw();
+	tree->draw();
 	dagger->draw();
-	//bottle->draw();
-	//pistol2->draw();
-	//phone->draw();
+	sniperRifle->draw();
 	plant->draw();
+	alarak->draw();
 #pragma endregion
 }
 

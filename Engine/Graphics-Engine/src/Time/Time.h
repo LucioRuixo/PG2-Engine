@@ -1,32 +1,37 @@
 #ifndef TIME_H
 #define TIME_H
 
-#include "Tools/Includes.h"
 #include <chrono>
 #include <time.h>
+#include "Tools/Includes.h"
 
-class GENGINE_API Time {
+class GENGINE_API Time
+{
 private:
-	std::chrono::system_clock::time_point startTime;
 	static float elapsedTime;
 	static float deltaTime;
+
+	int frames;
+
 	float timeScale;
 	float framesCounter;
-	int frames;
 	float fps = 0;
+
+	std::chrono::system_clock::time_point startTime;
 public:
+	static float getDeltaTime();
+
 	Time();
 	~Time();
-	static float DeltaTime();
-	void Reset();
-	void SetTimeScale(float t);
-	float GetTimeScale();
-	float GetSeconds();
-	void StartTime();
-	void Tick();
-	void CalculateFPS();
-	float GetFps();
-	void PrintFPS();
+
+	void tick();
+	void reset();
+	void setTimeScale(float value);
+	float getTimeScale();
+	float getSeconds();
+	void calculateFPS();
+	float getFPS();
+	void printFPS();
 };
 
 #endif // !TIME_H

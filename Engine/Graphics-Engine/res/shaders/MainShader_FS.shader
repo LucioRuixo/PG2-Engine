@@ -6,6 +6,7 @@ const int MAX_SPOTLIGHT_AMOUNT = 4;
 struct DirectionalLight
 {
 	bool null;
+	bool on;
 
 	vec3 direction;
 
@@ -16,6 +17,7 @@ struct DirectionalLight
 struct PointLight
 {
 	bool null;
+	bool on;
 
 	vec3 position;
 
@@ -30,6 +32,7 @@ struct PointLight
 struct Spotlight
 {
 	bool null;
+	bool on;
 
 	vec3 position;
 	vec3 direction;
@@ -40,6 +43,7 @@ struct Spotlight
 	float innerCutOff;
 	float outerCutOff;
 };
+
 
 struct Material
 {
@@ -85,11 +89,11 @@ uniform vec3 viewPosition;
 uniform bool spriteTextureActive;
 uniform sampler2D textureData;
 
-vec4 diffuseTexture;
-vec4 specularTexture;
+vec3 diffuseTexture;
+vec3 specularTexture;
 
-vec4 materialDiffuse;
-vec4 materialSpecular;
+vec3 materialDiffuse;
+vec3 materialSpecular;
 
 vec3 CalculateDirectionalLight(DirectionalLight light, vec3 nNormal, vec3 viewDirection);
 vec3 CalculatePointLight(PointLight light, vec3 nNormal, vec3 viewDirection);
@@ -99,44 +103,43 @@ void main()
 {
 	//DEBUG
 	//-------
-	//FragColor = vec4(Normal, 1.0f);
+	//FragColor = vec4(material.diffuse, 1.0f);
 	//return;
 	//-------
 
 	if (material.diffuseTexturesActive)
 	{
-		vec4 diffuseTexture0 = texture(material.diffuseTexture0, TextureCoordinates);
-		vec4 diffuseTexture1 = texture(material.diffuseTexture1, TextureCoordinates);
-		vec4 diffuseTexture2 = texture(material.diffuseTexture2, TextureCoordinates);
-		vec4 diffuseTexture3 = texture(material.diffuseTexture3, TextureCoordinates);
+		vec3 diffuseTexture0 = vec3(texture(material.diffuseTexture0, TextureCoordinates));
+		vec3 diffuseTexture1 = vec3(texture(material.diffuseTexture1, TextureCoordinates));
+		vec3 diffuseTexture2 = vec3(texture(material.diffuseTexture2, TextureCoordinates));
+		vec3 diffuseTexture3 = vec3(texture(material.diffuseTexture3, TextureCoordinates));
 		diffuseTexture = diffuseTexture0 + diffuseTexture1 + diffuseTexture2 + diffuseTexture3;
 		
 		materialDiffuse = diffuseTexture;
 	}
-	else materialDiffuse = vec4(material.diffuse, 1.0f);
+	else materialDiffuse = material.diffuse;
 	
 	if (material.specularTexturesActive)
 	{
-		vec4 specularTexture0 = texture(material.specularTexture0, TextureCoordinates);
-		vec4 specularTexture1 = texture(material.specularTexture1, TextureCoordinates);
-		vec4 specularTexture2 = texture(material.specularTexture2, TextureCoordinates);
-		vec4 specularTexture3 = texture(material.specularTexture3, TextureCoordinates);
+		vec3 specularTexture0 = vec3(texture(material.specularTexture0, TextureCoordinates));
+		vec3 specularTexture1 = vec3(texture(material.specularTexture1, TextureCoordinates));
+		vec3 specularTexture2 = vec3(texture(material.specularTexture2, TextureCoordinates));
+		vec3 specularTexture3 = vec3(texture(material.specularTexture3, TextureCoordinates));
 		specularTexture = specularTexture0 + specularTexture1 + specularTexture2 + specularTexture3;
 		
 		materialSpecular = specularTexture;
 	}
-	else materialSpecular = vec4(material.specular, 1.0f);
+	else materialSpecular = material.specular;
 	
 	vec4 objectColor;
 	if (spriteTextureActive) objectColor = texture(textureData, TextureCoordinates);
-	else if (material.diffuseTexturesActive) objectColor = materialDiffuse;
+	else if (material.diffuseTexturesActive) objectColor = vec4(materialDiffuse, 1.0f);
 	else objectColor = vec4(color, 1.0f);
 
 	//Ambient
 	//-------
-	vec3 ambient = lightingAmbient;
-	if (material.diffuseTexturesActive) ambient *= vec3(diffuseTexture);
-	else ambient *= material.diffuse;
+	vec3 ambient = lightingAmbient * material.diffuse;
+	if (material.diffuseTexturesActive) ambient *= diffuseTexture;
 	//-------
 	
 	vec3 lighting = ambient;
@@ -164,32 +167,36 @@ void main()
 
 vec3 CalculateDirectionalLight(DirectionalLight light, vec3 nNormal, vec3 viewDirection)
 {
-	if (light.null) return vec3(0.0f);
+	if (light.null || !light.on) return vec3(0.0f);
 
 	vec3 lightSourceDirection = -light.direction;
 
 	float diffuseImpact = max(dot(nNormal, lightSourceDirection), 0.0f);
-	vec3 diffuse = light.diffuse * vec3(materialDiffuse) * diffuseImpact;
+	vec3 diffuse = light.diffuse * material.diffuse * diffuseImpact;
+	if (material.diffuseTexturesActive) diffuse *= materialDiffuse;
 
 	vec3 reflectDirection = reflect(-lightSourceDirection, nNormal);
 	float specularImpact = pow(max(dot(viewDirection, reflectDirection), 0.0f), material.shininess * 128.0f);
-	vec3 specular = light.specular * vec3(materialSpecular) * specularImpact;
+	vec3 specular = light.specular * material.specular * specularImpact;
+	if (material.specularTexturesActive) specular *= materialSpecular;
 
 	return (diffuse + specular);
 }
 
 vec3 CalculatePointLight(PointLight light, vec3 nNormal, vec3 viewDirection)
 {
-	if (light.null) return vec3(0.0f);
+	if (light.null || !light.on) return vec3(0.0f);
 
 	vec3 lightSourceDirection = normalize(light.position - FragmentPosition);
 
 	float diffuseImpact = max(dot(nNormal, lightSourceDirection), 0.0f);
-	vec3 diffuse = light.diffuse * vec3(materialDiffuse) * diffuseImpact;
+	vec3 diffuse = light.diffuse * material.diffuse * diffuseImpact;
+	if (material.diffuseTexturesActive) diffuse *= materialDiffuse;
 
 	vec3 reflectDirection = reflect(-lightSourceDirection, nNormal);
 	float specularImpact = pow(max(dot(viewDirection, reflectDirection), 0.0f), material.shininess * 128.0f);
-	vec3 specular = light.specular * vec3(materialSpecular) * specularImpact;
+	vec3 specular = light.specular * material.specular * specularImpact;
+	if (material.specularTexturesActive) specular *= materialSpecular;
 
 	float distance = length(light.position - FragmentPosition);
 	float attenuation = 1.0f / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
@@ -202,16 +209,18 @@ vec3 CalculatePointLight(PointLight light, vec3 nNormal, vec3 viewDirection)
 
 vec3 CalculateSpotlight(Spotlight light, vec3 nNormal, vec3 viewDirection)
 {
-	if (light.null) return vec3(0.0f);
+	if (light.null || !light.on) return vec3(0.0f);
 
 	vec3 lightSourceDirection = normalize(light.position - FragmentPosition);
 
 	float diffuseImpact = max(dot(nNormal, lightSourceDirection), 0.0f);
-	vec3 diffuse = light.diffuse * vec3(materialDiffuse) * diffuseImpact;
+	vec3 diffuse = light.diffuse * material.diffuse * diffuseImpact;
+	if (material.diffuseTexturesActive) diffuse *= materialDiffuse;
 
 	vec3 reflectDirection = reflect(-lightSourceDirection, nNormal);
 	float specularImpact = pow(max(dot(viewDirection, reflectDirection), 0.0f), material.shininess * 128.0f);
-	vec3 specular = light.specular * vec3(materialSpecular) * specularImpact;
+	vec3 specular = light.specular * material.specular * specularImpact;
+	if (material.specularTexturesActive) specular *= materialSpecular;
 
 	float theta = dot(lightSourceDirection, -light.direction);
 	float epsilon = light.innerCutOff - light.outerCutOff;

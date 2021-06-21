@@ -29,12 +29,11 @@ Entity::Entity(vec3 _color, Material _material)
 	setMaterial(_material);
 }
 
-Entity::~Entity() { if (transform) delete transform; }
+Entity::~Entity() { /*if (transform) delete transform;*/ }
 
 void Entity::construct()
 {
-	transform = new Transform();
-
+	//transform = new Transform();
 	modelMatrix.model = mat4(1.0f);
 	modelMatrix.rotationX = mat4(1.0f);
 	modelMatrix.rotationY = mat4(1.0f);
@@ -47,7 +46,7 @@ void Entity::construct()
 	setScale(1.0f, 1.0f, 1.0f);
 }
 
-void Entity::setRenderer(Renderer * _renderer)
+void Entity::setRenderer(Renderer* _renderer)
 {
 	renderer = _renderer;
 }
@@ -76,10 +75,10 @@ void Entity::setUniformValues()
 
 	//Material
 	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(ShaderType::Main), "material.diffuseTexturesActive");
-	glUniform1i(uniformLocation, 0);
+	glUniform1i(uniformLocation, material.diffuseTexturesActive);
 
 	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(ShaderType::Main), "material.specularTexturesActive");
-	glUniform1i(uniformLocation, 0);
+	glUniform1i(uniformLocation, material.specularTexturesActive);
 
 	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(ShaderType::Main), "material.diffuse");
 	glUniform3f(uniformLocation, material.diffuse.r, material.diffuse.g, material.diffuse.b);
@@ -97,21 +96,24 @@ mat4 Entity::getModel() { return modelMatrix.model; }
 
 void Entity::setPosition(float x, float y, float z)
 {
-	transform->setPosition(x, y, z);
+	//transform->setPosition(x, y, z);
+	vec3 position = vec3(x, y, z);
 
-	modelMatrix.translation = glm::translate(mat4(1.0f), transform->getPosition());
+	modelMatrix.translation = glm::translate(mat4(1.0f), position/*transform->getPosition()*/);
 	updateModelMatrix();
 }
 
 void Entity::translate(float x, float y, float z)
 {
-	vec3 position = transform->getPosition();
+	//vec3 position = transform->getPosition();
+	vec3 position = vec3(x, y, z);
 	setPosition(position.x + x, position.y + y, position.z + z);
 }
 
 void Entity::setRotation(float x, float y, float z)
 {
-	transform->setRotation(x, y, z);
+	//transform->setRotation(x, y, z);
+	vec3 rotation = vec3(x, y, z);
 
 	vec3 xAxis = vec3(1.0f, 0.0f, 0.0f);
 	vec3 yAxis = vec3(0.0f, 1.0f, 0.0f);
@@ -132,8 +134,9 @@ Material Entity::getMaterial() { return material; }
 
 void Entity::setScale(float x, float y, float z)
 {
-	transform->setScale(x, y, z);
+	//transform->setScale(x, y, z);
+	vec3 _scale = vec3(x, y, z);
 
-	modelMatrix.scale = scale(mat4(1.0f), transform->getScale());
+	modelMatrix.scale = scale(mat4(1.0f), _scale/*transform->getScale()*/);
 	updateModelMatrix();
 }

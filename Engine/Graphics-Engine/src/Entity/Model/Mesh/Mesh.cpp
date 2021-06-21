@@ -1,8 +1,16 @@
 #include "Mesh.h"
 
-Mesh::Mesh(Renderer* _renderer, vector<Vertex> _vertices, vector<unsigned int> _indices, vector<Texture> _textures)
+Mesh::Mesh(vector<Vertex> _vertices, vector<unsigned int> _indices, vector<Texture> _textures) : Entity()
 {
-	renderer = _renderer;
+	vertices = _vertices;
+	indices = _indices;
+	textures = _textures;
+
+	setupMesh();
+}
+
+Mesh::Mesh(vector<Vertex> _vertices, vector<unsigned int> _indices, vector<Texture> _textures, Material _material) : Entity(_material)
+{
 	vertices = _vertices;
 	indices = _indices;
 	textures = _textures;
@@ -12,9 +20,9 @@ Mesh::Mesh(Renderer* _renderer, vector<Vertex> _vertices, vector<unsigned int> _
 
 Mesh::~Mesh()
 {
-	vertices.clear();
-	indices.clear();
-	textures.clear();
+	if (!vertices.empty()) vertices.clear();
+	if (!indices.empty()) indices.clear();
+	if (!textures.empty()) textures.clear();
 }
 
 void Mesh::setupMesh()
@@ -56,20 +64,20 @@ void Mesh::draw(mat4 model)
 {
 	unsigned int uniformLocation = 0;
 
-	//Texture
-	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(ShaderType::Main), "spriteTextureActive");
-	glUniform1i(uniformLocation, 0);
-	
-	//Color
-	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(ShaderType::Main), "color");
-	glUniform3f(uniformLocation, 1.0f, 1.0f, 1.0f);
-	
-	//Material
-	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(ShaderType::Main), "material.diffuseTexturesActive");
-	glUniform1i(uniformLocation, 1);
-	
-	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(ShaderType::Main), "material.specularTexturesActive");
-	glUniform1i(uniformLocation, 1);
+	////Texture
+	//uniformLocation = glGetUniformLocation(renderer->getShaderProgram(ShaderType::Main), "spriteTextureActive");
+	//glUniform1i(uniformLocation, 0);
+	//
+	////Color
+	//uniformLocation = glGetUniformLocation(renderer->getShaderProgram(ShaderType::Main), "color");
+	//glUniform3f(uniformLocation, 1.0f, 1.0f, 1.0f);
+	//
+	////Material
+	//uniformLocation = glGetUniformLocation(renderer->getShaderProgram(ShaderType::Main), "material.diffuseTexturesActive");
+	//glUniform1i(uniformLocation, 1);
+	//
+	//uniformLocation = glGetUniformLocation(renderer->getShaderProgram(ShaderType::Main), "material.specularTexturesActive");
+	//glUniform1i(uniformLocation, 1);
 
 	unsigned int diffuseNumber = 0;
 	unsigned int specularNumber = 0;
@@ -101,6 +109,7 @@ void Mesh::draw(mat4 model)
 	}
 	glActiveTexture(GL_TEXTURE0);
 
+	setUniformValues();
 	renderer->setModel(renderer->getShaderProgram(ShaderType::Main), model);
 	renderer->drawElements(vao, vbo, ebo, indices.size());
 

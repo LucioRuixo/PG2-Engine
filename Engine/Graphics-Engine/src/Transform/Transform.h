@@ -29,6 +29,7 @@ class GENGINE_API Transform
 public:
 	Transform();
 	~Transform();
+
 	void setPosition(float x, float y, float z);
 	vec3 getPosition();
 	void setRotation(float x, float y, float z);

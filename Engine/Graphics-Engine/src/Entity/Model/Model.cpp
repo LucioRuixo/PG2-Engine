@@ -4,6 +4,9 @@ Model::Model(TextureManager* _textureManager, const char* path) : Entity()
 {
 	textureManager = _textureManager;
 
+	material.diffuseTexturesActive = true;
+	material.specularTexturesActive = true;
+
 	loadModel(path);
 }
 
@@ -50,6 +53,7 @@ Mesh Model::processMesh(const aiScene* scene, aiMesh* mesh)
 	vector<Vertex> vertices;
 	vector<unsigned int> indices;
 	vector<Texture> textures;
+	Material newMaterial;
 
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
 	{
@@ -86,28 +90,42 @@ Mesh Model::processMesh(const aiScene* scene, aiMesh* mesh)
 
 	if (mesh->mMaterialIndex >= 0)
 	{
-		aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+		aiMaterial* meshMaterial = scene->mMaterials[mesh->mMaterialIndex];
 
-		vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "diffuseTexture");
+		newMaterial = loadMaterialColors(meshMaterial);
+
+		vector<Texture> diffuseMaps = loadMaterialTextures(meshMaterial, aiTextureType_DIFFUSE, "diffuseTexture");
+		if (!diffuseMaps.empty()) newMaterial.diffuseTexturesActive = true;
 		textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 
-		vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "specularTexture");
+		vector<Texture> specularMaps = loadMaterialTextures(meshMaterial, aiTextureType_SPECULAR, "specularTexture");
+		if (!specularMaps.empty()) newMaterial.specularTexturesActive = true;
 		textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
 	}
 
-	return Mesh(renderer, vertices, indices, textures);
+	return Mesh(vertices, indices, textures, newMaterial);
 }
 
-vector<Texture> Model::loadMaterialTextures(aiMaterial* material, aiTextureType type, string typeName)
+Material Model::loadMaterialColors(aiMaterial* meshMaterial)
+{
+	Material newMaterial;
+	aiColor3D color(0.0f, 0.0f, 0.0f);
+
+	if (AI_SUCCESS == meshMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, color)) newMaterial.diffuse = vec3(color.r, color.g, color.b);
+	if (AI_SUCCESS == meshMaterial->Get(AI_MATKEY_COLOR_SPECULAR, color)) newMaterial.specular = vec3(color.r, color.g, color.b);
+
+	return newMaterial;
+}
+
+vector<Texture> Model::loadMaterialTextures(aiMaterial* meshMaterial, aiTextureType type, string typeName)
 {
 	vector<Texture> textures;
 
-	unsigned int textureCount = material->GetTextureCount(type);
-	cout << "mesh texture count of type \"" << typeName << "\": " << textureCount << endl;
+	unsigned int textureCount = meshMaterial->GetTextureCount(type);
 	for (unsigned int i = 0; i < textureCount; i++)
 	{
 		aiString relativePath;
-		material->GetTexture(type, i, &relativePath);
+		meshMaterial->GetTexture(type, i, &relativePath);
 
 		string sRelativePath = relativePath.C_Str();
 		string path = directory + '/' + sRelativePath;
@@ -123,5 +141,7 @@ vector<Texture> Model::loadMaterialTextures(aiMaterial* material, aiTextureType 
 
 void Model::draw()
 {
+	setUniformValues();
+
 	for (unsigned int i = 0; i < meshes.size(); i++) meshes[i].draw(modelMatrix.model);
 }

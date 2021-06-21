@@ -98,7 +98,7 @@ GameBase::GameBase()
 	renderer = new Renderer();
 	camera = new Camera(renderer);
 	textureManager = new TextureManager(renderer);
-	lighting = new Lighting(renderer);
+	lightingManager = new LightingManager(renderer);
 	input = new Input(window);
 	time = new Time();
 
@@ -137,7 +137,7 @@ GameBase::GameBase()
 	for (int i = 0; i < ShaderType::Size; i++) renderer->setProjection(renderer->getProjection());
 
 	//Lighting
-	lighting->initializeShaderValues();
+	lightingManager->initializeShaderValues();
 
 	//Camera
 	camera->setPosition(0.0f, 0.0f, 0.0f);
@@ -151,7 +151,8 @@ GameBase::~GameBase()
 	if (window) delete window;
 	if (renderer) delete renderer;
 	if (camera) delete camera;
-	if (lighting) delete lighting;
+	if (textureManager) delete textureManager;
+	if (lightingManager) delete lightingManager;
 	if (input) delete input;
 	if (time) delete time;
 }
@@ -173,15 +174,15 @@ void GameBase::run()
 		renderer->useShader(ShaderType::LightSource);
 		for (int i = 0; i < MAX_POINT_LIGHT_AMOUNT; i++)
 		{
-			if (lighting->getPointLight(i)) lighting->getPointLight(i)->draw();
+			if (lightingManager->getPointLight(i)) lightingManager->getPointLight(i)->draw();
 		}
 		for (int i = 0; i < MAX_SPOTLIGHT_AMOUNT; i++)
 		{
-			if (lighting->getSpotlight(i)) lighting->getSpotlight(i)->draw();
+			if (lightingManager->getSpotlight(i)) lightingManager->getSpotlight(i)->draw();
 		}
 
-		time->Tick();
-		elapsedTime += time->DeltaTime();
+		time->tick();
+		elapsedTime += time->getDeltaTime();
 		framesInSecond++;
 		if (elapsedTime >= 1.0f)
 		{
