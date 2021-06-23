@@ -89,6 +89,9 @@
     <Filter Include="src\LightingManager\Light\Spot Light">
       <UniqueIdentifier>{85eb172e-d1ce-4a33-8ff0-0c6b1a82f8d3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\ModelManager">
+      <UniqueIdentifier>{dc87f704-7b4e-444a-a845-e38612083130}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\Shaders\LightSourceShader_FS.shader">
@@ -177,6 +180,9 @@
     <ClCompile Include="src\LightingManager\Light\Spotlight\Spotlight.cpp">
       <Filter>src\LightingManager\Light\Spot Light</Filter>
     </ClCompile>
+    <ClCompile Include="src\ModelManager\ModelManager.cpp">
+      <Filter>src\ModelManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Animation\Animation.h">
@@ -259,6 +265,9 @@
     </ClInclude>
     <ClInclude Include="src\LightingManager\Light\Spotlight\Spotlight.h">
       <Filter>src\LightingManager\Light\Spot Light</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ModelManager\ModelManager.h">
+      <Filter>src\ModelManager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

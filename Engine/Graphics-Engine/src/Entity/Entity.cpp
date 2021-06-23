@@ -1,6 +1,7 @@
 #include "Entity.h"
 
 Renderer* Entity::renderer = NULL;
+TextureManager* Entity::textureManager = NULL;
 
 Entity::Entity()
 {
@@ -46,10 +47,9 @@ void Entity::construct()
 	setScale(1.0f, 1.0f, 1.0f);
 }
 
-void Entity::setRenderer(Renderer* _renderer)
-{
-	renderer = _renderer;
-}
+void Entity::setRenderer(Renderer* _renderer) { renderer = _renderer; }
+
+void Entity::setTextureManager(TextureManager * _textureManager) { textureManager = _textureManager; }
 
 void Entity::updateModelMatrix()
 {

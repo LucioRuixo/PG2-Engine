@@ -6,6 +6,7 @@
 #include "Camera/Camera.h"
 #include "Input/Input.h"
 #include "LightingManager/LightingManager.h"
+#include "ModelManager/ModelManager.h"
 #include "Renderer/Renderer.h"
 #include "TextureManager/TextureManager.h"
 #include "TileMap/TileMap.h"
@@ -19,6 +20,7 @@ protected:
 	Renderer* renderer;
 	Camera* camera;
 	TextureManager* textureManager;
+	ModelManager* modelManager;
 	LightingManager* lightingManager;
 	Input* input;
 	Time* time;

@@ -25,8 +25,8 @@ vec3 lightSourcePosition = vec3(0.0f, 2.0f, -4.5f);
 vec3 cameraMovement;
 vec3 cameraRotation;
 
-Sprite* sprite1;
-Sprite* sprite2;
+//Sprite* sprite1;
+//Sprite* sprite2;
 
 Cube* cube;
 Cube* cube2;
@@ -51,8 +51,8 @@ int Game::initialize()
 	//sprite1->setPosition(1.0f, -0.5f, -10.0f);
 	
 	//Sprite 2
-	sprite2 = new Sprite(textureManager, "res/Assets/gato 2.jpg", "gato 2");
-	sprite2->setPosition(-1.0f, 0.0f, -3.0f);
+	//sprite2 = new Sprite(textureManager, "res/Assets/gato 2.jpg", "gato 2");
+	//sprite2->setPosition(-1.0f, 0.0f, -3.0f);
 	
 	//Cube
 	cube = new Cube(vec3(1.0f, 0.1f, 0.1f));
@@ -89,22 +89,22 @@ int Game::initialize()
 	goldCube->setScale(1.0f, 3.0f, 1.0f);
 
 	//Models
-	tree = new Model(textureManager, "res/Assets/Modelos/Tree/Lowpoly_tree_sample.obj");
+	tree = modelManager->importModel("res/Assets/Modelos/Tree/Lowpoly_tree_sample.obj");
 	tree->setPosition(-3.0f, -1.0f, -4.0f);
 	tree->setScale(0.075f, 0.075f, 0.075f);
 
-	dagger = new Model(textureManager, "res/Assets/Modelos/Dagger/source/Dagger.obj");
+	dagger = modelManager->importModel("res/Assets/Modelos/Dagger/source/Dagger.obj");
 	dagger->setPosition(-1.5f, 0.0f, -4.0f);
 	dagger->setScale(0.005f, 0.005f, 0.005f);
 	
-	sniperRifle = new Model(textureManager, "res/Assets/Modelos/Sniper Rifle/OBJ/Sniper_Rifle.obj");
+	sniperRifle = modelManager->importModel("res/Assets/Modelos/Sniper Rifle/OBJ/Sniper_Rifle.obj");
 	sniperRifle->setPosition(0.0f, 0.5f, -4.0f);
 	sniperRifle->setScale(0.25f, 0.25f, 0.25f);
 
-	plant = new Model(textureManager, "res/Assets/Modelos/Plant/A1.obj");
+	plant = modelManager->importModel("res/Assets/Modelos/Plant/A1.obj");
 	plant->setPosition(1.5f, -1.0f, -4.0f);
 
-	alarak = new Model(textureManager, "res/Assets/Modelos/Alarak/source/Alarak-Protoss/Alarak VR.fbx");
+	alarak = modelManager->importModel("res/Assets/Modelos/Alarak/source/Alarak-Protoss/Alarak VR.fbx");
 	alarak->setPosition(-1.5f, -1.0f, -9.0f);
 
 	//Lighting
@@ -207,7 +207,6 @@ void Game::update()
 	
 	cube->draw();
 	cube2->draw();
-	
 	rubyCube->draw();
 	emeraldCube->draw();
 	goldCube->draw();
@@ -222,13 +221,20 @@ void Game::update()
 
 int Game::terminate()
 {
-	if (sprite1) delete sprite1;
-	if (sprite2) delete sprite2;
+	//if (sprite1) delete sprite1;
+	//if (sprite2) delete sprite2;
+
 	if (cube) delete cube;
+	if (cube2) delete cube2;
 	if (rubyCube) delete rubyCube;
 	if (emeraldCube) delete emeraldCube;
 	if (goldCube) delete goldCube;
+
 	if (tree) delete tree;
+	if (dagger) delete dagger;
+	if (sniperRifle) delete sniperRifle;
+	if (plant) delete plant;
+	if (alarak) delete alarak;
 
 	return 0;
 }

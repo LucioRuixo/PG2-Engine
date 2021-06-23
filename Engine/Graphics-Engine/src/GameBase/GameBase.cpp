@@ -98,6 +98,7 @@ GameBase::GameBase()
 	renderer = new Renderer();
 	camera = new Camera(renderer);
 	textureManager = new TextureManager(renderer);
+	modelManager = new ModelManager(textureManager);
 	lightingManager = new LightingManager(renderer);
 	input = new Input(window);
 	time = new Time();
@@ -130,6 +131,7 @@ GameBase::GameBase()
 
 	//Entities
 	Entity::setRenderer(renderer);
+	Entity::setTextureManager(textureManager);
 	Plane::initializeRenderingObjects();
 	Cube::initializeRenderingObjects();
 
@@ -152,6 +154,7 @@ GameBase::~GameBase()
 	if (renderer) delete renderer;
 	if (camera) delete camera;
 	if (textureManager) delete textureManager;
+	if (modelManager) delete modelManager;
 	if (lightingManager) delete lightingManager;
 	if (input) delete input;
 	if (time) delete time;

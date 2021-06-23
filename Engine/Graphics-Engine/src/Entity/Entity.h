@@ -3,6 +3,7 @@
 
 #include "Tools/Includes.h"
 #include "Renderer/Renderer.h"
+#include "TextureManager/TextureManager.h"
 #include "Transform/Transform.h"
 
 using namespace glm;
@@ -22,6 +23,7 @@ class GENGINE_API Entity
 	void construct();
 protected:
 	static Renderer* renderer;
+	static TextureManager* textureManager;
 
 	float spriteTextureActive = false;
 	vec3 color = vec3(0.5f, 0.5f, 0.5f);
@@ -33,8 +35,7 @@ protected:
 	void setUniformValues();
 public:
 	static void setRenderer(Renderer* _renderer);
-
-	//Transform* transform;
+	static void setTextureManager(TextureManager* _textureManager);
 
 	Entity();
 	Entity(vec3 _color);

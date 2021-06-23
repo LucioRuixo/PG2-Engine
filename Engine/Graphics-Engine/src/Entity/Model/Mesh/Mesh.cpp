@@ -64,21 +64,6 @@ void Mesh::draw(mat4 model)
 {
 	unsigned int uniformLocation = 0;
 
-	////Texture
-	//uniformLocation = glGetUniformLocation(renderer->getShaderProgram(ShaderType::Main), "spriteTextureActive");
-	//glUniform1i(uniformLocation, 0);
-	//
-	////Color
-	//uniformLocation = glGetUniformLocation(renderer->getShaderProgram(ShaderType::Main), "color");
-	//glUniform3f(uniformLocation, 1.0f, 1.0f, 1.0f);
-	//
-	////Material
-	//uniformLocation = glGetUniformLocation(renderer->getShaderProgram(ShaderType::Main), "material.diffuseTexturesActive");
-	//glUniform1i(uniformLocation, 1);
-	//
-	//uniformLocation = glGetUniformLocation(renderer->getShaderProgram(ShaderType::Main), "material.specularTexturesActive");
-	//glUniform1i(uniformLocation, 1);
-
 	unsigned int diffuseNumber = 0;
 	unsigned int specularNumber = 0;
 	for (unsigned int i = 0; i < textures.size(); i++)

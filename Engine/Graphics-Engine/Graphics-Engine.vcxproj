@@ -41,6 +41,7 @@
     <ClCompile Include="src\LightingManager\Light\Light.cpp" />
     <ClCompile Include="src\LightingManager\Light\Point Light\PointLight.cpp" />
     <ClCompile Include="src\LightingManager\Light\Spotlight\Spotlight.cpp" />
+    <ClCompile Include="src\ModelManager\ModelManager.cpp" />
     <ClCompile Include="src\Renderer\Renderer.cpp" />
     <ClCompile Include="src\stb_image\stb_image.cpp" />
     <ClCompile Include="src\TextureManager\TextureManager.cpp" />
@@ -68,6 +69,7 @@
     <ClInclude Include="src\LightingManager\Light\Light.h" />
     <ClInclude Include="src\LightingManager\Light\Point Light\PointLight.h" />
     <ClInclude Include="src\LightingManager\Light\Spotlight\Spotlight.h" />
+    <ClInclude Include="src\ModelManager\ModelManager.h" />
     <ClInclude Include="src\Renderer\Renderer.h" />
     <ClInclude Include="src\stb_image\stb_image.h" />
     <ClInclude Include="src\TextureManager\TextureManager.h" />
