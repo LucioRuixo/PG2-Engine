@@ -34,6 +34,16 @@ void TextureManager::initializeTextureValues()
 	stbi_set_flip_vertically_on_load(1);
 }
 
+void TextureManager::setActiveTextureUnit(unsigned int index)
+{
+	glActiveTexture(GL_TEXTURE0 + index);
+}
+
+void TextureManager::bind2DTexture(unsigned int id)
+{
+	glBindTexture(GL_TEXTURE_2D, id);
+}
+
 Texture TextureManager::createTextureFromFile(const char* path, string name)
 {
 	Texture texture;

@@ -76,7 +76,7 @@ void Mesh::draw(mat4 model)
 			if (diffuseNumber >= MAX_TEXTURE_AMOUNT_PER_TYPE) continue;
 			else
 			{
-				glActiveTexture(GL_TEXTURE1 + diffuseNumber);
+				textureManager->setActiveTextureUnit(1 + diffuseNumber);
 				number = to_string(diffuseNumber++);
 			}
 		}
@@ -85,14 +85,14 @@ void Mesh::draw(mat4 model)
 			if (specularNumber >= MAX_TEXTURE_AMOUNT_PER_TYPE) continue;
 			else
 			{
-				glActiveTexture(GL_TEXTURE5 + specularNumber);
+				textureManager->setActiveTextureUnit(5 + specularNumber);
 				number = to_string(specularNumber++);
 			}
 		}
 
-		glBindTexture(GL_TEXTURE_2D, textures[i].id);
+		textureManager->bind2DTexture(textures[i].id);
 	}
-	glActiveTexture(GL_TEXTURE0);
+	textureManager->setActiveTextureUnit(0);
 
 	setUniformValues();
 	renderer->setModel(renderer->getShaderProgram(ShaderType::Main), model);
@@ -100,7 +100,7 @@ void Mesh::draw(mat4 model)
 
 	for (int i = 0; i < MAX_TEXTURE_AMOUNT_PER_TYPE * 2; i++)
 	{
-		glActiveTexture(GL_TEXTURE1 + i);
-		glBindTexture(GL_TEXTURE_2D, 0);
+		textureManager->setActiveTextureUnit(1 + i);
+		textureManager->bind2DTexture(0);
 	}
 }

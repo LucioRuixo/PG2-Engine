@@ -32,6 +32,8 @@ public:
 	~TextureManager();
 
 	void initializeTextureValues();
+	void setActiveTextureUnit(unsigned int index);
+	void bind2DTexture(unsigned int id);
 
 	Texture createTextureFromFile(const char* path, string name);
 	Texture getTexture(string name);
