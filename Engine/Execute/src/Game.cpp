@@ -20,6 +20,10 @@ float plantYRotation = 0.0f;
 float plantRotationSpeed = 50.0f;
 float alarakYRotation = 0.0f;
 float alarakRotationSpeed = 50.0f;
+float revolverYRotation = 0.0f;
+float revolverRotationSpeed = 50.0f;
+float alienYRotation = 0.0f;
+float alienRotationSpeed = 50.0f;
 
 vec3 lightSourcePosition = vec3(0.0f, 2.0f, -4.5f);
 vec3 cameraMovement;
@@ -39,6 +43,8 @@ Model* dagger;
 Model* sniperRifle;
 Model* plant;
 Model* alarak;
+Model* alien;
+Model* revolver;
 
 Game::Game() {}
 
@@ -106,6 +112,16 @@ int Game::initialize()
 
 	alarak = modelManager->importModel("res/Assets/Modelos/Alarak/source/Alarak-Protoss/Alarak VR.fbx");
 	alarak->setPosition(-1.5f, -1.0f, -9.0f);
+
+	revolver = modelManager->importModel("res/Assets/Modelos/Revolver/Gun.dae");
+	revolver->setPosition(-1.0f, 2.5f, -6.0f);
+	revolver->setRotation(-90.0f, 0.0f, 0.0f);
+	revolver->setScale(2.0f, 2.0f, 2.0f);
+
+	alien = modelManager->importModel("res/Assets/Modelos/Alien/Alien Animal.dae");
+	alien->setPosition(1.0f, 2.0f, -6.0f);
+	alien->setRotation(-90.0f, 0.0f, 0.0f);
+	alien->setScale(0.05f, 0.05f, 0.05f);
 
 	//Lighting
 	lightingManager->addDirectionalLight(vec3(1.0f, -1.0f, 0.0f));
@@ -199,6 +215,12 @@ void Game::update()
 
 	alarakYRotation += alarakRotationSpeed * time->getDeltaTime();
 	alarak->setRotation(-90.0f, 0.0f, alarakYRotation);
+
+	revolverYRotation += revolverRotationSpeed * time->getDeltaTime();
+	revolver->setRotation(-90.0f, 0.0f, revolverYRotation);
+
+	alienYRotation += alienRotationSpeed * time->getDeltaTime();
+	alien->setRotation(-90.0f, 0.0f, alienYRotation);
 #pragma endregion
 
 #pragma region Rendering
@@ -216,6 +238,8 @@ void Game::update()
 	sniperRifle->draw();
 	plant->draw();
 	alarak->draw();
+	revolver->draw();
+	alien->draw();
 #pragma endregion
 }
 
