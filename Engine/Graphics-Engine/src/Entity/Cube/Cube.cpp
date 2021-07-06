@@ -115,6 +115,6 @@ Cube::~Cube() {}
 void Cube::draw()
 {
 	setUniformValues();
-	renderer->setModel(renderer->getShaderProgram(ShaderType::Main), modelMatrix.model);
+	renderer->setModel(renderer->getShaderProgram(shader), modelMatrix.model);
 	renderer->drawElements(vao, vbo, ebo, CUBE_INDICES);
 }

@@ -38,13 +38,13 @@ Cube* rubyCube;
 Cube* emeraldCube;
 Cube* goldCube;
 
-Model* tree;
-Model* dagger;
-Model* sniperRifle;
-Model* plant;
 Model* alarak;
-Model* alien;
-Model* revolver;
+Model* dagger;
+//Model* tree;
+//Model* sniperRifle;
+//Model* plant;
+//Model* alien;
+//Model* revolver;
 
 Game::Game() {}
 
@@ -55,8 +55,8 @@ int Game::initialize()
 	//Sprite 1
 	//sprite1 = new Sprite(textureManager, "res/Assets/gato 1.jpg", "gato 1");
 	//sprite1->setPosition(1.0f, -0.5f, -10.0f);
-	
-	//Sprite 2
+	//
+	////Sprite 2
 	//sprite2 = new Sprite(textureManager, "res/Assets/gato 2.jpg", "gato 2");
 	//sprite2->setPosition(-1.0f, 0.0f, -3.0f);
 	
@@ -95,33 +95,33 @@ int Game::initialize()
 	goldCube->setScale(1.0f, 3.0f, 1.0f);
 
 	//Models
-	tree = modelManager->importModel("res/Assets/Modelos/Tree/Lowpoly_tree_sample.obj");
-	tree->setPosition(-3.0f, -1.0f, -4.0f);
-	tree->setScale(0.075f, 0.075f, 0.075f);
+	alarak = modelManager->importModel("res/Assets/Modelos/Alarak/source/Alarak-Protoss/Alarak VR.fbx");
+	alarak->setPosition(-1.5f, -1.0f, -9.0f);
 
 	dagger = modelManager->importModel("res/Assets/Modelos/Dagger/source/Dagger.obj");
 	dagger->setPosition(-1.5f, 0.0f, -4.0f);
 	dagger->setScale(0.005f, 0.005f, 0.005f);
-	
-	sniperRifle = modelManager->importModel("res/Assets/Modelos/Sniper Rifle/OBJ/Sniper_Rifle.obj");
-	sniperRifle->setPosition(0.0f, 0.5f, -4.0f);
-	sniperRifle->setScale(0.25f, 0.25f, 0.25f);
 
-	plant = modelManager->importModel("res/Assets/Modelos/Plant/A1.obj");
-	plant->setPosition(1.5f, -1.0f, -4.0f);
-
-	alarak = modelManager->importModel("res/Assets/Modelos/Alarak/source/Alarak-Protoss/Alarak VR.fbx");
-	alarak->setPosition(-1.5f, -1.0f, -9.0f);
-
-	revolver = modelManager->importModel("res/Assets/Modelos/Revolver/Gun.dae");
-	revolver->setPosition(-1.0f, 2.5f, -6.0f);
-	revolver->setRotation(-90.0f, 0.0f, 0.0f);
-	revolver->setScale(2.0f, 2.0f, 2.0f);
-
-	alien = modelManager->importModel("res/Assets/Modelos/Alien/Alien Animal.dae");
-	alien->setPosition(1.0f, 2.0f, -6.0f);
-	alien->setRotation(-90.0f, 0.0f, 0.0f);
-	alien->setScale(0.05f, 0.05f, 0.05f);
+	//tree = modelManager->importModel("res/Assets/Modelos/Tree/Lowpoly_tree_sample.obj");
+	//tree->setPosition(-3.0f, -1.0f, -4.0f);
+	//tree->setScale(0.075f, 0.075f, 0.075f);
+	//
+	//sniperRifle = modelManager->importModel("res/Assets/Modelos/Sniper Rifle/OBJ/Sniper_Rifle.obj");
+	//sniperRifle->setPosition(0.0f, 0.5f, -4.0f);
+	//sniperRifle->setScale(0.25f, 0.25f, 0.25f);
+	//
+	//plant = modelManager->importModel("res/Assets/Modelos/Plant/A1.obj");
+	//plant->setPosition(1.5f, -1.0f, -4.0f);
+	//
+	//revolver = modelManager->importModel("res/Assets/Modelos/Revolver/Gun.dae");
+	//revolver->setPosition(-1.0f, 2.5f, -6.0f);
+	//revolver->setRotation(-90.0f, 0.0f, 0.0f);
+	//revolver->setScale(2.0f, 2.0f, 2.0f);
+	//
+	//alien = modelManager->importModel("res/Assets/Modelos/Alien/Alien Animal.dae");
+	//alien->setPosition(1.0f, 2.0f, -6.0f);
+	//alien->setRotation(-90.0f, 0.0f, 0.0f);
+	//alien->setScale(0.05f, 0.05f, 0.05f);
 
 	//Lighting
 	lightingManager->addDirectionalLight(vec3(1.0f, -1.0f, 0.0f));
@@ -201,26 +201,26 @@ void Game::update()
 #pragma endregion
 
 #pragma region Transformations
-	treeYRotation += treeRotationSpeed * time->getDeltaTime();
-	tree->setRotation(0.0f, treeYRotation, 0.0f);
+	alarakYRotation += alarakRotationSpeed * time->getDeltaTime();
+	alarak->setRotation(-90.0f, 0.0f, alarakYRotation);
 
 	daggerYRotation += daggerRotationSpeed * time->getDeltaTime();
 	dagger->setRotation(0.0f, daggerYRotation, -90.0f);
 
-	sniperRifleYRotation += sniperRifleRotationSpeed * time->getDeltaTime();
-	sniperRifle->setRotation(0.0f, sniperRifleYRotation, -90.0f);
-
-	plantYRotation += plantRotationSpeed * time->getDeltaTime();
-	plant->setRotation(0.0f, plantYRotation, 0.0f);
-
-	alarakYRotation += alarakRotationSpeed * time->getDeltaTime();
-	alarak->setRotation(-90.0f, 0.0f, alarakYRotation);
-
-	revolverYRotation += revolverRotationSpeed * time->getDeltaTime();
-	revolver->setRotation(-90.0f, 0.0f, revolverYRotation);
-
-	alienYRotation += alienRotationSpeed * time->getDeltaTime();
-	alien->setRotation(-90.0f, 0.0f, alienYRotation);
+	//treeYRotation += treeRotationSpeed * time->getDeltaTime();
+	//tree->setRotation(0.0f, treeYRotation, 0.0f);
+	//
+	//sniperRifleYRotation += sniperRifleRotationSpeed * time->getDeltaTime();
+	//sniperRifle->setRotation(0.0f, sniperRifleYRotation, -90.0f);
+	//
+	//plantYRotation += plantRotationSpeed * time->getDeltaTime();
+	//plant->setRotation(0.0f, plantYRotation, 0.0f);
+	//
+	//revolverYRotation += revolverRotationSpeed * time->getDeltaTime();
+	//revolver->setRotation(-90.0f, 0.0f, revolverYRotation);
+	//
+	//alienYRotation += alienRotationSpeed * time->getDeltaTime();
+	//alien->setRotation(-90.0f, 0.0f, alienYRotation);
 #pragma endregion
 
 #pragma region Rendering
@@ -233,13 +233,13 @@ void Game::update()
 	emeraldCube->draw();
 	goldCube->draw();
 
-	tree->draw();
-	dagger->draw();
-	sniperRifle->draw();
-	plant->draw();
 	alarak->draw();
-	revolver->draw();
-	alien->draw();
+	dagger->draw();
+	//tree->draw();
+	//sniperRifle->draw();
+	//plant->draw();
+	//revolver->draw();
+	//alien->draw();
 #pragma endregion
 }
 
@@ -254,11 +254,13 @@ int Game::terminate()
 	if (emeraldCube) delete emeraldCube;
 	if (goldCube) delete goldCube;
 
-	if (tree) delete tree;
-	if (dagger) delete dagger;
-	if (sniperRifle) delete sniperRifle;
-	if (plant) delete plant;
 	if (alarak) delete alarak;
+	if (dagger) delete dagger;
+	//if (tree) delete tree;
+	//if (sniperRifle) delete sniperRifle;
+	//if (plant) delete plant;
+	//if (revolver) delete revolver;
+	//if (alien) delete alien;
 
 	return 0;
 }

@@ -25,6 +25,8 @@ protected:
 	static Renderer* renderer;
 	static TextureManager* textureManager;
 
+	ShaderType shader = ShaderType::Main;
+
 	float spriteTextureActive = false;
 	vec3 color = vec3(0.5f, 0.5f, 0.5f);
 	Material material;

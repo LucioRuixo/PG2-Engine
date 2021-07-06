@@ -95,7 +95,7 @@ void Mesh::draw(mat4 model)
 	textureManager->setActiveTextureUnit(0);
 
 	setUniformValues();
-	renderer->setModel(renderer->getShaderProgram(ShaderType::Main), model);
+	renderer->setModel(renderer->getShaderProgram(shader), model);
 	renderer->drawElements(vao, vbo, ebo, indices.size());
 
 	for (int i = 0; i < MAX_TEXTURE_AMOUNT_PER_TYPE * 2; i++)

@@ -2,6 +2,7 @@
 
 LightCube::LightCube() : Cube()
 {
+	shader = ShaderType::LightSource;
 	setScale(0.2f, 0.2f, 0.2f);
 }
 

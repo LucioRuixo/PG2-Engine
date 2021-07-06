@@ -12,6 +12,7 @@ using namespace std;
 
 enum ShaderType
 {
+	//None = -1,
 	Main,
 	LightSource,
 	Size

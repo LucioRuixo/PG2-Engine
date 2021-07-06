@@ -63,30 +63,30 @@ void Entity::setUniformValues()
 	unsigned int uniformLocation;
 
 	//Texture
-	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(ShaderType::Main), "spriteTextureActive");
+	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(shader), "spriteTextureActive");
 	glUniform1i(uniformLocation, spriteTextureActive);
 
 	//Color
 	if (!spriteTextureActive)
 	{
-		uniformLocation = glGetUniformLocation(renderer->getShaderProgram(ShaderType::Main), "color");
+		uniformLocation = glGetUniformLocation(renderer->getShaderProgram(shader), "color");
 		glUniform3f(uniformLocation, color.r, color.g, color.b);
 	}
 
 	//Material
-	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(ShaderType::Main), "material.diffuseTexturesActive");
+	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(shader), "material.diffuseTexturesActive");
 	glUniform1i(uniformLocation, material.diffuseTexturesActive);
 
-	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(ShaderType::Main), "material.specularTexturesActive");
+	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(shader), "material.specularTexturesActive");
 	glUniform1i(uniformLocation, material.specularTexturesActive);
 
-	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(ShaderType::Main), "material.diffuse");
+	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(shader), "material.diffuse");
 	glUniform3f(uniformLocation, material.diffuse.r, material.diffuse.g, material.diffuse.b);
 
-	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(ShaderType::Main), "material.specular");
+	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(shader), "material.specular");
 	glUniform3f(uniformLocation, material.specular.r, material.specular.g, material.specular.b);
 
-	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(ShaderType::Main), "material.shininess");
+	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(shader), "material.shininess");
 	glUniform1f(uniformLocation, material.shininess);
 }
 
