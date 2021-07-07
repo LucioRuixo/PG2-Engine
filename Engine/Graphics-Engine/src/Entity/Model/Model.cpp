@@ -1,6 +1,6 @@
 #include "Model.h"
 
-Model::Model(string _directory, vector<Mesh> _meshes) : Entity()
+Model::Model(string _directory, vector<Mesh*> _meshes) : Entity()
 {
 	directory = _directory;
 	meshes = _meshes;
@@ -11,6 +11,7 @@ Model::Model(string _directory, vector<Mesh> _meshes) : Entity()
 
 Model::~Model()
 {
+	for (int i = 0; i < meshes.size(); i++) { if (meshes[i] != NULL) delete meshes[i]; }
 	meshes.clear();
 }
 
@@ -20,5 +21,5 @@ void Model::draw()
 {
 	setUniformValues();
 
-	for (unsigned int i = 0; i < meshes.size(); i++) meshes[i].draw(modelMatrix.model);
+	for (unsigned int i = 0; i < meshes.size(); i++) meshes[i]->draw(transform->getModel());
 }

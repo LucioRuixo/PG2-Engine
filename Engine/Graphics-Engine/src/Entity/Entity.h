@@ -20,7 +20,6 @@ struct Material
 
 class GENGINE_API Entity
 {
-	void construct();
 protected:
 	static Renderer* renderer;
 	static TextureManager* textureManager;
@@ -31,9 +30,8 @@ protected:
 	vec3 color = vec3(0.5f, 0.5f, 0.5f);
 	Material material;
 
-	ModelMatrixData modelMatrix;
+	Transform* transform;
 
-	void updateModelMatrix();
 	void setUniformValues();
 public:
 	static void setRenderer(Renderer* _renderer);
@@ -46,12 +44,7 @@ public:
 	~Entity();
 
 	Renderer* getRenderer();
-	mat4 getModel();
-
-	virtual void setPosition(float x, float y, float z);
-	virtual void translate(float x, float y, float z);
-	void setRotation(float x, float y, float z);
-	virtual void setScale(float x, float y, float z);
+	Transform* getTransform();
 
 	void setColor(vec3 value);
 	vec3 getColor();

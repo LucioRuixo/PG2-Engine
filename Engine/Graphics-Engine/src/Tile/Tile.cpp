@@ -2,8 +2,8 @@
 
 Tile::Tile(float _x, float _y, float _width, float _height, Sprite* _sprite, Renderer* renderer) : Entity(/*renderer*/)
 {
-	setPosition(_x, _y, 0.0f);
-	setScale(_width, _height, 0.0f);
+	//setPosition(_x, _y, 0.0f);
+	//setScale(_width, _height, 0.0f);
 	//bounds.size.x = _width;
 	//bounds.size.y = _height;
 	sprite = _sprite;

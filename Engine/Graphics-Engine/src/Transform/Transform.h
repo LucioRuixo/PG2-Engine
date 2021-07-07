@@ -12,10 +12,8 @@ struct GENGINE_API TransformData
 	vec3 scale;
 };
 
-struct GENGINE_API ModelMatrixData
+struct GENGINE_API TRSMatrix
 {
-	mat4 model;
-
 	mat4 translation;
 	mat4 rotationX;
 	mat4 rotationY;
@@ -25,17 +23,24 @@ struct GENGINE_API ModelMatrixData
 
 class GENGINE_API Transform
 {
+protected:
+	TRSMatrix trsMatrix;
+	mat4 model;
+
 	TransformData transformData;
+
+	void updateModel();
 public:
 	Transform();
 	~Transform();
 
-	void setPosition(float x, float y, float z);
+	virtual void setPosition(float x, float y, float z);
 	vec3 getPosition();
-	void setRotation(float x, float y, float z);
+	virtual void setRotation(float pitch, float yaw, float roll);
 	vec3 getRotation();
-	void setScale(float x, float y, float z);
+	virtual void setScale(float x, float y, float z);
 	vec3 getScale();
+	mat4 getModel();
 };
 
 #endif // !TRANSFORM

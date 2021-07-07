@@ -12,7 +12,7 @@ using namespace std;
 
 enum ShaderType
 {
-	//None = -1,
+	None = -1,
 	Main,
 	LightSource,
 	Size
@@ -33,7 +33,7 @@ struct VPMatrix
 	vec3 cameraUp = vec3(0.0f, 1.0f, 0.0f);
 };
 
-class GENGINE_API Renderer //TODO: que algunas funciones sean estaticas para no tener que pasarle una referencia a todos los objetos que se creen
+class GENGINE_API Renderer
 {
 	unsigned int positionAttributeLocation;
 	unsigned int colorAttribute;
@@ -41,7 +41,7 @@ class GENGINE_API Renderer //TODO: que algunas funciones sean estaticas para no 
 
 	vec3 backgroundColor;
 
-	int currentShader = -1;
+	int currentShader = ShaderType::None;
 	Shader shaders[ShaderType::Size];
 
 	VPMatrix vpMatrix;

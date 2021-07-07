@@ -31,7 +31,7 @@ Spotlight::~Spotlight() { if (lightCube) delete lightCube; }
 void Spotlight::setPosition(vec3 _position)
 {
 	position = _position;
-	lightCube->setPosition(position.x, position.y, position.z);
+	lightCube->getTransform()->setPosition(position.x, position.y, position.z);
 
 	sprintf_s(characterBuffer, "spotlights[%i].position", index);
 	int uniformLocation = glGetUniformLocation(renderer->getShaderProgram(ShaderType::Main), characterBuffer);

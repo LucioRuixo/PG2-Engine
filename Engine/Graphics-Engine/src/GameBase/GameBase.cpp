@@ -142,7 +142,8 @@ GameBase::GameBase()
 	lightingManager->initializeShaderValues();
 
 	//Camera
-	camera->setPosition(0.0f, 0.0f, 0.0f);
+	camera->getTransform()->setPosition(0.0f, 0.0f, 0.0f);
+	camera->getTransform()->setRotation(0.0f, -90.0f, 0.0f);
 }
 
 GameBase::~GameBase()

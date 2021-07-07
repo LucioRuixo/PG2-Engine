@@ -3,13 +3,13 @@
 LightCube::LightCube() : Cube()
 {
 	shader = ShaderType::LightSource;
-	setScale(0.2f, 0.2f, 0.2f);
+	transform->setScale(0.2f, 0.2f, 0.2f);
 }
 
 LightCube::~LightCube() {}
 
 void LightCube::draw()
 {
-	renderer->setModel(renderer->getShaderProgram(ShaderType::LightSource), modelMatrix.model);
+	renderer->setModel(renderer->getShaderProgram(ShaderType::LightSource), transform->getModel());
 	renderer->drawElements(vao, vbo, ebo, CUBE_INDICES);
 }

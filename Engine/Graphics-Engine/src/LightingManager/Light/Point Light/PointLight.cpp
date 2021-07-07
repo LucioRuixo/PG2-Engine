@@ -27,7 +27,7 @@ PointLight::~PointLight() { if (lightCube) delete lightCube; }
 void PointLight::setPosition(vec3 _position)
 {
 	position = _position;
-	lightCube->setPosition(position.x, position.y, position.z);
+	lightCube->getTransform()->setPosition(position.x, position.y, position.z);
 
 	sprintf_s(characterBuffer, "pointLights[%i].position", index);
 	int uniformLocation = glGetUniformLocation(renderer->getShaderProgram(ShaderType::Main), characterBuffer);

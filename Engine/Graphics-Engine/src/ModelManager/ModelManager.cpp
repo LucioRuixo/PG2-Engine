@@ -19,7 +19,7 @@ ModelManager::~ModelManager()
 	}
 }
 
-void ModelManager::processNode(const aiScene* scene, aiNode* node, vector<Mesh>& meshes)
+void ModelManager::processNode(const aiScene* scene, aiNode* node, vector<Mesh*>& meshes)
 {
 	for (unsigned int i = 0; i < node->mNumMeshes; i++)
 	{
@@ -35,7 +35,7 @@ void ModelManager::processNode(const aiScene* scene, aiNode* node, vector<Mesh>&
 	cout << "node \"" << node->mName.C_Str() << "\" and all its children processed" << endl;
 }
 
-Mesh ModelManager::processMesh(const aiScene* scene, aiMesh* mesh)
+Mesh* ModelManager::processMesh(const aiScene* scene, aiMesh* mesh)
 {
 	vector<Vertex> vertices;
 	vector<unsigned int> indices;
@@ -90,7 +90,7 @@ Mesh ModelManager::processMesh(const aiScene* scene, aiMesh* mesh)
 		textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
 	}
 
-	return Mesh(vertices, indices, textures, newMaterial);
+	return new Mesh(vertices, indices, textures, newMaterial);
 }
 
 Material ModelManager::loadMaterialColors(aiMaterial* meshMaterial)
@@ -140,7 +140,7 @@ Model* ModelManager::importModel(string path)
 	string directory = path.substr(0, path.find_last_of('/'));
 	importingDirectory = directory;
 
-	vector<Mesh> meshes;
+	vector<Mesh*> meshes;
 	processNode(scene, scene->mRootNode, meshes);
 	cout << "model loaded from \"" << path << "\"" << endl << endl;
 

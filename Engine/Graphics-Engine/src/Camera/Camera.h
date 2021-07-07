@@ -3,28 +3,19 @@
 
 #include "Tools/Includes.h"
 #include "Renderer/Renderer.h"
-#include "Transform/Transform.h"
+#include "Transform/CameraTransform/CameraTransform.h"
 
 using namespace glm;
 
 class GENGINE_API Camera
 {
-	vec3 forward;
-	vec3 upVector;
-	mat4 view;
-
 	Renderer* renderer;
-
-	void updateViewMatrix();
+	CameraTransform* transform;
 public:
-	Transform* transform;
-
-	Camera(Renderer* renderer);
+	Camera(Renderer* _renderer);
 	~Camera();
-	void setPosition(float x, float y, float z);
-	void translate(float x, float y, float z);
-	void setRotation(float pitch, float yaw, float roll);
-	void rotate(float pitch, float yaw, float roll);
+
+	CameraTransform* getTransform();
 };
 
 #endif // !CAMERA_H

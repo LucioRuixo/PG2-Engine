@@ -65,4 +65,4 @@ void DirectionalLight::setOn(bool _on)
 	glUniform1i(uniformLocation, on);
 }
 
-void DirectionalLight::draw() { std::cout << "can not draw directional light" << std::endl; }
+void DirectionalLight::draw() { std::cout << "Can not draw directional light" << std::endl; }

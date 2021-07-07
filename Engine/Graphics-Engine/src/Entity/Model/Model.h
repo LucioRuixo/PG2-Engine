@@ -14,9 +14,9 @@ class GENGINE_API Model : public Entity
 {
 	string directory;
 
-	vector<Mesh> meshes;
+	vector<Mesh*> meshes;
 public:
-	Model(string _directory, vector<Mesh> _meshes);
+	Model(string _directory, vector<Mesh*> _meshes);
 	~Model();
 
 	string getDirectory();

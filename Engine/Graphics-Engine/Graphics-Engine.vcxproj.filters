@@ -53,9 +53,6 @@
     <Filter Include="src\Entity\Cube">
       <UniqueIdentifier>{acd3d751-c15a-4422-9c30-3c33f025833f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Transform">
-      <UniqueIdentifier>{f1d8c50c-d0e8-4995-9752-aad7f3ecb381}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Entity\Plane">
       <UniqueIdentifier>{8bdc16bd-f481-453e-973d-5a161bce6208}</UniqueIdentifier>
     </Filter>
@@ -91,6 +88,12 @@
     </Filter>
     <Filter Include="src\ModelManager">
       <UniqueIdentifier>{dc87f704-7b4e-444a-a845-e38612083130}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Transform">
+      <UniqueIdentifier>{6a81234a-e917-4374-93a6-3e88abf93225}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Transform\CameraTransform">
+      <UniqueIdentifier>{fc2d9948-0790-4c76-9720-a34e2cf204da}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -144,9 +147,6 @@
     <ClCompile Include="src\Entity\Cube\Cube.cpp">
       <Filter>src\Entity\Cube</Filter>
     </ClCompile>
-    <ClCompile Include="src\Transform\Transform.cpp">
-      <Filter>src\Transform</Filter>
-    </ClCompile>
     <ClCompile Include="src\Entity\Plane\Plane.cpp">
       <Filter>src\Entity\Plane</Filter>
     </ClCompile>
@@ -182,6 +182,12 @@
     </ClCompile>
     <ClCompile Include="src\ModelManager\ModelManager.cpp">
       <Filter>src\ModelManager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Transform\Transform.cpp">
+      <Filter>src\Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Transform\CameraTransform\CameraTransform.cpp">
+      <Filter>src\Transform\CameraTransform</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -230,9 +236,6 @@
     <ClInclude Include="src\Entity\Cube\Cube.h">
       <Filter>src\Entity\Cube</Filter>
     </ClInclude>
-    <ClInclude Include="src\Transform\Transform.h">
-      <Filter>src\Transform</Filter>
-    </ClInclude>
     <ClInclude Include="src\Entity\Plane\Plane.h">
       <Filter>src\Entity\Plane</Filter>
     </ClInclude>
@@ -268,6 +271,12 @@
     </ClInclude>
     <ClInclude Include="src\ModelManager\ModelManager.h">
       <Filter>src\ModelManager</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Transform\Transform.h">
+      <Filter>src\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Transform\CameraTransform\CameraTransform.h">
+      <Filter>src\Transform\CameraTransform</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
