@@ -11,7 +11,7 @@
 using namespace std;
 using namespace glm;
 
-struct Vertex
+struct GENGINE_API Vertex
 {
 	vec3 Position;
 	vec3 Normal;
