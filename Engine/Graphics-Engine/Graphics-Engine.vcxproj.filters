@@ -95,7 +95,7 @@
     <Filter Include="src\Transform\CameraTransform">
       <UniqueIdentifier>{fc2d9948-0790-4c76-9720-a34e2cf204da}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Entity\Model\Node">
+    <Filter Include="src\Entity\Model\ModelNode">
       <UniqueIdentifier>{730e2af8-f154-406f-8cf8-3d673216bde9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -192,8 +192,8 @@
     <ClCompile Include="src\Transform\CameraTransform\CameraTransform.cpp">
       <Filter>src\Transform\CameraTransform</Filter>
     </ClCompile>
-    <ClCompile Include="src\Entity\Model\Node\Node.cpp">
-      <Filter>src\Entity\Model\Node</Filter>
+    <ClCompile Include="src\Entity\Model\ModelNode\ModelNode.cpp">
+      <Filter>src\Entity\Model\ModelNode</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -284,8 +284,8 @@
     <ClInclude Include="src\Transform\CameraTransform\CameraTransform.h">
       <Filter>src\Transform\CameraTransform</Filter>
     </ClInclude>
-    <ClInclude Include="src\Entity\Model\Node\Node.h">
-      <Filter>src\Entity\Model\Node</Filter>
+    <ClInclude Include="src\Entity\Model\ModelNode\ModelNode.h">
+      <Filter>src\Entity\Model\ModelNode</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

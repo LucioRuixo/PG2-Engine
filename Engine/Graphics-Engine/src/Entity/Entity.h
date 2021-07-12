@@ -8,7 +8,7 @@
 
 using namespace glm;
 
-struct Material
+struct GENGINE_API Material
 {
 	vec3 diffuse = vec3(1.0f, 1.0f, 1.0f);
 	vec3 specular = vec3(1.0f, 1.0f, 1.0f);
@@ -50,6 +50,8 @@ public:
 	vec3 getColor();
 	void setMaterial(Material value);
 	Material getMaterial();
+
+	virtual void draw();
 };
 
 #endif // !ENTITY_H

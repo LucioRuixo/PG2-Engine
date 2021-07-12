@@ -25,7 +25,7 @@ public:
 	Cube(vec3 _color, Material _material);
 	~Cube();
 
-	virtual void draw();
+	virtual void draw() override;
 };
 
 #endif // !CUBE_H

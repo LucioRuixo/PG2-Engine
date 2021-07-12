@@ -38,7 +38,7 @@ public:
 	vector<unsigned int> getIndices();
 	vector<Texture> getTextures();
 
-	void draw(mat4 model);
+	void draw() override;
 };
 
 #endif // !MESH_H

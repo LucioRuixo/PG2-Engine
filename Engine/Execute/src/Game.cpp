@@ -39,7 +39,7 @@ Cube* emeraldCube;
 Cube* goldCube;
 
 Model* alarak;
-Model* dagger;
+//Model* dagger;
 //Model* tree;
 //Model* sniperRifle;
 //Model* plant;
@@ -98,9 +98,9 @@ int Game::initialize()
 	alarak = modelManager->importModel("res/Assets/Modelos/Alarak/source/Alarak-Protoss/Alarak VR.fbx");
 	alarak->getTransform()->setPosition(-1.5f, -1.0f, -9.0f);
 
-	dagger = modelManager->importModel("res/Assets/Modelos/Dagger/source/Dagger.obj");
-	dagger->getTransform()->setPosition(-1.5f, 0.0f, -4.0f);
-	dagger->getTransform()->setScale(0.005f, 0.005f, 0.005f);
+	//dagger = modelManager->importModel("res/Assets/Modelos/Dagger/source/Dagger.obj");
+	//dagger->getTransform()->setPosition(-1.5f, 0.0f, -4.0f);
+	//dagger->getTransform()->setScale(0.005f, 0.005f, 0.005f);
 
 	//tree = modelManager->importModel("res/Assets/Modelos/Tree/Lowpoly_tree_sample.obj");
 	//tree->getTransform()->setPosition(-3.0f, -1.0f, -4.0f);
@@ -204,8 +204,8 @@ void Game::update()
 	alarakYRotation += alarakRotationSpeed * time->getDeltaTime();
 	alarak->getTransform()->setRotation(-90.0f, 0.0f, alarakYRotation);
 
-	daggerYRotation += daggerRotationSpeed * time->getDeltaTime();
-	dagger->getTransform()->setRotation(0.0f, daggerYRotation, -90.0f);
+	//daggerYRotation += daggerRotationSpeed * time->getDeltaTime();
+	//dagger->getTransform()->setRotation(0.0f, daggerYRotation, -90.0f);
 
 	//treeYRotation += treeRotationSpeed * time->getDeltaTime();
 	//tree->getTransform()->setRotation(0.0f, treeYRotation, 0.0f);
@@ -234,7 +234,7 @@ void Game::update()
 	goldCube->draw();
 
 	alarak->draw();
-	dagger->draw();
+	//dagger->draw();
 	//tree->draw();
 	//sniperRifle->draw();
 	//plant->draw();
@@ -255,7 +255,7 @@ int Game::terminate()
 	if (goldCube) delete goldCube;
 
 	if (alarak) delete alarak;
-	if (dagger) delete dagger;
+	//if (dagger) delete dagger;
 	//if (tree) delete tree;
 	//if (sniperRifle) delete sniperRifle;
 	//if (plant) delete plant;

@@ -1,9 +1,11 @@
 #include "Model.h"
 
-Model::Model(string _directory, Node* _rootNode) : Entity()
+Model::Model(string _directory, ModelNode* _rootNode) : Entity()
 {
 	directory = _directory;
 	rootNode = _rootNode;
+
+	transform->addChild(rootNode);
 
 	material.diffuseTexturesActive = true;
 	material.specularTexturesActive = true;
@@ -16,11 +18,12 @@ Model::~Model()
 
 string Model::getDirectory() { return directory; }
 
-Node * Model::getRootNode() { return rootNode; }
+ModelNode* Model::getRootNode() { return rootNode; }
 
 void Model::draw()
 {
 	setUniformValues();
 
-	rootNode->draw(transform->getModel());
+	//rootNode->draw();
+	Entity::draw();
 }

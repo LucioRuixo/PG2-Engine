@@ -7,7 +7,7 @@
 #include "../Entity.h"
 #include "Renderer/Renderer.h"
 #include "Mesh/Mesh.h"
-#include "Node/Node.h"
+#include "ModelNode/ModelNode.h"
 
 using namespace std;
 
@@ -15,15 +15,15 @@ class GENGINE_API Model : public Entity
 {
 	string directory;
 
-	Node* rootNode = NULL;
+	ModelNode* rootNode = NULL;
 public:
-	Model(string _directory, Node* _rootNode);
+	Model(string _directory, ModelNode* _rootNode);
 	~Model();
 
 	string getDirectory();
-	Node* getRootNode();
+	ModelNode* getRootNode();
 
-	void draw();
+	void draw() override;
 };
 
 #endif // !MODEL_H

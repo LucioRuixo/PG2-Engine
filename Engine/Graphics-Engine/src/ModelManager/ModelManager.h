@@ -8,7 +8,7 @@
 #include <assimp/postprocess.h>
 #include "Tools/Includes.h"
 #include "Entity/Model/Model.h"
-#include "Entity/Model/Node/Node.h"
+#include "Entity/Model/ModelNode/ModelNode.h"
 #include "TextureManager/TextureManager.h"
 
 using namespace std;
@@ -22,9 +22,10 @@ class GENGINE_API ModelManager
 
 	vector<Model*> models;
 
+	Renderer* renderer;
 	TextureManager* textureManager;
 
-	Node* processNode(const aiScene* scene, aiNode* node);
+	ModelNode* processNode(const aiScene* scene, aiNode* node);
 	Mesh* processMesh(const aiScene* scene, aiMesh* mesh);
 	vector<Texture> loadMaterialTextures(aiMaterial* material, aiTextureType type, string typeName);
 	Material loadMaterialColors(aiMaterial* meshMaterial);

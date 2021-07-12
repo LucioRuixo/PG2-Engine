@@ -24,7 +24,7 @@ public:
 	Plane(vec3 _color, Material _material);
 	~Plane();
 
-	virtual void draw();
+	virtual void draw() override;
 };
 
 #endif // !PLANE_H

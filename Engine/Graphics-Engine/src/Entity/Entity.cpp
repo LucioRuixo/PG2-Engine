@@ -77,3 +77,9 @@ vec3 Entity::getColor() { return color; }
 
 void Entity::setMaterial(Material value) { material = value; }
 Material Entity::getMaterial() { return material; }
+
+void Entity::draw()
+{
+	if (transform->getChildCount() > 0)
+		for (int i = 0; i < transform->getChildCount(); i++) transform->getChildren()[i]->draw();
+}

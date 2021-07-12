@@ -19,7 +19,7 @@ ModelManager::~ModelManager()
 	}
 }
 
-Node* ModelManager::processNode(const aiScene* scene, aiNode* node)
+ModelNode* ModelManager::processNode(const aiScene* scene, aiNode* node)
 {
 	vector<Mesh*> meshes;
 	for (unsigned int i = 0; i < node->mNumMeshes; i++)
@@ -29,14 +29,16 @@ Node* ModelManager::processNode(const aiScene* scene, aiNode* node)
 	}
 
 	cout << currentNodeLayer++ << " - processing node \"" << node->mName.C_Str() << "\"" << endl;
-	vector<Node*> children;
+	vector<Entity*> children;
 	for (unsigned int i = 0; i < node->mNumChildren; i++)
 	{
 		children.push_back(processNode(scene, node->mChildren[i]));
 	}
 	cout << --currentNodeLayer << " - node \"" << node->mName.C_Str() << "\" and all its children processed" << endl;
 
-	return new Node(node->mName.C_Str(), meshes, children);
+	ModelNode* newNode = new ModelNode(node->mName.C_Str(), meshes);
+	newNode->getTransform()->addChildren(children);
+	return newNode;
 }
 
 Mesh* ModelManager::processMesh(const aiScene* scene, aiMesh* mesh)
@@ -144,7 +146,7 @@ Model* ModelManager::importModel(string path)
 	string directory = path.substr(0, path.find_last_of('/'));
 	importingDirectory = directory;
 
-	Node* rootNode = processNode(scene, scene->mRootNode);
+	ModelNode* rootNode = processNode(scene, scene->mRootNode);
 	cout << "model loaded from \"" << path << "\"" << endl << endl;
 
 	Model* model = new Model(directory, rootNode);

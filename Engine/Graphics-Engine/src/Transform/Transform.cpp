@@ -2,6 +2,8 @@
 
 Transform::Transform()
 {
+	childCount = 0;
+
 	transformData.position = vec3(0.0f, 0.0f, 0.0f);
 	transformData.rotation = vec3(0.0f, 0.0f, 0.0f);
 	transformData.scale = vec3(1.0f, 1.0f, 1.0f);
@@ -19,7 +21,36 @@ Transform::Transform()
 	setScale(1.0f, 1.0f, 1.0f);
 }
 
-Transform::~Transform() {}
+Transform::Transform(vector<Entity*> _children)
+{
+	transformData.position = vec3(0.0f, 0.0f, 0.0f);
+	transformData.rotation = vec3(0.0f, 0.0f, 0.0f);
+	transformData.scale = vec3(1.0f, 1.0f, 1.0f);
+
+	model = mat4(1.0f);
+
+	trsMatrix.translation = mat4(1.0f);
+	trsMatrix.rotationX = mat4(1.0f);
+	trsMatrix.rotationY = mat4(1.0f);
+	trsMatrix.rotationZ = mat4(1.0f);
+	trsMatrix.scale = mat4(1.0f);
+
+	setPosition(0.0f, 0.0f, 0.0f);
+	setRotation(0.0f, 0.0f, 0.0f);
+	setScale(1.0f, 1.0f, 1.0f);
+
+	children = _children;
+	childCount = children.size();
+}
+
+Transform::~Transform()
+{
+	if (!children.empty())
+	{
+		for (int i = 0; i < children.size(); i++) if (children[i]) delete children[i];
+		children.clear();
+	}
+}
 
 void Transform::updateModel()
 {
@@ -28,6 +59,7 @@ void Transform::updateModel()
 		trsMatrix.scale;
 }
 
+#pragma region Transformations
 void Transform::setPosition(float x, float y, float z)
 {
 	transformData.position.x = x;
@@ -69,3 +101,22 @@ void Transform::setScale(float x, float y, float z)
 vec3 Transform::getScale() { return transformData.scale; }
 
 mat4 Transform::getModel() { return model; }
+#pragma endregion
+
+#pragma region Children
+vector<Entity*> Transform::getChildren() { return children; }
+
+void Transform::addChild(Entity* child)
+{
+	children.push_back(child);
+	childCount = children.size();
+}
+
+void Transform::addChildren(vector<Entity*> newChildren)
+{
+	children.insert(children.end(), newChildren.begin(), newChildren.end());
+	childCount = children.size();
+}
+
+int Transform::getChildCount() { return childCount; }
+#pragma endregion
