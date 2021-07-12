@@ -32,12 +32,15 @@ protected:
 
 	Transform* transform;
 
+	vector<Entity*> children;
+
 	void setUniformValues();
 public:
 	static void setRenderer(Renderer* _renderer);
 	static void setTextureManager(TextureManager* _textureManager);
 
 	Entity();
+	Entity(vector<Entity*> _children);
 	Entity(vec3 _color);
 	Entity(Material _material);
 	Entity(vec3 _color, Material _material);
@@ -46,10 +49,18 @@ public:
 	Renderer* getRenderer();
 	Transform* getTransform();
 
+#pragma region Rendering
 	void setColor(vec3 value);
 	vec3 getColor();
 	void setMaterial(Material value);
 	Material getMaterial();
+#pragma endregion
+
+#pragma region Children
+	vector<Entity*> getChildren();
+	void addChild(Entity* child);
+	void addChildren(vector<Entity*> newChildren);
+#pragma endregion
 
 	virtual void draw();
 };

@@ -2,8 +2,6 @@
 
 Transform::Transform()
 {
-	childCount = 0;
-
 	transformData.position = vec3(0.0f, 0.0f, 0.0f);
 	transformData.rotation = vec3(0.0f, 0.0f, 0.0f);
 	transformData.scale = vec3(1.0f, 1.0f, 1.0f);
@@ -21,7 +19,7 @@ Transform::Transform()
 	setScale(1.0f, 1.0f, 1.0f);
 }
 
-Transform::Transform(vector<Entity*> _children)
+Transform::Transform(vector<Transform*> _children)
 {
 	transformData.position = vec3(0.0f, 0.0f, 0.0f);
 	transformData.rotation = vec3(0.0f, 0.0f, 0.0f);
@@ -40,7 +38,6 @@ Transform::Transform(vector<Entity*> _children)
 	setScale(1.0f, 1.0f, 1.0f);
 
 	children = _children;
-	childCount = children.size();
 }
 
 Transform::~Transform()
@@ -60,43 +57,77 @@ void Transform::updateModel()
 }
 
 #pragma region Transformations
+void Transform::translate(float x, float y, float z)
+{
+	if (!children.empty())
+		for (int i = 0; i < children.size(); i++) children[i]->translate(x, y, z);
+
+	transformData.position.x += x;
+	transformData.position.y += y;
+	transformData.position.z += z;
+
+	trsMatrix.translation = glm::translate(mat4(1.0f), transformData.position);
+	updateModel();
+}
+
 void Transform::setPosition(float x, float y, float z)
 {
-	transformData.position.x = x;
-	transformData.position.y = y;
-	transformData.position.z = z;
+	float translationX = x - transformData.position.x;
+	float translationY = y - transformData.position.y;
+	float translationZ = z - transformData.position.z;
 
-	trsMatrix.translation = translate(mat4(1.0f), transformData.position);
-	updateModel();
+	translate(translationX, translationY, translationZ);
 }
 vec3 Transform::getPosition() { return transformData.position; }
 
-void Transform::setRotation(float pitch, float yaw, float roll)
+void Transform::rotate(float pitch, float yaw, float roll)
 {
-	transformData.rotation.x = pitch;
-	transformData.rotation.y = yaw;
-	transformData.rotation.z = roll;
+	if (!children.empty())
+		for (int i = 0; i < children.size(); i++) children[i]->rotate(pitch, yaw, roll);
+
+	transformData.rotation.x += pitch;
+	transformData.rotation.y += yaw;
+	transformData.rotation.z += roll;
 
 	vec3 xAxis = vec3(1.0f, 0.0f, 0.0f);
 	vec3 yAxis = vec3(0.0f, 1.0f, 0.0f);
 	vec3 zAxis = vec3(0.0f, 0.0f, 1.0f);
-
-	trsMatrix.rotationX = rotate(mat4(1.0f), radians(pitch), xAxis);
-	trsMatrix.rotationY = rotate(mat4(1.0f), radians(yaw), yAxis);
-	trsMatrix.rotationZ = rotate(mat4(1.0f), radians(roll), zAxis);
-
+	trsMatrix.rotationX = glm::rotate(mat4(1.0f), radians(transformData.rotation.x), xAxis);
+	trsMatrix.rotationY = glm::rotate(mat4(1.0f), radians(transformData.rotation.y), yAxis);
+	trsMatrix.rotationZ = glm::rotate(mat4(1.0f), radians(transformData.rotation.z), zAxis);
 	updateModel();
+}
+
+void Transform::setRotation(float pitch, float yaw, float roll)
+{
+	float rotationX = pitch - transformData.rotation.x;
+	float rotationY = yaw - transformData.rotation.y;
+	float rotationZ = roll - transformData.rotation.z;
+
+	rotate(rotationX, rotationY, rotationZ);
 }
 vec3 Transform::getRotation() { return transformData.rotation; }
 
+void Transform::scale(float x, float y, float z)
+{
+	if (!children.empty())
+		for (int i = 0; i < children.size(); i++) children[i]->scale(x, y, z);
+
+	transformData.scale.x += x;
+	transformData.scale.y += y;
+	transformData.scale.z += z;
+
+	trsMatrix.scale = glm::scale(mat4(1.0f), transformData.scale);
+	updateModel();
+}
+
 void Transform::setScale(float x, float y, float z)
 {
-	transformData.scale.x = x;
-	transformData.scale.y = y;
-	transformData.scale.z = z;
+	float scaleX = x - transformData.scale.x;
+	float scaleY = y - transformData.scale.y;
+	float scaleZ = z - transformData.scale.z;
 
-	trsMatrix.scale = scale(mat4(1.0f), transformData.scale);
-	updateModel();
+	scale(scaleX, scaleY, scaleZ);
 }
 vec3 Transform::getScale() { return transformData.scale; }
 
@@ -104,19 +135,9 @@ mat4 Transform::getModel() { return model; }
 #pragma endregion
 
 #pragma region Children
-vector<Entity*> Transform::getChildren() { return children; }
+vector<Transform*> Transform::getChildren() { return children; }
 
-void Transform::addChild(Entity* child)
-{
-	children.push_back(child);
-	childCount = children.size();
-}
+void Transform::addChild(Transform* child) { children.push_back(child); }
 
-void Transform::addChildren(vector<Entity*> newChildren)
-{
-	children.insert(children.end(), newChildren.begin(), newChildren.end());
-	childCount = children.size();
-}
-
-int Transform::getChildCount() { return childCount; }
+void Transform::addChildren(vector<Transform*> newChildren) { children.insert(children.end(), newChildren.begin(), newChildren.end()); }
 #pragma endregion

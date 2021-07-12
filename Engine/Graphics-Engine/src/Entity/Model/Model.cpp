@@ -5,7 +5,7 @@ Model::Model(string _directory, ModelNode* _rootNode) : Entity()
 	directory = _directory;
 	rootNode = _rootNode;
 
-	transform->addChild(rootNode);
+	addChild(rootNode);
 
 	material.diffuseTexturesActive = true;
 	material.specularTexturesActive = true;

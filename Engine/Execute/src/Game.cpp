@@ -198,6 +198,15 @@ void Game::update()
 	}
 	else if (input->getKeyRelease(PrintableKey::FIVE)) fivePressed = false;
 	//-----------
+
+	//Model transformations
+	//-----------
+	if (input->getKeyPress(PrintableKey::I)) cube->getTransform()->rotate(0.0f, 0.0f, -cameraMovementSpeed * time->getDeltaTime());
+	if (input->getKeyPress(PrintableKey::K)) cube->getTransform()->rotate(0.0f, 0.0f, cameraMovementSpeed * time->getDeltaTime());
+
+	if (input->getKeyPress(PrintableKey::L)) cube->getTransform()->rotate(cameraMovementSpeed * time->getDeltaTime(), 0.0f, 0.0f);
+	if (input->getKeyPress(PrintableKey::J)) cube->getTransform()->rotate(-cameraMovementSpeed * time->getDeltaTime(), 0.0f, 0.0f);
+	//-----------
 #pragma endregion
 
 #pragma region Transformations

@@ -8,6 +8,13 @@ Entity::Entity()
 	transform = new Transform();
 }
 
+Entity::Entity(vector<Entity*> _children)
+{
+	transform = new Transform();
+
+	children = _children;
+}
+
 Entity::Entity(vec3 _color)
 {
 	transform = new Transform();
@@ -32,6 +39,7 @@ Entity::Entity(vec3 _color, Material _material)
 
 Entity::~Entity() { if (transform) delete transform; }
 
+#pragma region Rendering
 void Entity::setRenderer(Renderer* _renderer) { renderer = _renderer; }
 
 void Entity::setTextureManager(TextureManager * _textureManager) { textureManager = _textureManager; }
@@ -77,9 +85,28 @@ vec3 Entity::getColor() { return color; }
 
 void Entity::setMaterial(Material value) { material = value; }
 Material Entity::getMaterial() { return material; }
+#pragma endregion
+
+#pragma region Children
+vector<Entity*> Entity::getChildren() { return children; }
+
+void Entity::addChild(Entity* child)
+{
+	children.push_back(child);
+
+	transform->addChild(child->getTransform());
+}
+
+void Entity::addChildren(vector<Entity*> newChildren)
+{
+	children.insert(children.end(), newChildren.begin(), newChildren.end());
+
+	for (int i = 0; i < newChildren.size(); i++) transform->addChild(newChildren[i]->getTransform());
+}
+#pragma endregion
 
 void Entity::draw()
 {
-	if (transform->getChildCount() > 0)
-		for (int i = 0; i < transform->getChildCount(); i++) transform->getChildren()[i]->draw();
+	if (!children.empty())
+		for (int i = 0; i < children.size(); i++) children[i]->draw();
 }
