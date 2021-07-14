@@ -60,7 +60,9 @@ vector<unsigned int> Mesh::getIndices() { return indices; }
 
 vector<Texture> Mesh::getTextures() { return textures; }
 
-void Mesh::draw()
+//void Mesh::draw() {}
+
+void Mesh::draw(/*mat4 model /*Renderer* renderer, TextureManager* textureManager*/)
 {
 	unsigned int uniformLocation = 0;
 
@@ -95,7 +97,7 @@ void Mesh::draw()
 	textureManager->setActiveTextureUnit(0);
 
 	setUniformValues();
-	renderer->setModel(renderer->getShaderProgram(shader), transform->getModel());
+	//renderer->setModel(renderer->getShaderProgram(shader), transform->getModel());
 	renderer->drawElements(vao, vbo, ebo, indices.size());
 
 	for (int i = 0; i < MAX_TEXTURE_AMOUNT_PER_TYPE * 2; i++)

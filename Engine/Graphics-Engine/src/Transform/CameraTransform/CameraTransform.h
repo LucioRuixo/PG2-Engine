@@ -10,8 +10,6 @@ using namespace glm;
 
 class GENGINE_API CameraTransform : public Transform
 {
-	vec3 forward;
-	vec3 upVector;
 	mat4 view;
 
 	Renderer* renderer;

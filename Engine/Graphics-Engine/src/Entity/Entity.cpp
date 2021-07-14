@@ -12,7 +12,7 @@ Entity::Entity(vector<Entity*> _children)
 {
 	transform = new Transform();
 
-	children = _children;
+	addChildren(_children);
 }
 
 Entity::Entity(vec3 _color)

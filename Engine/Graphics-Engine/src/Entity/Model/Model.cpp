@@ -7,8 +7,8 @@ Model::Model(string _directory, ModelNode* _rootNode) : Entity()
 
 	addChild(rootNode);
 
-	material.diffuseTexturesActive = true;
-	material.specularTexturesActive = true;
+	//material.diffuseTexturesActive = true;
+	//material.specularTexturesActive = true;
 }
 
 Model::~Model()

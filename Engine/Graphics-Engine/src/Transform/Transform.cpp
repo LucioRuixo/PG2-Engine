@@ -2,6 +2,9 @@
 
 Transform::Transform()
 {
+	forward = vec3(0.0f, 0.0f, 1.0f);
+	upVector = vec3(0.0f, 1.0f, 0.0f);
+
 	transformData.position = vec3(0.0f, 0.0f, 0.0f);
 	transformData.rotation = vec3(0.0f, 0.0f, 0.0f);
 	transformData.scale = vec3(1.0f, 1.0f, 1.0f);
@@ -21,6 +24,9 @@ Transform::Transform()
 
 Transform::Transform(vector<Transform*> _children)
 {
+	forward = vec3(0.0f, 0.0f, 1.0f);
+	upVector = vec3(0.0f, 1.0f, 0.0f);
+
 	transformData.position = vec3(0.0f, 0.0f, 0.0f);
 	transformData.rotation = vec3(0.0f, 0.0f, 0.0f);
 	transformData.scale = vec3(1.0f, 1.0f, 1.0f);
@@ -37,7 +43,7 @@ Transform::Transform(vector<Transform*> _children)
 	setRotation(0.0f, 0.0f, 0.0f);
 	setScale(1.0f, 1.0f, 1.0f);
 
-	children = _children;
+	addChildren(_children);
 }
 
 Transform::~Transform()
@@ -52,8 +58,8 @@ Transform::~Transform()
 void Transform::updateModel()
 {
 	model = trsMatrix.translation *
-		trsMatrix.rotationX * trsMatrix.rotationY * trsMatrix.rotationZ *
-		trsMatrix.scale;
+			trsMatrix.rotationX * trsMatrix.rotationY * trsMatrix.rotationZ *
+			trsMatrix.scale;
 }
 
 #pragma region Transformations
@@ -82,9 +88,6 @@ vec3 Transform::getPosition() { return transformData.position; }
 
 void Transform::rotate(float pitch, float yaw, float roll)
 {
-	if (!children.empty())
-		for (int i = 0; i < children.size(); i++) children[i]->rotate(pitch, yaw, roll);
-
 	transformData.rotation.x += pitch;
 	transformData.rotation.y += yaw;
 	transformData.rotation.z += roll;
@@ -96,6 +99,20 @@ void Transform::rotate(float pitch, float yaw, float roll)
 	trsMatrix.rotationY = glm::rotate(mat4(1.0f), radians(transformData.rotation.y), yAxis);
 	trsMatrix.rotationZ = glm::rotate(mat4(1.0f), radians(transformData.rotation.z), zAxis);
 	updateModel();
+
+	if (!children.empty())
+	{
+		for (int i = 0; i < children.size(); i++)
+		{
+			children[i]->getTRS().rotationX *= trsMatrix.rotationX;
+			children[i]->getTRS().rotationY *= trsMatrix.rotationY;
+			children[i]->getTRS().rotationZ *= trsMatrix.rotationZ;
+
+			children[i]->updateModel();
+		}
+
+		//for (int i = 0; i < children.size(); i++) children[i]->rotate(pitch, yaw, roll);
+	}
 }
 
 void Transform::setRotation(float pitch, float yaw, float roll)
@@ -132,6 +149,8 @@ void Transform::setScale(float x, float y, float z)
 vec3 Transform::getScale() { return transformData.scale; }
 
 mat4 Transform::getModel() { return model; }
+
+TRSMatrix Transform::getTRS() { return trsMatrix; }
 #pragma endregion
 
 #pragma region Children

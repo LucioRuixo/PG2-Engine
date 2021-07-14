@@ -3,7 +3,6 @@
 CameraTransform::CameraTransform(Renderer* _renderer) : Transform()
 {
 	forward = vec3(0.0f, 0.0f, -1.0f);
-	upVector = vec3(0.0f, 1.0f, 0.0f);
 	view = mat4(1.0f);
 
 	renderer = _renderer;

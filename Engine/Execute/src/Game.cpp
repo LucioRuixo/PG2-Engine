@@ -60,15 +60,16 @@ int Game::initialize()
 	//sprite2 = new Sprite(textureManager, "res/Assets/gato 2.jpg", "gato 2");
 	//sprite2->getTransform()->setPosition(-1.0f, 0.0f, -3.0f);
 	
-	//Cube
+	//Cubes
 	cube = new Cube(vec3(1.0f, 0.1f, 0.1f));
 	cube->getTransform()->setPosition(0.75f, 0.0f, -6.5f);
 	
-	//Cube 2
 	cube2 = new Cube(vec3(0.1f, 0.1f, 1.0f));
 	cube2->getTransform()->setPosition(-1.5f, -3.0f, -9.5f);
 	cube2->getTransform()->setScale(3.0f, 3.0f, 3.0f);
 	
+	cube->addChild(cube2);
+
 	//Material cubes
 	Material ruby;
 	ruby.diffuse = vec3(0.61424f, 0.04136f, 0.04136f);
@@ -97,6 +98,7 @@ int Game::initialize()
 	//Models
 	alarak = modelManager->importModel("res/Assets/Modelos/Alarak/source/Alarak-Protoss/Alarak VR.fbx");
 	alarak->getTransform()->setPosition(-1.5f, -1.0f, -9.0f);
+	alarak->getTransform()->setRotation(-90.0f, 0.0f, 0.0f);
 
 	//dagger = modelManager->importModel("res/Assets/Modelos/Dagger/source/Dagger.obj");
 	//dagger->getTransform()->setPosition(-1.5f, 0.0f, -4.0f);
@@ -201,17 +203,17 @@ void Game::update()
 
 	//Model transformations
 	//-----------
-	if (input->getKeyPress(PrintableKey::I)) cube->getTransform()->rotate(0.0f, 0.0f, -cameraMovementSpeed * time->getDeltaTime());
-	if (input->getKeyPress(PrintableKey::K)) cube->getTransform()->rotate(0.0f, 0.0f, cameraMovementSpeed * time->getDeltaTime());
+	if (input->getKeyPress(PrintableKey::I)) cube->getTransform()->rotate(alarakRotationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
+	if (input->getKeyPress(PrintableKey::K)) cube->getTransform()->rotate(-alarakRotationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
 
-	if (input->getKeyPress(PrintableKey::L)) cube->getTransform()->rotate(cameraMovementSpeed * time->getDeltaTime(), 0.0f, 0.0f);
-	if (input->getKeyPress(PrintableKey::J)) cube->getTransform()->rotate(-cameraMovementSpeed * time->getDeltaTime(), 0.0f, 0.0f);
+	if (input->getKeyPress(PrintableKey::O)) cube2->getTransform()->rotate(alarakRotationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
+	if (input->getKeyPress(PrintableKey::L)) cube2->getTransform()->rotate(-alarakRotationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
 	//-----------
 #pragma endregion
 
 #pragma region Transformations
-	alarakYRotation += alarakRotationSpeed * time->getDeltaTime();
-	alarak->getTransform()->setRotation(-90.0f, 0.0f, alarakYRotation);
+	//alarakYRotation += alarakRotationSpeed * time->getDeltaTime();
+	//alarak->getTransform()->setRotation(-90.0f, 0.0f, alarakYRotation);
 
 	//daggerYRotation += daggerRotationSpeed * time->getDeltaTime();
 	//dagger->getTransform()->setRotation(0.0f, daggerYRotation, -90.0f);

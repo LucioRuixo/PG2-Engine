@@ -39,6 +39,8 @@ public:
 	vector<Texture> getTextures();
 
 	void draw() override;
+	//void draw(mat4 model);
+	//void draw(Renderer* renderer, TextureManager* textureManager);
 };
 
 #endif // !MESH_H

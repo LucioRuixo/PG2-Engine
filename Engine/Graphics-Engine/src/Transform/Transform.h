@@ -26,6 +26,9 @@ struct GENGINE_API TRSMatrix
 class GENGINE_API Transform
 {
 protected:
+	vec3 forward;
+	vec3 upVector;
+
 	TRSMatrix trsMatrix;
 	mat4 model;
 
@@ -33,8 +36,8 @@ protected:
 
 	vector<Transform*> children;
 
-	void updateModel();
 public:
+	void updateModel();
 	Transform();
 	Transform(vector<Transform*> _children);
 	~Transform();
@@ -53,6 +56,7 @@ public:
 	vec3 getScale();
 
 	mat4 getModel();
+	TRSMatrix getTRS();
 #pragma endregion
 
 #pragma region Children
