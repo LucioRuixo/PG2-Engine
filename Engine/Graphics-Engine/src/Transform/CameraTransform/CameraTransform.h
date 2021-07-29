@@ -19,10 +19,10 @@ public:
 	CameraTransform(Renderer* _renderer);
 	~CameraTransform();
 
+	void translate(float x, float y, float z) override;
 	void setPosition(float x, float y, float z) override;
-	void translate(float x, float y, float z);
+	void rotate(float pitch, float yaw, float roll) override;
 	void setRotation(float pitch, float yaw, float roll) override;
-	void rotate(float pitch, float yaw, float roll);
 	void setScale(float x, float y, float z) override;
 };
 

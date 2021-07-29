@@ -10,6 +10,8 @@ float cameraMovementSpeed = 1.0f;
 float cameraRotationSpeed = 50.0f;
 float spriteScaleAddition = 0.1f;
 
+float cubeRotationSpeed = 100.0f;
+
 float treeYRotation = 0.0f;
 float treeRotationSpeed = 50.0f;
 float daggerYRotation = 0.0f;
@@ -62,11 +64,10 @@ int Game::initialize()
 	
 	//Cubes
 	cube = new Cube(vec3(1.0f, 0.1f, 0.1f));
-	cube->getTransform()->setPosition(0.75f, 0.0f, -6.5f);
+	cube->getTransform()->setPosition(0.0f, 0.0f, -6.0f);
 	
 	cube2 = new Cube(vec3(0.1f, 0.1f, 1.0f));
-	cube2->getTransform()->setPosition(-1.5f, -3.0f, -9.5f);
-	cube2->getTransform()->setScale(3.0f, 3.0f, 3.0f);
+	cube2->getTransform()->setPosition(0.0f, -1.5f, -6.0f);
 	
 	cube->addChild(cube2);
 
@@ -203,12 +204,20 @@ void Game::update()
 
 	//Model transformations
 	//-----------
-	if (input->getKeyPress(PrintableKey::I)) cube->getTransform()->rotate(alarakRotationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
-	if (input->getKeyPress(PrintableKey::K)) cube->getTransform()->rotate(-alarakRotationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
+	if (input->getKeyPress(PrintableKey::U)) cube->getTransform()->rotate(cubeRotationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
+	if (input->getKeyPress(PrintableKey::J)) cube->getTransform()->rotate(-cubeRotationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
 
-	if (input->getKeyPress(PrintableKey::O)) cube2->getTransform()->rotate(alarakRotationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
-	if (input->getKeyPress(PrintableKey::L)) cube2->getTransform()->rotate(-alarakRotationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
+	if (input->getKeyPress(PrintableKey::I)) cube->getTransform()->rotate(0.0f, cubeRotationSpeed * time->getDeltaTime(), 0.0f);
+	if (input->getKeyPress(PrintableKey::K)) cube->getTransform()->rotate(0.0f, -cubeRotationSpeed * time->getDeltaTime(), 0.0f);
+
+	if (input->getKeyPress(PrintableKey::O)) cube->getTransform()->rotate(0.0f, 0.0f, cubeRotationSpeed * time->getDeltaTime());
+	if (input->getKeyPress(PrintableKey::L)) cube->getTransform()->rotate(0.0f, 0.0f, -cubeRotationSpeed * time->getDeltaTime());
 	//-----------
+
+	cout << endl;
+	cout << "right: " << cube->getTransform()->getRight().x << " | y: " << cube->getTransform()->getRight().y << " | z: " << cube->getTransform()->getRight().z << endl;
+	cout << "up: " << cube->getTransform()->getUp().x << " | y: " << cube->getTransform()->getUp().y << " | z: " << cube->getTransform()->getUp().z << endl;
+	cout << "forward: " << cube->getTransform()->getForward().x << " | y: " << cube->getTransform()->getForward().y << " | z: " << cube->getTransform()->getForward().z << endl;
 #pragma endregion
 
 #pragma region Transformations

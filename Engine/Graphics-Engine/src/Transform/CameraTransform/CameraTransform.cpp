@@ -15,54 +15,54 @@ void CameraTransform::updateView()
 	renderer->setView(view);
 }
 
-void CameraTransform::setPosition(float x, float y, float z)
+void CameraTransform::translate(float x, float y, float z)
 {
-	transformData.position.x = x;
-	transformData.position.y = y;
-	transformData.position.z = z;
+	transformData.position += right * x + up * y - forward * z;
 
-	view = lookAt(transformData.position, transformData.position + forward, upVector);
+	view = lookAt(transformData.position, transformData.position + forward, vec3(0.0f, 1.0f, 0.0f));
 	updateView();
 
 	int uniformLocation = glGetUniformLocation(renderer->getShaderProgram(ShaderType::Main), "viewPosition");
 	glUniform3f(uniformLocation, transformData.position.x, transformData.position.y, transformData.position.z);
 }
 
-void CameraTransform::translate(float x, float y, float z)
+void CameraTransform::setPosition(float x, float y, float z)
 {
-	vec3 newPosition = transformData.position;
+	float translationX = x - transformData.position.x;
+	float translationY = y - transformData.position.y;
+	float translationZ = z - transformData.position.z;
 
-	vec3 right = normalize(cross(forward, upVector));
-	vec3 up = cross(right, forward);
-	newPosition += right * x + up * y - forward * z;
-
-	setPosition(newPosition.x, newPosition.y, newPosition.z);
-}
-
-void CameraTransform::setRotation(float pitch, float yaw, float roll)
-{
-	if (pitch > 89.0f) pitch = 89.0f;
-	if (pitch < -89.0f) pitch = -89.0f;
-	transformData.rotation.x = pitch;
-	transformData.rotation.y = yaw;
-	transformData.rotation.z = roll;
-
-	forward.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-	forward.y = sin(glm::radians(pitch));
-	forward.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-	forward = glm::normalize(forward);
-
-	view = lookAt(transformData.position, transformData.position + forward, upVector);
-	updateView();
+	translate(translationX, translationY, translationZ);
 }
 
 void CameraTransform::rotate(float pitch, float yaw, float roll)
 {
-	float newPitch = transformData.rotation.x + pitch;
-	float newYaw = transformData.rotation.y + yaw;
-	float newRoll = transformData.rotation.z + roll;
+	transformData.rotation.x += pitch;
+	if (transformData.rotation.x > 89.0f) transformData.rotation.x = 89.0f;
+	if (transformData.rotation.x < -89.0f) transformData.rotation.x = -89.0f;
 
-	setRotation(newPitch, newYaw, newRoll);
+	transformData.rotation.y += yaw;
+	transformData.rotation.z += roll;
+
+	forward.x = cos(glm::radians(transformData.rotation.y)) * cos(glm::radians(transformData.rotation.x));
+	forward.y = sin(glm::radians(transformData.rotation.x));
+	forward.z = sin(glm::radians(transformData.rotation.y)) * cos(glm::radians(transformData.rotation.x));
+	forward = glm::normalize(forward);
+
+	right = normalize(cross(forward, vec3(0.0f, 1.0f, 0.0f)));
+	up = normalize(cross(right, forward));
+
+	view = lookAt(transformData.position, transformData.position + forward, vec3(0.0f, 1.0f, 0.0f));
+	updateView();
+}
+
+void CameraTransform::setRotation(float pitch, float yaw, float roll)
+{
+	float rotationX = pitch - transformData.position.x;
+	float rotationY = yaw - transformData.position.y;
+	float rotationZ = roll - transformData.position.z;
+
+	rotate(rotationX, rotationY, rotationZ);
 }
 
 void CameraTransform::setScale(float x, float y, float z) { cout << "Can not scale camera transform" << endl; }

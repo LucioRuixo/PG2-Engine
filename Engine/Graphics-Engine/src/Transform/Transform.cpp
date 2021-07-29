@@ -2,8 +2,9 @@
 
 Transform::Transform()
 {
+	right = vec3(1.0f, 0.0f, 0.0f);
+	up = vec3(0.0f, 1.0f, 0.0f);
 	forward = vec3(0.0f, 0.0f, 1.0f);
-	upVector = vec3(0.0f, 1.0f, 0.0f);
 
 	transformData.position = vec3(0.0f, 0.0f, 0.0f);
 	transformData.rotation = vec3(0.0f, 0.0f, 0.0f);
@@ -24,8 +25,9 @@ Transform::Transform()
 
 Transform::Transform(vector<Transform*> _children)
 {
+	right = vec3(1.0f, 0.0f, 0.0f);
+	up = vec3(0.0f, 1.0f, 0.0f);
 	forward = vec3(0.0f, 0.0f, 1.0f);
-	upVector = vec3(0.0f, 1.0f, 0.0f);
 
 	transformData.position = vec3(0.0f, 0.0f, 0.0f);
 	transformData.rotation = vec3(0.0f, 0.0f, 0.0f);
@@ -92,6 +94,15 @@ void Transform::rotate(float pitch, float yaw, float roll)
 	transformData.rotation.y += yaw;
 	transformData.rotation.z += roll;
 
+	right = rotateY(right, radians(yaw));
+	right = rotateZ(right, radians(roll));
+
+	up = rotateX(up, radians(pitch));
+	up = rotateZ(up, radians(roll));
+
+	forward = rotateX(forward, radians(pitch));
+	forward = rotateY(forward, radians(yaw));
+
 	vec3 xAxis = vec3(1.0f, 0.0f, 0.0f);
 	vec3 yAxis = vec3(0.0f, 1.0f, 0.0f);
 	vec3 zAxis = vec3(0.0f, 0.0f, 1.0f);
@@ -101,18 +112,7 @@ void Transform::rotate(float pitch, float yaw, float roll)
 	updateModel();
 
 	if (!children.empty())
-	{
-		for (int i = 0; i < children.size(); i++)
-		{
-			children[i]->getTRS().rotationX *= trsMatrix.rotationX;
-			children[i]->getTRS().rotationY *= trsMatrix.rotationY;
-			children[i]->getTRS().rotationZ *= trsMatrix.rotationZ;
-
-			children[i]->updateModel();
-		}
-
-		//for (int i = 0; i < children.size(); i++) children[i]->rotate(pitch, yaw, roll);
-	}
+		for (int i = 0; i < children.size(); i++) children[i]->rotateAroundPivot(pitch, yaw, roll, this);
 }
 
 void Transform::setRotation(float pitch, float yaw, float roll)
@@ -124,6 +124,82 @@ void Transform::setRotation(float pitch, float yaw, float roll)
 	rotate(rotationX, rotationY, rotationZ);
 }
 vec3 Transform::getRotation() { return transformData.rotation; }
+
+void Transform::rotateAroundPivot(float pitch, float yaw, float roll, Transform* pivot)
+{
+	rotate(pitch, yaw, roll);
+
+	vec3 radius = transformData.position - pivot->getPosition();
+	float newPositionX;
+	float newPositionY;
+	float newPositionZ;
+
+	//Pitch
+	if (pitch != 0.0f)
+	{
+		vec3 pitchRadius = vec3(0.0f, radius.y, radius.z);
+		float angleToPitchStart = angle(vec3(0.0f, 0.0f, 1.0f), normalize(pitchRadius));
+
+		if (transformData.position.y < pivot->getPosition().y)
+		{
+			newPositionY = sin((angleToPitchStart + radians(pitch))) * length(pitchRadius);
+			newPositionZ = cos((angleToPitchStart + radians(pitch))) * length(pitchRadius);
+
+			newPositionY *= -1.0f;
+		}
+		else
+		{
+			newPositionY = sin((angleToPitchStart - radians(pitch))) * length(pitchRadius);
+			newPositionZ = cos((angleToPitchStart - radians(pitch))) * length(pitchRadius);
+		}
+
+		setPosition(transformData.position.x, pivot->getPosition().y + newPositionY, pivot->getPosition().z + newPositionZ);
+	}
+
+	//Yaw
+	if (yaw != 0.0f)
+	{
+		vec3 yawRadius = vec3(radius.x, 0.0f, radius.z);
+		float angleToYawStart = angle(vec3(1.0f, 0.0f, 0.0f), normalize(yawRadius));
+
+		if (transformData.position.z < pivot->getPosition().z)
+		{
+			newPositionZ = sin((angleToYawStart + radians(yaw))) * length(yawRadius);
+			newPositionX = cos((angleToYawStart + radians(yaw))) * length(yawRadius);
+
+			newPositionZ *= -1.0f;
+		}
+		else
+		{
+			newPositionZ = sin((angleToYawStart - radians(yaw))) * length(yawRadius);
+			newPositionX = cos((angleToYawStart - radians(yaw))) * length(yawRadius);
+		}
+
+		setPosition(pivot->getPosition().x + newPositionX, transformData.position.y, pivot->getPosition().z + newPositionZ);
+	}
+
+	//Roll
+	if (roll != 0.0f)
+	{
+		vec3 rollRadius = vec3(radius.x, radius.y, 0.0f);
+		float angleToRollStart = angle(vec3(1.0f, 0.0f, 0.0f), normalize(rollRadius));
+
+		if (transformData.position.y < pivot->getPosition().y)
+		{
+			newPositionY = sin((angleToRollStart - radians(roll))) * length(rollRadius);
+			newPositionX = cos((angleToRollStart - radians(roll))) * length(rollRadius);
+
+			newPositionY *= -1.0f;
+		}
+		else
+		{
+			newPositionY = sin((angleToRollStart + radians(roll))) * length(rollRadius);
+			newPositionX = cos((angleToRollStart + radians(roll))) * length(rollRadius);
+		}
+
+		setPosition(pivot->getPosition().x + newPositionX, pivot->getPosition().y + newPositionY, transformData.position.z);
+	}
+}
 
 void Transform::scale(float x, float y, float z)
 {
@@ -147,6 +223,12 @@ void Transform::setScale(float x, float y, float z)
 	scale(scaleX, scaleY, scaleZ);
 }
 vec3 Transform::getScale() { return transformData.scale; }
+
+vec3 Transform::getRight() { return right; }
+
+vec3 Transform::getUp() { return up; }
+
+vec3 Transform::getForward() { return forward; }
 
 mat4 Transform::getModel() { return model; }
 

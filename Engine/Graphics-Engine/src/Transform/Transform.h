@@ -2,6 +2,8 @@
 #define TRANSFORM_H
 
 #include <vector>
+#include <glm/gtx/vector_angle.hpp>
+#include <glm/gtx/rotate_vector.hpp>
 #include "Tools/Includes.h"
 
 using namespace std;
@@ -26,8 +28,9 @@ struct GENGINE_API TRSMatrix
 class GENGINE_API Transform
 {
 protected:
+	vec3 right;
+	vec3 up;
 	vec3 forward;
-	vec3 upVector;
 
 	TRSMatrix trsMatrix;
 	mat4 model;
@@ -43,17 +46,22 @@ public:
 	~Transform();
 
 #pragma region Transformations
-	void translate(float x, float y, float z);
+	virtual void translate(float x, float y, float z);
 	virtual void setPosition(float x, float y, float z);
 	vec3 getPosition();
 
-	void rotate(float pitch, float yaw, float roll);
+	virtual void rotate(float pitch, float yaw, float roll);
 	virtual void setRotation(float pitch, float yaw, float roll);
 	vec3 getRotation();
+	void rotateAroundPivot(float pitch, float yaw, float roll, Transform* pivot);
 
-	void scale(float x, float y, float z);
+	virtual void scale(float x, float y, float z);
 	virtual void setScale(float x, float y, float z);
 	vec3 getScale();
+
+	vec3 getRight();
+	vec3 getUp();
+	vec3 getForward();
 
 	mat4 getModel();
 	TRSMatrix getTRS();
