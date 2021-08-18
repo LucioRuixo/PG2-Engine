@@ -94,21 +94,44 @@ void Transform::rotate(float pitch, float yaw, float roll)
 	transformData.rotation.y += yaw;
 	transformData.rotation.z += roll;
 
-	right = rotateY(right, radians(yaw));
-	right = rotateZ(right, radians(roll));
+	//right = rotateY(right, radians(-yaw));
+	//right = rotateZ(right, radians(-roll));
+	//right = normalize(right);
+	
+	//up = rotateX(up, radians(pitch));
+	//up = rotateZ(up, radians(-roll));
+	//up = normalize(up);
+	
+	forward = glm::rotate(forward, radians(pitch), right);
+	forward = glm::rotate(forward, radians(yaw), up);
+	forward = normalize(forward);
+	//cout << "forward - x: " << forward.x << " | y: " << forward.y << " | z: " << forward.z << endl;
 
-	up = rotateX(up, radians(pitch));
-	up = rotateZ(up, radians(roll));
+	if (forward.z > 0.0f)
+	{
+		right = normalize(cross(vec3(0.0f, 1.0f, 0.0f), forward));
+		up = normalize(cross(forward, right));
+	}
+	else
+	{
+		right = normalize(cross(forward, vec3(0.0f, 1.0f, 0.0f)));
+		up = normalize(cross(right, forward));
+	}
 
-	forward = rotateX(forward, radians(pitch));
-	forward = rotateY(forward, radians(yaw));
+	//cout << "right - x: " << right.x << " | y: " << right.y << " | z: " << right.z << endl;
+	//cout << "up - x: " << up.x << " | y: " << up.y << " | z: " << up.z << endl;
 
-	vec3 xAxis = vec3(1.0f, 0.0f, 0.0f);
-	vec3 yAxis = vec3(0.0f, 1.0f, 0.0f);
-	vec3 zAxis = vec3(0.0f, 0.0f, 1.0f);
-	trsMatrix.rotationX = glm::rotate(mat4(1.0f), radians(transformData.rotation.x), xAxis);
-	trsMatrix.rotationY = glm::rotate(mat4(1.0f), radians(transformData.rotation.y), yAxis);
-	trsMatrix.rotationZ = glm::rotate(mat4(1.0f), radians(transformData.rotation.z), zAxis);
+	//cout << "XY: " << angle(right, up) << endl;
+	//cout << "XZ: " << angle(right, forward) << endl;
+	//cout << "YZ: " << angle(up, forward) << endl;
+	cout << endl;
+
+	//trsMatrix.rotationX = glm::rotate(mat4(1.0f), radians(transformData.rotation.x), vec3(1.0f, 0.0f, 0.0f));
+	//trsMatrix.rotationY = glm::rotate(mat4(1.0f), radians(transformData.rotation.y), vec3(0.0f, 1.0f, 0.0f));
+	//trsMatrix.rotationZ = glm::rotate(mat4(1.0f), radians(transformData.rotation.z), vec3(0.0f, 0.0f, 1.0f));
+	trsMatrix.rotationX = glm::rotate(mat4(1.0f), radians(transformData.rotation.x), right);
+	trsMatrix.rotationY = glm::rotate(mat4(1.0f), radians(transformData.rotation.y), up);
+	trsMatrix.rotationZ = glm::rotate(mat4(1.0f), radians(transformData.rotation.z), forward);
 	updateModel();
 
 	if (!children.empty())
@@ -157,6 +180,11 @@ void Transform::rotateAroundPivot(float pitch, float yaw, float roll, Transform*
 	}
 
 	//Yaw
+	vec3 upInZAxis = normalize(vec3(pivot->getUp().x, pivot->getUp().y, 0.0f));
+	float upZAxisTilt = angle(vec3(0.0f, 1.0f, 0.0f), upInZAxis);
+	if (pivot->getUp().x < 0.0f) upZAxisTilt *= -1.0f;
+	cout << "up Z axis tilt: " << upZAxisTilt << endl;
+
 	if (yaw != 0.0f)
 	{
 		vec3 yawRadius = vec3(radius.x, 0.0f, radius.z);
@@ -186,15 +214,15 @@ void Transform::rotateAroundPivot(float pitch, float yaw, float roll, Transform*
 
 		if (transformData.position.y < pivot->getPosition().y)
 		{
-			newPositionY = sin((angleToRollStart - radians(roll))) * length(rollRadius);
-			newPositionX = cos((angleToRollStart - radians(roll))) * length(rollRadius);
+			newPositionY = sin((angleToRollStart - radians(roll) /*+ upZAxisTilt*/)) * length(rollRadius);
+			newPositionX = cos((angleToRollStart - radians(roll) /*+ upZAxisTilt*/)) * length(rollRadius);
 
 			newPositionY *= -1.0f;
 		}
 		else
 		{
-			newPositionY = sin((angleToRollStart + radians(roll))) * length(rollRadius);
-			newPositionX = cos((angleToRollStart + radians(roll))) * length(rollRadius);
+			newPositionY = sin((angleToRollStart + radians(roll)/* + upZAxisTilt*/)) * length(rollRadius);
+			newPositionX = cos((angleToRollStart + radians(roll)/* + upZAxisTilt*/)) * length(rollRadius);
 		}
 
 		setPosition(pivot->getPosition().x + newPositionX, pivot->getPosition().y + newPositionY, transformData.position.z);

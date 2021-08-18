@@ -65,11 +65,12 @@ int Game::initialize()
 	//Cubes
 	cube = new Cube(vec3(1.0f, 0.1f, 0.1f));
 	cube->getTransform()->setPosition(0.0f, 0.0f, -6.0f);
+	//cube->getTransform()->setRotation(0.0f, 45.0f, 0.0f);
 	
 	cube2 = new Cube(vec3(0.1f, 0.1f, 1.0f));
 	cube2->getTransform()->setPosition(0.0f, -1.5f, -6.0f);
 	
-	cube->addChild(cube2);
+	//cube->addChild(cube2);
 
 	//Material cubes
 	Material ruby;
@@ -214,10 +215,14 @@ void Game::update()
 	if (input->getKeyPress(PrintableKey::L)) cube->getTransform()->rotate(0.0f, 0.0f, -cubeRotationSpeed * time->getDeltaTime());
 	//-----------
 
-	cout << endl;
-	cout << "right: " << cube->getTransform()->getRight().x << " | y: " << cube->getTransform()->getRight().y << " | z: " << cube->getTransform()->getRight().z << endl;
-	cout << "up: " << cube->getTransform()->getUp().x << " | y: " << cube->getTransform()->getUp().y << " | z: " << cube->getTransform()->getUp().z << endl;
-	cout << "forward: " << cube->getTransform()->getForward().x << " | y: " << cube->getTransform()->getForward().y << " | z: " << cube->getTransform()->getForward().z << endl;
+	//DEBUG
+	//-----------
+	//cout << endl;
+	//cout << "position: " << cube->getTransform()->getPosition().x << " | y: " << cube->getTransform()->getPosition().y << " | z: " << cube->getTransform()->getPosition().z << endl;
+	//cout << "right: " << camera->getTransform()->getRight().x << " | y: " << camera->getTransform()->getRight().y << " | z: " << camera->getTransform()->getRight().z << endl;
+	//cout << "up: " << camera->getTransform()->getUp().x << " | y: " << camera->getTransform()->getUp().y << " | z: " << camera->getTransform()->getUp().z << endl;
+	//cout << "forward: " << camera->getTransform()->getForward().x << " | y: " << camera->getTransform()->getForward().y << " | z: " << camera->getTransform()->getForward().z << endl;
+	//-----------
 #pragma endregion
 
 #pragma region Transformations
@@ -248,7 +253,8 @@ void Game::update()
 	//sprite2->draw();
 	
 	cube->draw();
-	cube2->draw();
+	//cube2->draw();
+
 	rubyCube->draw();
 	emeraldCube->draw();
 	goldCube->draw();
