@@ -37,6 +37,7 @@ protected:
 
 	TransformData transformData;
 
+	Transform* parent = NULL;
 	vector<Transform*> children;
 
 public:
@@ -71,6 +72,12 @@ public:
 	vector<Transform*> getChildren();
 	void addChild(Transform* child);
 	void addChildren(vector<Transform*> newChildren);
+	void removeChild(Transform* child);
+#pragma endregion
+
+#pragma region Parent
+	void setParent(Transform* _parent);
+	Transform* getParent();
 #pragma endregion
 };
 

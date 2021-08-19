@@ -32,6 +32,7 @@ protected:
 
 	Transform* transform;
 
+	Entity* parent = NULL;
 	vector<Entity*> children;
 
 	void setUniformValues();
@@ -60,6 +61,12 @@ public:
 	vector<Entity*> getChildren();
 	void addChild(Entity* child);
 	void addChildren(vector<Entity*> newChildren);
+	void removeChild(Entity* child);
+#pragma endregion
+
+#pragma region Parent
+	void setParent(Entity* _parent);
+	Entity* getParent();
 #pragma endregion
 
 	virtual void draw();

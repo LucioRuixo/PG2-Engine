@@ -92,6 +92,16 @@ vector<Entity*> Entity::getChildren() { return children; }
 
 void Entity::addChild(Entity* child)
 {
+	for (int i = 0; i < children.size(); i++)
+	{
+		if (children[i] == child)
+		{
+			cout << "Entity intended to be added to parent is already a child" << endl;
+
+			return;
+		}
+	}
+
 	children.push_back(child);
 
 	transform->addChild(child->getTransform());
@@ -103,6 +113,41 @@ void Entity::addChildren(vector<Entity*> newChildren)
 
 	for (int i = 0; i < newChildren.size(); i++) transform->addChild(newChildren[i]->getTransform());
 }
+
+void Entity::removeChild(Entity* child)
+{
+	int i = 0;
+	vector<Entity*>::iterator iterator;
+	for (iterator = children.begin(); iterator < children.end(); iterator++)
+	{
+		if (*iterator == child)
+		{
+			transform->removeChild(child->getTransform());
+			children.erase(iterator);
+			if (child == NULL) cout << "child is now NULL!" << endl;
+
+			return;
+		}
+
+		i++;
+	}
+
+	cout << "Child entity intended to be removed was not found" << endl;
+}
+#pragma endregion
+
+#pragma region Parent
+void Entity::setParent(Entity* _parent)
+{
+	if (parent == _parent) return;
+
+	if (parent != NULL) parent->removeChild(this);
+
+	parent = _parent;
+	transform->setParent(parent->getTransform());
+}
+
+Entity* Entity::getParent() { return parent; }
 #pragma endregion
 
 void Entity::draw()

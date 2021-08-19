@@ -71,6 +71,7 @@ int Game::initialize()
 	cube2->getTransform()->setPosition(0.0f, -1.5f, -6.0f);
 	
 	//cube->addChild(cube2);
+	//cube->removeChild(cube2);
 
 	//Material cubes
 	Material ruby;
@@ -205,14 +206,23 @@ void Game::update()
 
 	//Model transformations
 	//-----------
-	if (input->getKeyPress(PrintableKey::U)) cube->getTransform()->rotate(cubeRotationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
-	if (input->getKeyPress(PrintableKey::J)) cube->getTransform()->rotate(-cubeRotationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
+	//Cube 1
+	//if (input->getKeyPress(PrintableKey::U)) cube->getTransform()->rotate(cubeRotationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
+	//if (input->getKeyPress(PrintableKey::J)) cube->getTransform()->rotate(-cubeRotationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
 
 	if (input->getKeyPress(PrintableKey::I)) cube->getTransform()->rotate(0.0f, cubeRotationSpeed * time->getDeltaTime(), 0.0f);
 	if (input->getKeyPress(PrintableKey::K)) cube->getTransform()->rotate(0.0f, -cubeRotationSpeed * time->getDeltaTime(), 0.0f);
 
-	if (input->getKeyPress(PrintableKey::O)) cube->getTransform()->rotate(0.0f, 0.0f, cubeRotationSpeed * time->getDeltaTime());
-	if (input->getKeyPress(PrintableKey::L)) cube->getTransform()->rotate(0.0f, 0.0f, -cubeRotationSpeed * time->getDeltaTime());
+	//if (input->getKeyPress(PrintableKey::O)) cube->getTransform()->rotate(0.0f, 0.0f, cubeRotationSpeed * time->getDeltaTime());
+	//if (input->getKeyPress(PrintableKey::L)) cube->getTransform()->rotate(0.0f, 0.0f, -cubeRotationSpeed * time->getDeltaTime());
+
+	//Cube 2
+	if (input->getKeyPress(PrintableKey::U)) cube2->getTransform()->rotate(0.0f, cubeRotationSpeed * time->getDeltaTime(), 0.0f);
+	if (input->getKeyPress(PrintableKey::J)) cube2->getTransform()->rotate(0.0f, -cubeRotationSpeed * time->getDeltaTime(), 0.0f);
+
+	//Add/remove child
+	if (input->getKeyPress(PrintableKey::O)) cube->addChild(cube2);
+	if (input->getKeyPress(PrintableKey::L)) cube->removeChild(cube2);
 	//-----------
 
 	//DEBUG
@@ -253,7 +263,7 @@ void Game::update()
 	//sprite2->draw();
 	
 	cube->draw();
-	//cube2->draw();
+	cube2->draw();
 
 	rubyCube->draw();
 	emeraldCube->draw();

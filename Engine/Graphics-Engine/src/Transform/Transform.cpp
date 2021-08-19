@@ -269,4 +269,36 @@ vector<Transform*> Transform::getChildren() { return children; }
 void Transform::addChild(Transform* child) { children.push_back(child); }
 
 void Transform::addChildren(vector<Transform*> newChildren) { children.insert(children.end(), newChildren.begin(), newChildren.end()); }
+
+void Transform::removeChild(Transform* child)
+{
+	int i = 0;
+	vector<Transform*>::iterator iterator;
+	for (iterator = children.begin(); iterator < children.end(); iterator++)
+	{
+		if (*iterator == child)
+		{
+			children.erase(iterator);
+
+			return;
+		}
+
+		i++;
+	}
+
+	cout << "Child transform intended to be removed was not found" << endl;
+}
+#pragma endregion
+
+#pragma region Parent
+void Transform::setParent(Transform* _parent)
+{
+	if (parent == _parent) return;
+
+	if (parent != NULL) parent->removeChild(this);
+
+	parent = _parent;
+}
+
+Transform* Transform::getParent() { return parent; }
 #pragma endregion
