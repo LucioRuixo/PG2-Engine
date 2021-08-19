@@ -79,7 +79,7 @@ Plane::~Plane() {}
 void Plane::draw()
 {
 	setUniformValues();
-	renderer->setModel(renderer->getShaderProgram(shader), transform->getModel().model);
+	renderer->setModel(renderer->getShaderProgram(shader), transform->getGlobalModel());
 	renderer->drawElements(vao, vbo, ebo, PLANE_INDICES);
 
 	Entity::draw();

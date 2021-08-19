@@ -16,7 +16,7 @@ struct GENGINE_API TransformData
 	vec3 scale;
 };
 
-struct GENGINE_API ModelMatrix
+struct GENGINE_API LocalModelMatrix
 {
 	mat4 model;
 
@@ -34,8 +34,9 @@ protected:
 	vec3 up;
 	vec3 forward;
 
-	ModelMatrix model;
 	//TODO: agregar matrices local y global
+	LocalModelMatrix localModel;
+	mat4 globalModel;
 	//mat4 model;
 
 	TransformData transformData;
@@ -44,11 +45,14 @@ protected:
 	vector<Transform*> children;
 
 public:
-	void updateModel();
+	void updateLocalModel();
+	void updateGlobalModel();
+
 	Transform();
 	Transform(vector<Transform*> _children);
 	~Transform();
 
+	//TODO: como las transformaciones por ahora son locales, agregar también métodos globales
 #pragma region Transformations
 	virtual void translate(float x, float y, float z);
 	virtual void setPosition(float x, float y, float z);
@@ -67,7 +71,8 @@ public:
 	vec3 getUp();
 	vec3 getForward();
 
-	ModelMatrix getModel();
+	mat4 getLocalModel();
+	mat4 getGlobalModel();
 	//ModelMatrix getTRS();
 #pragma endregion
 
@@ -77,6 +82,7 @@ public:
 	void removeChild(Transform* child);
 #pragma endregion
 
+	//TODO: comprobar que las transformaciones sigan bien después de modificar el padre
 #pragma region Parent
 	void setParent(Transform* _parent);
 	Transform* getParent();

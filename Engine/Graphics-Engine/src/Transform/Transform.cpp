@@ -10,12 +10,12 @@ Transform::Transform()
 	transformData.rotation = vec3(0.0f, 0.0f, 0.0f);
 	transformData.scale = vec3(1.0f, 1.0f, 1.0f);
 
-	model.model = mat4(1.0f);
-	model.translation = mat4(1.0f);
-	model.rotationX = mat4(1.0f);
-	model.rotationY = mat4(1.0f);
-	model.rotationZ = mat4(1.0f);
-	model.scale = mat4(1.0f);
+	localModel.model = mat4(1.0f);
+	localModel.translation = mat4(1.0f);
+	localModel.rotationX = mat4(1.0f);
+	localModel.rotationY = mat4(1.0f);
+	localModel.rotationZ = mat4(1.0f);
+	localModel.scale = mat4(1.0f);
 
 	setPosition(0.0f, 0.0f, 0.0f);
 	setRotation(0.0f, 0.0f, 0.0f);
@@ -32,12 +32,12 @@ Transform::Transform(vector<Transform*> _children)
 	transformData.rotation = vec3(0.0f, 0.0f, 0.0f);
 	transformData.scale = vec3(1.0f, 1.0f, 1.0f);
 
-	model.model = mat4(1.0f);
-	model.translation = mat4(1.0f);
-	model.rotationX = mat4(1.0f);
-	model.rotationY = mat4(1.0f);
-	model.rotationZ = mat4(1.0f);
-	model.scale = mat4(1.0f);
+	localModel.model = mat4(1.0f);
+	localModel.translation = mat4(1.0f);
+	localModel.rotationX = mat4(1.0f);
+	localModel.rotationY = mat4(1.0f);
+	localModel.rotationZ = mat4(1.0f);
+	localModel.scale = mat4(1.0f);
 
 	setPosition(0.0f, 0.0f, 0.0f);
 	setRotation(0.0f, 0.0f, 0.0f);
@@ -55,25 +55,38 @@ Transform::~Transform()
 	}
 }
 
-void Transform::updateModel()
+void Transform::updateLocalModel()
 {
-	model.model = model.translation *
-				  model.rotationX * model.rotationY * model.rotationZ *
-				  model.scale;
+	localModel.model = localModel.translation *
+					   localModel.rotationX * localModel.rotationY * localModel.rotationZ *
+					   localModel.scale;
+
+	updateGlobalModel();
+}
+
+void Transform::updateGlobalModel()
+{
+	//TODO: Comprobar que el orden de multiplicación esté bien
+	if (parent) globalModel = parent->getGlobalModel() * localModel.model;
+	//if (parent) globalModel = localModel.model * parent->getGlobalModel();
+	else globalModel = localModel.model;
 }
 
 #pragma region Transformations
 void Transform::translate(float x, float y, float z)
 {
-	if (!children.empty())
-		for (int i = 0; i < children.size(); i++) children[i]->translate(x, y, z);
+	//if (!children.empty())
+	//	for (int i = 0; i < children.size(); i++) children[i]->translate(x, y, z);
 
 	transformData.position.x += x;
 	transformData.position.y += y;
 	transformData.position.z += z;
 
-	model.translation = glm::translate(mat4(1.0f), transformData.position);
-	updateModel();
+	localModel.translation = glm::translate(mat4(1.0f), transformData.position);
+	updateLocalModel();
+
+	if (!children.empty())
+		for (int i = 0; i < children.size(); i++) children[i]->updateGlobalModel();
 }
 
 void Transform::setPosition(float x, float y, float z)
@@ -127,13 +140,14 @@ void Transform::rotate(float pitch, float yaw, float roll)
 	//trsMatrix.rotationX = glm::rotate(mat4(1.0f), radians(transformData.rotation.x), vec3(1.0f, 0.0f, 0.0f));
 	//trsMatrix.rotationY = glm::rotate(mat4(1.0f), radians(transformData.rotation.y), vec3(0.0f, 1.0f, 0.0f));
 	//trsMatrix.rotationZ = glm::rotate(mat4(1.0f), radians(transformData.rotation.z), vec3(0.0f, 0.0f, 1.0f));
-	model.rotationX = glm::rotate(mat4(1.0f), radians(transformData.rotation.x), right);
-	model.rotationY = glm::rotate(mat4(1.0f), radians(transformData.rotation.y), up);
-	model.rotationZ = glm::rotate(mat4(1.0f), radians(transformData.rotation.z), forward);
-	updateModel();
+	localModel.rotationX = glm::rotate(mat4(1.0f), radians(transformData.rotation.x), right); //TODO: no aplicar las rotaciones todas juntas! aplicar en un eje u después generar el otro y así...
+	localModel.rotationY = glm::rotate(mat4(1.0f), radians(transformData.rotation.y), up);
+	localModel.rotationZ = glm::rotate(mat4(1.0f), radians(transformData.rotation.z), forward);
+	updateLocalModel();
 
 	if (!children.empty())
-		for (int i = 0; i < children.size(); i++) children[i]->rotateAroundPivot(pitch, yaw, roll, this);
+		for (int i = 0; i < children.size(); i++) children[i]->updateGlobalModel();
+		//for (int i = 0; i < children.size(); i++) children[i]->rotateAroundPivot(pitch, yaw, roll, this);
 }
 
 void Transform::setRotation(float pitch, float yaw, float roll)
@@ -229,15 +243,18 @@ void Transform::rotateAroundPivot(float pitch, float yaw, float roll, Transform*
 
 void Transform::scale(float x, float y, float z)
 {
-	if (!children.empty())
-		for (int i = 0; i < children.size(); i++) children[i]->scale(x, y, z);
+	//if (!children.empty())
+	//	for (int i = 0; i < children.size(); i++) children[i]->scale(x, y, z);
 
 	transformData.scale.x += x;
 	transformData.scale.y += y;
 	transformData.scale.z += z;
 
-	model.scale = glm::scale(mat4(1.0f), transformData.scale);
-	updateModel();
+	localModel.scale = glm::scale(mat4(1.0f), transformData.scale);
+	updateLocalModel();
+
+	if (!children.empty())
+		for (int i = 0; i < children.size(); i++) children[i]->updateGlobalModel();
 }
 
 void Transform::setScale(float x, float y, float z)
@@ -256,7 +273,9 @@ vec3 Transform::getUp() { return up; }
 
 vec3 Transform::getForward() { return forward; }
 
-ModelMatrix Transform::getModel() { return model; }
+mat4 Transform::getLocalModel() { return localModel.model; }
+
+mat4 Transform::getGlobalModel() { return globalModel; }
 
 //ModelMatrix Transform::getTRS() { return model; }
 #pragma endregion

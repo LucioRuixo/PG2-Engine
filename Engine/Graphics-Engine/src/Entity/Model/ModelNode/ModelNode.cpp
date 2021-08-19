@@ -38,7 +38,7 @@ string ModelNode::getName() { return name; }
 
 void ModelNode::draw()
 {
-	renderer->setModel(renderer->getShaderProgram(shader), transform->getModel().model);
+	renderer->setModel(renderer->getShaderProgram(shader), transform->getGlobalModel());
 	for (int i = 0; i < meshes.size(); i++) if (meshes[i]) meshes[i]->draw(/*transform->getModel()/*renderer, textureManager*/);
 
 	Entity::draw();
