@@ -12,7 +12,7 @@ Entity::Entity(vector<Entity*> _children)
 {
 	transform = new Transform();
 
-	addChildren(_children);
+	for (int i = 0; i < _children.size(); i++) addChild(_children[i]);
 }
 
 Entity::Entity(vec3 _color)
@@ -103,36 +103,27 @@ void Entity::addChild(Entity* child)
 	}
 
 	children.push_back(child);
+	child->setParent(this);
 
 	transform->addChild(child->getTransform());
 }
 
-void Entity::addChildren(vector<Entity*> newChildren)
-{
-	children.insert(children.end(), newChildren.begin(), newChildren.end());
-
-	for (int i = 0; i < newChildren.size(); i++) transform->addChild(newChildren[i]->getTransform());
-}
-
 void Entity::removeChild(Entity* child)
 {
-	int i = 0;
 	vector<Entity*>::iterator iterator;
 	for (iterator = children.begin(); iterator < children.end(); iterator++)
 	{
 		if (*iterator == child)
 		{
-			transform->removeChild(child->getTransform());
 			children.erase(iterator);
-			if (child == NULL) cout << "child is now NULL!" << endl;
+			transform->removeChild(child->getTransform());
+			child->setParent(NULL);
 
 			return;
 		}
-
-		i++;
 	}
 
-	cout << "Child entity intended to be removed was not found" << endl;
+	cout << "Child entity intended to be removed from parent was not found" << endl;
 }
 #pragma endregion
 
@@ -141,10 +132,11 @@ void Entity::setParent(Entity* _parent)
 {
 	if (parent == _parent) return;
 
-	if (parent != NULL) parent->removeChild(this);
+	if (parent) parent->removeChild(this);
 
 	parent = _parent;
-	transform->setParent(parent->getTransform());
+	if (parent) transform->setParent(parent->getTransform());
+	else transform->setParent(NULL);
 }
 
 Entity* Entity::getParent() { return parent; }

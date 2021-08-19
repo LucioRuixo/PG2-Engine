@@ -60,7 +60,6 @@ public:
 #pragma region Children
 	vector<Entity*> getChildren();
 	void addChild(Entity* child);
-	void addChildren(vector<Entity*> newChildren);
 	void removeChild(Entity* child);
 #pragma endregion
 

@@ -10,13 +10,12 @@ Transform::Transform()
 	transformData.rotation = vec3(0.0f, 0.0f, 0.0f);
 	transformData.scale = vec3(1.0f, 1.0f, 1.0f);
 
-	model = mat4(1.0f);
-
-	trsMatrix.translation = mat4(1.0f);
-	trsMatrix.rotationX = mat4(1.0f);
-	trsMatrix.rotationY = mat4(1.0f);
-	trsMatrix.rotationZ = mat4(1.0f);
-	trsMatrix.scale = mat4(1.0f);
+	model.model = mat4(1.0f);
+	model.translation = mat4(1.0f);
+	model.rotationX = mat4(1.0f);
+	model.rotationY = mat4(1.0f);
+	model.rotationZ = mat4(1.0f);
+	model.scale = mat4(1.0f);
 
 	setPosition(0.0f, 0.0f, 0.0f);
 	setRotation(0.0f, 0.0f, 0.0f);
@@ -33,19 +32,18 @@ Transform::Transform(vector<Transform*> _children)
 	transformData.rotation = vec3(0.0f, 0.0f, 0.0f);
 	transformData.scale = vec3(1.0f, 1.0f, 1.0f);
 
-	model = mat4(1.0f);
-
-	trsMatrix.translation = mat4(1.0f);
-	trsMatrix.rotationX = mat4(1.0f);
-	trsMatrix.rotationY = mat4(1.0f);
-	trsMatrix.rotationZ = mat4(1.0f);
-	trsMatrix.scale = mat4(1.0f);
+	model.model = mat4(1.0f);
+	model.translation = mat4(1.0f);
+	model.rotationX = mat4(1.0f);
+	model.rotationY = mat4(1.0f);
+	model.rotationZ = mat4(1.0f);
+	model.scale = mat4(1.0f);
 
 	setPosition(0.0f, 0.0f, 0.0f);
 	setRotation(0.0f, 0.0f, 0.0f);
 	setScale(1.0f, 1.0f, 1.0f);
 
-	addChildren(_children);
+	for (int i = 0; i < _children.size(); i++) addChild(_children[i]);
 }
 
 Transform::~Transform()
@@ -59,9 +57,9 @@ Transform::~Transform()
 
 void Transform::updateModel()
 {
-	model = trsMatrix.translation *
-			trsMatrix.rotationX * trsMatrix.rotationY * trsMatrix.rotationZ *
-			trsMatrix.scale;
+	model.model = model.translation *
+				  model.rotationX * model.rotationY * model.rotationZ *
+				  model.scale;
 }
 
 #pragma region Transformations
@@ -74,7 +72,7 @@ void Transform::translate(float x, float y, float z)
 	transformData.position.y += y;
 	transformData.position.z += z;
 
-	trsMatrix.translation = glm::translate(mat4(1.0f), transformData.position);
+	model.translation = glm::translate(mat4(1.0f), transformData.position);
 	updateModel();
 }
 
@@ -129,9 +127,9 @@ void Transform::rotate(float pitch, float yaw, float roll)
 	//trsMatrix.rotationX = glm::rotate(mat4(1.0f), radians(transformData.rotation.x), vec3(1.0f, 0.0f, 0.0f));
 	//trsMatrix.rotationY = glm::rotate(mat4(1.0f), radians(transformData.rotation.y), vec3(0.0f, 1.0f, 0.0f));
 	//trsMatrix.rotationZ = glm::rotate(mat4(1.0f), radians(transformData.rotation.z), vec3(0.0f, 0.0f, 1.0f));
-	trsMatrix.rotationX = glm::rotate(mat4(1.0f), radians(transformData.rotation.x), right);
-	trsMatrix.rotationY = glm::rotate(mat4(1.0f), radians(transformData.rotation.y), up);
-	trsMatrix.rotationZ = glm::rotate(mat4(1.0f), radians(transformData.rotation.z), forward);
+	model.rotationX = glm::rotate(mat4(1.0f), radians(transformData.rotation.x), right);
+	model.rotationY = glm::rotate(mat4(1.0f), radians(transformData.rotation.y), up);
+	model.rotationZ = glm::rotate(mat4(1.0f), radians(transformData.rotation.z), forward);
 	updateModel();
 
 	if (!children.empty())
@@ -238,7 +236,7 @@ void Transform::scale(float x, float y, float z)
 	transformData.scale.y += y;
 	transformData.scale.z += z;
 
-	trsMatrix.scale = glm::scale(mat4(1.0f), transformData.scale);
+	model.scale = glm::scale(mat4(1.0f), transformData.scale);
 	updateModel();
 }
 
@@ -258,17 +256,19 @@ vec3 Transform::getUp() { return up; }
 
 vec3 Transform::getForward() { return forward; }
 
-mat4 Transform::getModel() { return model; }
+ModelMatrix Transform::getModel() { return model; }
 
-TRSMatrix Transform::getTRS() { return trsMatrix; }
+//ModelMatrix Transform::getTRS() { return model; }
 #pragma endregion
 
 #pragma region Children
 vector<Transform*> Transform::getChildren() { return children; }
 
-void Transform::addChild(Transform* child) { children.push_back(child); }
-
-void Transform::addChildren(vector<Transform*> newChildren) { children.insert(children.end(), newChildren.begin(), newChildren.end()); }
+void Transform::addChild(Transform* child)
+{
+	children.push_back(child);
+	child->setParent(this);
+}
 
 void Transform::removeChild(Transform* child)
 {
@@ -279,6 +279,7 @@ void Transform::removeChild(Transform* child)
 		if (*iterator == child)
 		{
 			children.erase(iterator);
+			child->setParent(NULL);
 
 			return;
 		}
@@ -295,7 +296,7 @@ void Transform::setParent(Transform* _parent)
 {
 	if (parent == _parent) return;
 
-	if (parent != NULL) parent->removeChild(this);
+	if (parent) parent->removeChild(this);
 
 	parent = _parent;
 }

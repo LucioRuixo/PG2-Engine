@@ -16,8 +16,10 @@ struct GENGINE_API TransformData
 	vec3 scale;
 };
 
-struct GENGINE_API TRSMatrix
+struct GENGINE_API ModelMatrix
 {
+	mat4 model;
+
 	mat4 translation;
 	mat4 rotationX;
 	mat4 rotationY;
@@ -32,8 +34,9 @@ protected:
 	vec3 up;
 	vec3 forward;
 
-	TRSMatrix trsMatrix;
-	mat4 model;
+	ModelMatrix model;
+	//TODO: agregar matrices local y global
+	//mat4 model;
 
 	TransformData transformData;
 
@@ -64,14 +67,13 @@ public:
 	vec3 getUp();
 	vec3 getForward();
 
-	mat4 getModel();
-	TRSMatrix getTRS();
+	ModelMatrix getModel();
+	//ModelMatrix getTRS();
 #pragma endregion
 
 #pragma region Children
 	vector<Transform*> getChildren();
 	void addChild(Transform* child);
-	void addChildren(vector<Transform*> newChildren);
 	void removeChild(Transform* child);
 #pragma endregion
 

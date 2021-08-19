@@ -10,6 +10,6 @@ LightCube::~LightCube() {}
 
 void LightCube::draw()
 {
-	renderer->setModel(renderer->getShaderProgram(ShaderType::LightSource), transform->getModel());
+	renderer->setModel(renderer->getShaderProgram(ShaderType::LightSource), transform->getModel().model);
 	renderer->drawElements(vao, vbo, ebo, CUBE_INDICES);
 }

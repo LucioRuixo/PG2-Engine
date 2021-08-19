@@ -37,7 +37,7 @@ ModelNode* ModelManager::processNode(const aiScene* scene, aiNode* node)
 	cout << --currentNodeLayer << " - node \"" << node->mName.C_Str() << "\" and all its children processed" << endl;
 
 	ModelNode* newNode = new ModelNode(node->mName.C_Str(), meshes);
-	newNode->addChildren(children);
+	for (int i = 0; i < children.size(); i++) newNode->addChild(children[i]);
 	return newNode;
 }
 
