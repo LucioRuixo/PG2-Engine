@@ -39,6 +39,8 @@ Transform::Transform(vector<Transform*> _children)
 	localModel.rotationZ = mat4(1.0f);
 	localModel.scale = mat4(1.0f);
 
+	localModel.rotation = mat4(1.0f);
+
 	setPosition(0.0f, 0.0f, 0.0f);
 	setRotation(0.0f, 0.0f, 0.0f);
 	setScale(1.0f, 1.0f, 1.0f);
@@ -58,7 +60,9 @@ Transform::~Transform()
 void Transform::updateLocalModel()
 {
 	localModel.model = localModel.translation *
-					   localModel.rotationX * localModel.rotationY * localModel.rotationZ *
+					   //localModel.rotation *
+					   //localModel.rotationX * localModel.rotationY * localModel.rotationZ *
+					   localModel.rotationZ * localModel.rotationY * localModel.rotationX *
 					   localModel.scale;
 
 	updateGlobalModel();
@@ -104,14 +108,6 @@ void Transform::rotate(float pitch, float yaw, float roll)
 	transformData.rotation.x += pitch;
 	transformData.rotation.y += yaw;
 	transformData.rotation.z += roll;
-
-	//right = rotateY(right, radians(-yaw));
-	//right = rotateZ(right, radians(-roll));
-	//right = normalize(right);
-	
-	//up = rotateX(up, radians(pitch));
-	//up = rotateZ(up, radians(-roll));
-	//up = normalize(up);
 	
 	forward = glm::rotate(forward, radians(pitch), right);
 	forward = glm::rotate(forward, radians(yaw), up);
@@ -128,26 +124,19 @@ void Transform::rotate(float pitch, float yaw, float roll)
 		right = normalize(cross(forward, vec3(0.0f, 1.0f, 0.0f)));
 		up = normalize(cross(right, forward));
 	}
+	//TODO: comprobar que los cálculos de forward, up y right estén bien
 
 	//cout << "right - x: " << right.x << " | y: " << right.y << " | z: " << right.z << endl;
 	//cout << "up - x: " << up.x << " | y: " << up.y << " | z: " << up.z << endl;
+	//cout << endl;
 
-	//cout << "XY: " << angle(right, up) << endl;
-	//cout << "XZ: " << angle(right, forward) << endl;
-	//cout << "YZ: " << angle(up, forward) << endl;
-	cout << endl;
+	if (pitch != 0.0f) localModel.model = glm::rotate(localModel.model, radians(pitch), vec3(1.0f, 0.0f, 0.0f));
+	if (yaw != 0.0f) localModel.model = glm::rotate(localModel.model, radians(yaw), vec3(0.0f, 1.0f, 0.0f));
+	if (roll != 0.0f) localModel.model = glm::rotate(localModel.model, radians(roll), vec3(0.0f, 0.0f, 1.0f));
 
-	//trsMatrix.rotationX = glm::rotate(mat4(1.0f), radians(transformData.rotation.x), vec3(1.0f, 0.0f, 0.0f));
-	//trsMatrix.rotationY = glm::rotate(mat4(1.0f), radians(transformData.rotation.y), vec3(0.0f, 1.0f, 0.0f));
-	//trsMatrix.rotationZ = glm::rotate(mat4(1.0f), radians(transformData.rotation.z), vec3(0.0f, 0.0f, 1.0f));
-	localModel.rotationX = glm::rotate(mat4(1.0f), radians(transformData.rotation.x), right); //TODO: no aplicar las rotaciones todas juntas! aplicar en un eje u después generar el otro y así...
-	localModel.rotationY = glm::rotate(mat4(1.0f), radians(transformData.rotation.y), up);
-	localModel.rotationZ = glm::rotate(mat4(1.0f), radians(transformData.rotation.z), forward);
-	updateLocalModel();
-
+	updateGlobalModel();
 	if (!children.empty())
 		for (int i = 0; i < children.size(); i++) children[i]->updateGlobalModel();
-		//for (int i = 0; i < children.size(); i++) children[i]->rotateAroundPivot(pitch, yaw, roll, this);
 }
 
 void Transform::setRotation(float pitch, float yaw, float roll)

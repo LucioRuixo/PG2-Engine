@@ -10,7 +10,7 @@ float cameraMovementSpeed = 1.0f;
 float cameraRotationSpeed = 50.0f;
 float spriteScaleAddition = 0.1f;
 
-float cubeRotationSpeed = 100.0f;
+float cubeSpeed = 5.0f;
 
 float treeYRotation = 0.0f;
 float treeRotationSpeed = 50.0f;
@@ -64,14 +64,13 @@ int Game::initialize()
 	
 	//Cubes
 	cube = new Cube(vec3(1.0f, 0.1f, 0.1f));
+	cube2 = new Cube(vec3(0.1f, 0.1f, 1.0f));
+	cube->addChild(cube2);
+
 	cube->getTransform()->setPosition(0.0f, 0.0f, -6.0f);
 	//cube->getTransform()->setRotation(0.0f, 45.0f, 0.0f);
 	
-	//cube2 = new Cube(vec3(0.1f, 0.1f, 1.0f));
-	//cube2->getTransform()->setPosition(0.0f, -1.5f, /*-6.0f*/0.0f);
-	
-	//cube->addChild(cube2);
-	//cube->removeChild(cube2);
+	cube2->getTransform()->setPosition(0.0f, -1.5f, /*-6.0f*/0.0f);
 
 	//Material cubes
 	Material ruby;
@@ -207,14 +206,14 @@ void Game::update()
 	//Model transformations
 	//-----------
 	//Cube 1
-	if (input->getKeyPress(PrintableKey::U)) cube->getTransform()->rotate(cubeRotationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
-	if (input->getKeyPress(PrintableKey::J)) cube->getTransform()->rotate(-cubeRotationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
+	if (input->getKeyPress(PrintableKey::U)) cube->getTransform()->rotate(cubeSpeed * time->getDeltaTime(), 0.0f, 0.0f);
+	if (input->getKeyPress(PrintableKey::J)) cube->getTransform()->rotate(-cubeSpeed * time->getDeltaTime(), 0.0f, 0.0f);
 
-	if (input->getKeyPress(PrintableKey::I)) cube->getTransform()->rotate(0.0f, cubeRotationSpeed * time->getDeltaTime(), 0.0f);
-	if (input->getKeyPress(PrintableKey::K)) cube->getTransform()->rotate(0.0f, -cubeRotationSpeed * time->getDeltaTime(), 0.0f);
+	if (input->getKeyPress(PrintableKey::I)) cube->getTransform()->rotate(0.0f, cubeSpeed * time->getDeltaTime(), 0.0f);
+	if (input->getKeyPress(PrintableKey::K)) cube->getTransform()->rotate(0.0f, -cubeSpeed * time->getDeltaTime(), 0.0f);
 
-	if (input->getKeyPress(PrintableKey::O)) cube->getTransform()->rotate(0.0f, 0.0f, cubeRotationSpeed * time->getDeltaTime());
-	if (input->getKeyPress(PrintableKey::L)) cube->getTransform()->rotate(0.0f, 0.0f, -cubeRotationSpeed * time->getDeltaTime());
+	if (input->getKeyPress(PrintableKey::O)) cube->getTransform()->rotate(0.0f, 0.0f, cubeSpeed * time->getDeltaTime());
+	if (input->getKeyPress(PrintableKey::L)) cube->getTransform()->rotate(0.0f, 0.0f, -cubeSpeed * time->getDeltaTime());
 
 	//Cube 2
 	//if (input->getKeyPress(PrintableKey::U)) cube2->getTransform()->rotate(0.0f, cubeRotationSpeed * time->getDeltaTime(), 0.0f);

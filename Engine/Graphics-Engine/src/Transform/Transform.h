@@ -25,6 +25,8 @@ struct GENGINE_API LocalModelMatrix
 	mat4 rotationY;
 	mat4 rotationZ;
 	mat4 scale;
+
+	mat4 rotation;
 };
 
 class GENGINE_API Transform
@@ -34,10 +36,8 @@ protected:
 	vec3 up;
 	vec3 forward;
 
-	//TODO: agregar matrices local y global
 	LocalModelMatrix localModel;
 	mat4 globalModel;
-	//mat4 model;
 
 	TransformData transformData;
 
