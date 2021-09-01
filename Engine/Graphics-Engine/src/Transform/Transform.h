@@ -24,9 +24,8 @@ struct GENGINE_API LocalModelMatrix
 	mat4 rotationX;
 	mat4 rotationY;
 	mat4 rotationZ;
-	mat4 scale;
-
 	mat4 rotation;
+	mat4 scale;
 };
 
 class GENGINE_API Transform
@@ -61,7 +60,6 @@ public:
 	virtual void rotate(float pitch, float yaw, float roll);
 	virtual void setRotation(float pitch, float yaw, float roll);
 	vec3 getRotation();
-	void rotateAroundPivot(float pitch, float yaw, float roll, Transform* pivot);
 
 	virtual void scale(float x, float y, float z);
 	virtual void setScale(float x, float y, float z);
