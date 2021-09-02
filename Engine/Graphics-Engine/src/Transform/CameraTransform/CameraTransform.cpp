@@ -15,16 +15,16 @@ CameraTransform::CameraTransform(Renderer* _renderer) : Transform()
 
 CameraTransform::~CameraTransform() {}
 
-void CameraTransform::updateView()
-{
-	renderer->setView(view);
-}
+void CameraTransform::updateView() { renderer->setView(view); }
 
 void CameraTransform::translate(float x, float y, float z)
 {
-	transformData.position += -right * x + up * y - forward * z;
+	transformData.position += right * x + up * y - forward * z;
+	cout << endl;
+	cout << "camera position: " << transformData.position.x << ", " << transformData.position.y << ", " << transformData.position.z << endl;
 
-	view = lookAt(transformData.position, transformData.position + vec3(-forward.x, forward.y, forward.z), vec3(0.0f, 1.0f, 0.0f));
+	vec3 adjustedPosition = vec3(-transformData.position.x, transformData.position.y, transformData.position.z);
+	view = lookAt(adjustedPosition, adjustedPosition + vec3(-forward.x, forward.y, forward.z), vec3(0.0f, 1.0f, 0.0f));
 	updateView();
 
 	int uniformLocation = glGetUniformLocation(renderer->getShaderProgram(ShaderType::Main), "viewPosition");
@@ -63,7 +63,8 @@ void CameraTransform::rotate(float pitch, float yaw, float roll)
 	up = normalize(cross(forward, right));
 	//cout << "up - x: " << up.x << " | y: " << up.y << " | z: " << up.z << endl;
 
-	view = lookAt(transformData.position, transformData.position + vec3(-forward.x, forward.y, forward.z), vec3(0.0f, 1.0f, 0.0f));
+	vec3 adjustedPosition = vec3(-transformData.position.x, transformData.position.y, transformData.position.z);
+	view = lookAt(adjustedPosition, adjustedPosition + vec3(-forward.x, forward.y, forward.z), vec3(0.0f, 1.0f, 0.0f));
 	updateView();
 }
 
