@@ -48,7 +48,8 @@ public:
 	~Entity();
 
 	Renderer* getRenderer();
-	Transform* getTransform();
+	virtual Transform* getTransform();
+	void updateModels(mat4 otherModel);
 
 #pragma region Rendering
 	void setColor(vec3 value);
@@ -58,14 +59,14 @@ public:
 #pragma endregion
 
 #pragma region Children
-	vector<Entity*> getChildren();
-	void addChild(Entity* child);
-	void removeChild(Entity* child);
+	virtual vector<Entity*> getChildren();
+	virtual void addChild(Entity* child);
+	virtual void removeChild(Entity* child);
 #pragma endregion
 
 #pragma region Parent
-	void setParent(Entity* _parent);
-	Entity* getParent();
+	virtual void setParent(Entity* _parent);
+	virtual Entity* getParent();
 #pragma endregion
 
 	virtual void draw();

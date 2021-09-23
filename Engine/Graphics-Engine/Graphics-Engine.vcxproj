@@ -50,6 +50,7 @@
     <ClCompile Include="src\Tile\Tile.cpp" />
     <ClCompile Include="src\Time\Time.cpp" />
     <ClCompile Include="src\Transform\CameraTransform\CameraTransform.cpp" />
+    <ClCompile Include="src\Transform\ModelTransform\ModelTransform.cpp" />
     <ClCompile Include="src\Transform\Transform.cpp" />
     <ClCompile Include="src\Window\Window.cpp" />
   </ItemGroup>
@@ -82,6 +83,7 @@
     <ClInclude Include="src\Tools\Export.h" />
     <ClInclude Include="src\Tools\Includes.h" />
     <ClInclude Include="src\Transform\CameraTransform\CameraTransform.h" />
+    <ClInclude Include="src\Transform\ModelTransform\ModelTransform.h" />
     <ClInclude Include="src\Transform\Transform.h" />
     <ClInclude Include="src\Window\Window.h" />
   </ItemGroup>

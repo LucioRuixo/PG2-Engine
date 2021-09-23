@@ -13,15 +13,11 @@ class GENGINE_API ModelNode : public Entity
 	string name;
 
 	vector<Mesh*> meshes;
-	//vector<ModelNode*> children;
 public:
 	ModelNode(string _name, vector<Mesh*> _meshes);
-	//ModelNode(string _name, vector<Mesh*> _meshes, vector<ModelNode*> _children);
 	~ModelNode();
 
 	string getName();
-	//vector<ModelNode*> getChildren();
-	//void addChild(ModelNode* child);
 
 	void draw() override;
 };

@@ -95,7 +95,7 @@ GameBase::GameBase()
 	}
 
 	window = new Window(1280, 720);
-	renderer = new Renderer();
+	renderer = new Renderer(45.0f, 1280, 720, 0.1f, 100.0f);
 	camera = new Camera(renderer);
 	textureManager = new TextureManager(renderer);
 	modelManager = new ModelManager(textureManager);
@@ -174,6 +174,7 @@ void GameBase::run()
 
 		renderer->useShader(ShaderType::Main);
 		update();
+		camera->draw();
 
 		renderer->useShader(ShaderType::LightSource);
 		for (int i = 0; i < MAX_POINT_LIGHT_AMOUNT; i++)

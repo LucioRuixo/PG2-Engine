@@ -1,9 +1,16 @@
 #include "Renderer.h"
 
-Renderer::Renderer()
+Renderer::Renderer(float fov, float windowWidth, float windowHeight, float near, float far)
 {
 	unsigned int _posAttrib = 0;
 	unsigned int _colorAttrib = 1;
+
+	perspectiveData.fov = fov;
+	perspectiveData.width = windowWidth;
+	perspectiveData.height = windowHeight;
+	perspectiveData.near = near;
+	perspectiveData.far = far;
+	aspect = perspectiveData.width / perspectiveData.height;
 
 	backgroundColor = vec3(0.025f, 0.025f, 0.025f);
 
@@ -15,6 +22,12 @@ Renderer::Renderer()
 }
 
 Renderer::~Renderer() {}
+
+#pragma region Perspective
+PerspectiveData Renderer::getPerspectiveData() { return perspectiveData; }
+
+float Renderer::getAspect() { return aspect; }
+#pragma endregion
 
 #pragma region Background
 void Renderer::setBackgroundColor(vec3 value) { backgroundColor = value; }
@@ -87,7 +100,7 @@ mat4 Renderer::getProjection() { return vpMatrix.projection; }
 
 void Renderer::updateProjection(mat4 &projection)
 {
-	projection = perspective(radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+	projection = perspective(radians(perspectiveData.fov), aspect, perspectiveData.near, perspectiveData.far);
 	//projection = ortho(0.0f, 1280.0f, 0.0f, 720.0f);
 }
 #pragma endregion

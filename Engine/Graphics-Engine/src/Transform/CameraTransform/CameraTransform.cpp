@@ -2,15 +2,15 @@
 
 CameraTransform::CameraTransform(Renderer* _renderer) : Transform()
 {
-	//forward = vec3(0.0f, 0.0f, -1.0f);
+	forward = vec3(0.0f, 0.0f, -1.0f);
 	view = mat4(1.0f);
 
 	renderer = _renderer;
 
-	cout << endl;
-	cout << "right: " << right.x << " | y: " << right.y << " | z: " << right.z << endl;
-	cout << "up: " << up.x << " | y: " << up.y << " | z: " << up.z << endl;
-	cout << "forward: " << forward.x << " | y: " << forward.y << " | z: " << forward.z << endl;
+	//cout << endl;
+	//cout << "right: " << right.x << " | y: " << right.y << " | z: " << right.z << endl;
+	//cout << "up: " << up.x << " | y: " << up.y << " | z: " << up.z << endl;
+	//cout << "forward: " << forward.x << " | y: " << forward.y << " | z: " << forward.z << endl;
 }
 
 CameraTransform::~CameraTransform() {}
@@ -19,13 +19,18 @@ void CameraTransform::updateView() { renderer->setView(view); }
 
 void CameraTransform::translate(float x, float y, float z)
 {
+	//Transform::translate(x, y, z);
+
 	transformData.position += right * x + up * y - forward * z;
-	cout << endl;
-	cout << "camera position: " << transformData.position.x << ", " << transformData.position.y << ", " << transformData.position.z << endl;
+	//cout << endl;
+	//cout << "camera position: " << transformData.position.x << ", " << transformData.position.y << ", " << transformData.position.z << endl;
 
 	vec3 adjustedPosition = vec3(-transformData.position.x, transformData.position.y, transformData.position.z);
 	view = lookAt(adjustedPosition, adjustedPosition + vec3(-forward.x, forward.y, forward.z), vec3(0.0f, 1.0f, 0.0f));
 	updateView();
+
+	//if (!children.empty())
+	//	for (int i = 0; i < children.size(); i++) children[i]->updateGlobalModel();
 
 	int uniformLocation = glGetUniformLocation(renderer->getShaderProgram(ShaderType::Main), "viewPosition");
 	glUniform3f(uniformLocation, transformData.position.x, transformData.position.y, transformData.position.z);
@@ -66,6 +71,9 @@ void CameraTransform::rotate(float pitch, float yaw, float roll)
 	vec3 adjustedPosition = vec3(-transformData.position.x, transformData.position.y, transformData.position.z);
 	view = lookAt(adjustedPosition, adjustedPosition + vec3(-forward.x, forward.y, forward.z), vec3(0.0f, 1.0f, 0.0f));
 	updateView();
+
+	if (!children.empty())
+		for (int i = 0; i < children.size(); i++) children[i]->updateGlobalModel();
 }
 
 void CameraTransform::setRotation(float pitch, float yaw, float roll)

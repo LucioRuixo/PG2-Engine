@@ -14,20 +14,22 @@ float cubeTranslationSpeed = 10.0f;
 float cubeRotationSpeed = 50.0f;
 float cubeScaleSpeed = 10.0f;
 
-float treeYRotation = 0.0f;
-float treeRotationSpeed = 50.0f;
-float daggerYRotation = 0.0f;
-float daggerRotationSpeed = 50.0f;
-float sniperRifleYRotation = 0.0f;
-float sniperRifleRotationSpeed = 50.0f;
-float plantYRotation = 0.0f;
-float plantRotationSpeed = 50.0f;
-float alarakYRotation = 0.0f;
-float alarakRotationSpeed = 50.0f;
-float revolverYRotation = 0.0f;
-float revolverRotationSpeed = 50.0f;
-float alienYRotation = 0.0f;
-float alienRotationSpeed = 50.0f;
+//float treeYRotation = 0.0f;
+//float treeRotationSpeed = 50.0f;
+//float daggerYRotation = 0.0f;
+//float daggerRotationSpeed = 50.0f;
+//float sniperRifleYRotation = 0.0f;
+//float sniperRifleRotationSpeed = 50.0f;
+//float plantYRotation = 0.0f;
+//float plantRotationSpeed = 50.0f;
+//float alarakYRotation = 0.0f;
+//float alarakRotationSpeed = 50.0f;
+//float revolverYRotation = 0.0f;
+//float revolverRotationSpeed = 50.0f;
+//float alienYRotation = 0.0f;
+//float alienRotationSpeed = 50.0f;
+
+float bPlaneTranslationSpeed = 10.0f;
 
 vec3 lightSourcePosition = vec3(0.0f, 2.0f, -4.5f);
 vec3 cameraMovement;
@@ -43,13 +45,16 @@ Cube* rubyCube;
 Cube* emeraldCube;
 Cube* goldCube;
 
-Model* alarak;
+//Model* alarak;
 //Model* dagger;
 //Model* tree;
 //Model* sniperRifle;
 //Model* plant;
 //Model* alien;
 //Model* revolver;
+
+// b* = Blender
+Model* bPlane;
 
 Game::Game() {}
 
@@ -68,7 +73,7 @@ int Game::initialize()
 	//Cubes
 	cube = new Cube(vec3(0.9f, 0.1f, 0.9f));
 	cube2 = new Cube(vec3(0.9f, 0.9f, 0.1f));
-	cube->addChild(cube2);
+	//cube->addChild(cube2);
 
 	cube->getTransform()->setScale(0.5f, 0.5f, 0.5f);
 	cube->getTransform()->setPosition(0.0f, 0.0f, -6.0f);
@@ -102,8 +107,8 @@ int Game::initialize()
 	goldCube->getTransform()->setScale(1.0f, 3.0f, 1.0f);
 
 	//Models
-	alarak = modelManager->importModel("res/Assets/Modelos/Alarak/source/Alarak-Protoss/Alarak VR.fbx");
-	alarak->getTransform()->setPosition(-1.5f, -1.0f, -9.0f);
+	//alarak = modelManager->importModel("res/Assets/Modelos/Alarak/source/Alarak-Protoss/Alarak VR.fbx");
+	//alarak->getTransform()->setPosition(-1.5f, -1.0f, -9.0f);
 
 	//dagger = modelManager->importModel("res/Assets/Modelos/Dagger/source/Dagger.obj");
 	//dagger->getTransform()->setPosition(-1.5f, 0.0f, -4.0f);
@@ -129,6 +134,9 @@ int Game::initialize()
 	//alien->getTransform()->setPosition(1.0f, 2.0f, -6.0f);
 	//alien->getTransform()->setRotation(-90.0f, 0.0f, 0.0f);
 	//alien->getTransform()->setScale(0.05f, 0.05f, 0.05f);
+
+	bPlane = modelManager->importModel("res/Assets/Modelos/Blender/Plano.dae");
+	bPlane->getTransform()->setPosition(0.0f, 2.0f, -5.0f);
 
 	//Lighting
 	lightingManager->addDirectionalLight(vec3(1.0f, -1.0f, 0.0f));
@@ -219,28 +227,32 @@ void Game::update()
 	//if (input->getKeyPress(PrintableKey::W)) cube->getTransform()->translate(0.0f, 0.0f, -cubeTranslationSpeed * time->getDeltaTime());
 
 	//Cube 1 Rotation
-	if (input->getKeyPress(PrintableKey::R)) cube->getTransform()->rotate(cubeRotationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
-	if (input->getKeyPress(PrintableKey::F)) cube->getTransform()->rotate(-cubeRotationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
-
-	if (input->getKeyPress(PrintableKey::T)) cube->getTransform()->rotate(0.0f, cubeRotationSpeed * time->getDeltaTime(), 0.0f);
-	if (input->getKeyPress(PrintableKey::G)) cube->getTransform()->rotate(0.0f, -cubeRotationSpeed * time->getDeltaTime(), 0.0f);
-
-	if (input->getKeyPress(PrintableKey::Y)) cube->getTransform()->rotate(0.0f, 0.0f, cubeRotationSpeed * time->getDeltaTime());
-	if (input->getKeyPress(PrintableKey::H)) cube->getTransform()->rotate(0.0f, 0.0f, -cubeRotationSpeed * time->getDeltaTime());
+	//if (input->getKeyPress(PrintableKey::R)) cube->getTransform()->rotate(cubeRotationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
+	//if (input->getKeyPress(PrintableKey::F)) cube->getTransform()->rotate(-cubeRotationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
+	//
+	//if (input->getKeyPress(PrintableKey::T)) cube->getTransform()->rotate(0.0f, cubeRotationSpeed * time->getDeltaTime(), 0.0f);
+	//if (input->getKeyPress(PrintableKey::G)) cube->getTransform()->rotate(0.0f, -cubeRotationSpeed * time->getDeltaTime(), 0.0f);
+	//
+	//if (input->getKeyPress(PrintableKey::Y)) cube->getTransform()->rotate(0.0f, 0.0f, cubeRotationSpeed * time->getDeltaTime());
+	//if (input->getKeyPress(PrintableKey::H)) cube->getTransform()->rotate(0.0f, 0.0f, -cubeRotationSpeed * time->getDeltaTime());
 
 	//Cube 1 Scale
-	if (input->getKeyPress(PrintableKey::U)) cube->getTransform()->scale(cubeScaleSpeed * time->getDeltaTime(), 0.0f, 0.0f);
-	if (input->getKeyPress(PrintableKey::J)) cube->getTransform()->scale(-cubeScaleSpeed * time->getDeltaTime(), 0.0f, 0.0f);
+	//if (input->getKeyPress(PrintableKey::U)) cube->getTransform()->scale(cubeScaleSpeed * time->getDeltaTime(), 0.0f, 0.0f);
+	//if (input->getKeyPress(PrintableKey::J)) cube->getTransform()->scale(-cubeScaleSpeed * time->getDeltaTime(), 0.0f, 0.0f);
+	//
+	//if (input->getKeyPress(PrintableKey::I)) cube->getTransform()->scale(0.0f, cubeScaleSpeed * time->getDeltaTime(), 0.0f);
+	//if (input->getKeyPress(PrintableKey::K)) cube->getTransform()->scale(0.0f, -cubeScaleSpeed * time->getDeltaTime(), 0.0f);
+	//
+	//if (input->getKeyPress(PrintableKey::O)) cube->getTransform()->scale(0.0f, 0.0f, cubeScaleSpeed * time->getDeltaTime());
+	//if (input->getKeyPress(PrintableKey::L)) cube->getTransform()->scale(0.0f, 0.0f, -cubeScaleSpeed * time->getDeltaTime());
 
-	if (input->getKeyPress(PrintableKey::I)) cube->getTransform()->scale(0.0f, cubeScaleSpeed * time->getDeltaTime(), 0.0f);
-	if (input->getKeyPress(PrintableKey::K)) cube->getTransform()->scale(0.0f, -cubeScaleSpeed * time->getDeltaTime(), 0.0f);
-
-	if (input->getKeyPress(PrintableKey::O)) cube->getTransform()->scale(0.0f, 0.0f, cubeScaleSpeed * time->getDeltaTime());
-	if (input->getKeyPress(PrintableKey::L)) cube->getTransform()->scale(0.0f, 0.0f, -cubeScaleSpeed * time->getDeltaTime());
-
-	//Add/remove child
+	//Cube add/remove child
 	//if (input->getKeyPress(PrintableKey::O)) cube->addChild(cube2);
 	//if (input->getKeyPress(PrintableKey::L)) cube->removeChild(cube2);
+
+	//bPlane Translation
+	if (input->getKeyPress(PrintableKey::I)) bPlane->getTransform()->translate(0.0f, 0.0f, bPlaneTranslationSpeed * time->getDeltaTime());
+	if (input->getKeyPress(PrintableKey::K)) bPlane->getTransform()->translate(0.0f, 0.0f, -bPlaneTranslationSpeed * time->getDeltaTime());
 	//-----------
 
 	//DEBUG
@@ -286,13 +298,15 @@ void Game::update()
 	emeraldCube->draw();
 	goldCube->draw();
 
-	alarak->draw();
+	//alarak->draw();
 	//dagger->draw();
 	//tree->draw();
 	//sniperRifle->draw();
 	//plant->draw();
 	//revolver->draw();
 	//alien->draw();
+
+	bPlane->draw();
 #pragma endregion
 }
 
@@ -307,13 +321,15 @@ int Game::terminate()
 	if (emeraldCube) delete emeraldCube;
 	if (goldCube) delete goldCube;
 
-	if (alarak) delete alarak;
+	//if (alarak) delete alarak;
 	//if (dagger) delete dagger;
 	//if (tree) delete tree;
 	//if (sniperRifle) delete sniperRifle;
 	//if (plant) delete plant;
 	//if (revolver) delete revolver;
 	//if (alien) delete alien;
+
+	if (bPlane) delete bPlane;
 
 	return 0;
 }

@@ -98,6 +98,9 @@
     <Filter Include="src\Entity\Model\ModelNode">
       <UniqueIdentifier>{730e2af8-f154-406f-8cf8-3d673216bde9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Transform\ModelTransform">
+      <UniqueIdentifier>{6b0087ca-8ddc-491c-8482-1d83f12e46ec}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\Shaders\LightSourceShader_FS.shader">
@@ -195,6 +198,9 @@
     <ClCompile Include="src\Entity\Model\ModelNode\ModelNode.cpp">
       <Filter>src\Entity\Model\ModelNode</Filter>
     </ClCompile>
+    <ClCompile Include="src\Transform\ModelTransform\ModelTransform.cpp">
+      <Filter>src\Transform\ModelTransform</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Animation\Animation.h">
@@ -286,6 +292,9 @@
     </ClInclude>
     <ClInclude Include="src\Entity\Model\ModelNode\ModelNode.h">
       <Filter>src\Entity\Model\ModelNode</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Transform\ModelTransform\ModelTransform.h">
+      <Filter>src\Transform\ModelTransform</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

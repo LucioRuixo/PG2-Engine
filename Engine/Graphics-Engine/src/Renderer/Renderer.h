@@ -18,6 +18,15 @@ enum ShaderType
 	Size
 };
 
+struct PerspectiveData
+{
+	float fov;
+	float width;
+	float height;
+	float near;
+	float far;
+};
+
 struct Shader
 {
 	ShaderType type;
@@ -39,6 +48,9 @@ class GENGINE_API Renderer
 	unsigned int colorAttribute;
 	unsigned int normalAttributeLocation;
 
+	PerspectiveData perspectiveData;
+	float aspect;
+
 	vec3 backgroundColor;
 
 	int currentShader = ShaderType::None;
@@ -46,8 +58,13 @@ class GENGINE_API Renderer
 
 	VPMatrix vpMatrix;
 public:
-	Renderer();
+	Renderer(float fov, float windowWidth, float windowHeight, float near, float far);
 	~Renderer();
+
+#pragma region Perspective
+	PerspectiveData getPerspectiveData();
+	float getAspect();
+#pragma endregion
 
 #pragma region Background
 	void setBackgroundColor(vec3 value);

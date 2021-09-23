@@ -80,6 +80,13 @@ Renderer* Entity::getRenderer() { return renderer; }
 
 Transform* Entity::getTransform() { return transform; }
 
+void Entity::updateModels(mat4 otherModel)
+{
+	transform->updateGlobalModel(otherModel);
+
+	for (int i = 0; i < children.size(); i++) children[i]->updateModels(otherModel);
+}
+
 void Entity::setColor(vec3 value) { color = value; }
 vec3 Entity::getColor() { return color; }
 

@@ -78,6 +78,11 @@ void Transform::updateGlobalModel()
 	else globalModel = localModel.model;
 }
 
+void Transform::updateGlobalModel(mat4 other)
+{
+	if (parent) globalModel = other * localModel.model;
+}
+
 #pragma region Transformations
 void Transform::translate(float x, float y, float z)
 {
@@ -85,6 +90,8 @@ void Transform::translate(float x, float y, float z)
 	transformData.position.y += y;
 	transformData.position.z += z;
 
+	cout << "translating to <" << transformData.position.x << ", " << transformData.position.y << ", " << transformData.position.z << ">" << endl;
+	
 	localModel.translation = glm::translate(mat4(1.0f), transformData.position);
 	updateLocalModel();
 
