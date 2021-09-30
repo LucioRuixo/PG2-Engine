@@ -74,6 +74,9 @@ void Entity::setUniformValues()
 
 	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(shader), "material.shininess");
 	glUniform1f(uniformLocation, material.shininess);
+
+	uniformLocation = glGetUniformLocation(renderer->getShaderProgram(shader), "material.alpha");
+	glUniform1f(uniformLocation, material.alpha);
 }
 
 Renderer* Entity::getRenderer() { return renderer; }

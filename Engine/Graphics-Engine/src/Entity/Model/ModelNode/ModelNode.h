@@ -12,12 +12,19 @@ class GENGINE_API ModelNode : public Entity
 {
 	string name;
 
+	bool isBSPPlane = false;
+
 	vector<Mesh*> meshes;
 public:
 	ModelNode(string _name, vector<Mesh*> _meshes);
 	~ModelNode();
 
 	string getName();
+
+#pragma region BSP
+	bool getIsBSPPlane();
+	vec3 getBSPNornal();
+#pragma endregion
 
 	void draw() override;
 };

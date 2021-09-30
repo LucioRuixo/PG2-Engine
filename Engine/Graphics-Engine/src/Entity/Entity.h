@@ -13,6 +13,7 @@ struct GENGINE_API Material
 	vec3 diffuse = vec3(1.0f, 1.0f, 1.0f);
 	vec3 specular = vec3(1.0f, 1.0f, 1.0f);
 	float shininess = 0.25f;
+	float alpha = 1.0f;
 
 	bool diffuseTexturesActive = false;
 	bool specularTexturesActive = false;

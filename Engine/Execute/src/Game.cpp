@@ -30,6 +30,7 @@ float cubeScaleSpeed = 10.0f;
 //float alienRotationSpeed = 50.0f;
 
 float bPlaneTranslationSpeed = 10.0f;
+float bPlaneRotationSpeed = 50.0f;
 
 vec3 lightSourcePosition = vec3(0.0f, 2.0f, -4.5f);
 vec3 cameraMovement;
@@ -251,8 +252,19 @@ void Game::update()
 	//if (input->getKeyPress(PrintableKey::L)) cube->removeChild(cube2);
 
 	//bPlane Translation
-	if (input->getKeyPress(PrintableKey::I)) bPlane->getTransform()->translate(0.0f, 0.0f, bPlaneTranslationSpeed * time->getDeltaTime());
-	if (input->getKeyPress(PrintableKey::K)) bPlane->getTransform()->translate(0.0f, 0.0f, -bPlaneTranslationSpeed * time->getDeltaTime());
+	//if (input->getKeyPress(PrintableKey::I)) bPlane->getTransform()->translate(0.0f, 0.0f, bPlaneTranslationSpeed * time->getDeltaTime());
+	//if (input->getKeyPress(PrintableKey::K)) bPlane->getTransform()->translate(0.0f, 0.0f, -bPlaneTranslationSpeed * time->getDeltaTime());
+
+	//bPlane Rotation
+	if (input->getKeyPress(PrintableKey::I))
+	{
+		bPlane->getTransform()->rotate(0.0f, bPlaneRotationSpeed * time->getDeltaTime(), 0.0f);
+
+		//vec3 normal = bPlane->getRootNode()->getChildren()[0]->getBSPNornal();
+		vec3 normal = dynamic_cast<ModelNode*>(bPlane->getRootNode()->getChildren()[0])->getBSPNornal();
+		cout << "BSP NORMAL: " << normal.x << ", " << normal.y << ", " << normal.z << endl;
+	}
+	if (input->getKeyPress(PrintableKey::K)) bPlane->getTransform()->rotate(0.0f, -bPlaneRotationSpeed * time->getDeltaTime(), 0.0f);
 	//-----------
 
 	//DEBUG

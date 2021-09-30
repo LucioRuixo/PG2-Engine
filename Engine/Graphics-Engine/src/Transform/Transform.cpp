@@ -89,8 +89,6 @@ void Transform::translate(float x, float y, float z)
 	transformData.position.x += x;
 	transformData.position.y += y;
 	transformData.position.z += z;
-
-	cout << "translating to <" << transformData.position.x << ", " << transformData.position.y << ", " << transformData.position.z << ">" << endl;
 	
 	localModel.translation = glm::translate(mat4(1.0f), transformData.position);
 	updateLocalModel();

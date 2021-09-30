@@ -102,9 +102,13 @@ Mesh* ModelManager::processMesh(const aiScene* scene, aiMesh* mesh)
 Material ModelManager::loadMaterialColors(aiMaterial* meshMaterial)
 {
 	Material newMaterial;
-	aiColor3D color(0.0f, 0.0f, 0.0f);
+	aiColor4D color(0.0f, 0.0f, 0.0f, 1.0f);
 
-	if (AI_SUCCESS == meshMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, color)) newMaterial.diffuse = vec3(color.r, color.g, color.b);
+	if (AI_SUCCESS == meshMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, color))
+	{
+		newMaterial.diffuse = vec3(color.r, color.g, color.b);
+		newMaterial.alpha = color.a;
+	}
 	if (AI_SUCCESS == meshMaterial->Get(AI_MATKEY_COLOR_SPECULAR, color)) newMaterial.specular = vec3(color.r, color.g, color.b);
 
 	return newMaterial;

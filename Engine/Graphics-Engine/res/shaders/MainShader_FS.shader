@@ -50,6 +50,7 @@ struct Material
 	vec3 diffuse;
 	vec3 specular;
 	float shininess;
+	float alpha;
 
 	bool diffuseTexturesActive;
 	sampler2D diffuseTexture0;
@@ -162,7 +163,7 @@ void main()
 	for (int i = 0; i < MAX_SPOTLIGHT_AMOUNT; i++) lighting += CalculateSpotlight(spotlights[i], nNormal, viewDirection);
 	//-------
 	
-	FragColor = objectColor * vec4(lighting, 1.0f);
+	FragColor = objectColor * vec4(lighting, material.alpha);
 }
 
 vec3 CalculateDirectionalLight(DirectionalLight light, vec3 nNormal, vec3 viewDirection)

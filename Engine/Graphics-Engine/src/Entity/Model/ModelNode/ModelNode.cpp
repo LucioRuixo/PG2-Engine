@@ -4,6 +4,8 @@ ModelNode::ModelNode(string _name, vector<Mesh*> _meshes) : Entity()
 {
 	name = _name;
 	meshes = _meshes;
+
+	if (name.substr(0, 3) == "BSP" && meshes.size() > 0) isBSPPlane = true;
 }
 
 ModelNode::~ModelNode()
@@ -15,15 +17,25 @@ ModelNode::~ModelNode()
 
 string ModelNode::getName() { return name; }
 
-//vector<ModelNode*> ModelNode::getChildren() { return children; }
-//
-//void ModelNode::addChild(ModelNode* child) { children.push_back(child); }
+#pragma region BSP
+bool ModelNode::getIsBSPPlane() { return isBSPPlane; }
+
+vec3 ModelNode::getBSPNornal()
+{
+	if (!isBSPPlane)
+	{
+		cout << "Model node is not a valid BSP Plane. Returning (0, 0, 0)..." << endl;
+		return vec3(0.0f);
+	}
+
+	return mat3(transpose(inverse(transform->getGlobalModel()))) * meshes[0]->getVertices()[0].Normal;
+}
+#pragma endregion
 
 void ModelNode::draw()
 {
 	renderer->setModel(renderer->getShaderProgram(shader), transform->getGlobalModel());
-	for (int i = 0; i < meshes.size(); i++) if (meshes[i]) meshes[i]->draw(/*transform->getModel()/*renderer, textureManager*/);
+	for (int i = 0; i < meshes.size(); i++) if (meshes[i]) meshes[i]->draw();
 
 	Entity::draw();
-	//for (int i = 0; i < children.size(); i++) if (children[i]) children[i]->draw();
 }
