@@ -4,7 +4,9 @@
 #include <string>
 #include <vector>
 #include "Tools/Includes.h"
+#include "Entity/Plane/Plane.h"
 #include "Entity/Model/Mesh/Mesh.h"
+#include "Transform/ModelNodeTransform/ModelNodeTransform.h"
 
 using namespace std;
 
@@ -12,19 +14,17 @@ class GENGINE_API ModelNode : public Entity
 {
 	string name;
 
-	bool isBSPPlane = false;
+	ModelNodeTransform* transform;
 
 	vector<Mesh*> meshes;
 public:
 	ModelNode(string _name, vector<Mesh*> _meshes);
 	~ModelNode();
 
-	string getName();
+	void updateModels(mat4 otherModel) override;
 
-#pragma region BSP
-	bool getIsBSPPlane();
-	vec3 getBSPNornal();
-#pragma endregion
+	string getName();
+	ModelNodeTransform* getTransform() override;
 
 	void draw() override;
 };

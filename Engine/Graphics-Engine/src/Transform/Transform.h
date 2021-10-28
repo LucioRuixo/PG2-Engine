@@ -46,7 +46,7 @@ protected:
 public:
 	void updateLocalModel();
 	void updateGlobalModel();
-	void updateGlobalModel(mat4 other);
+	virtual void updateGlobalModel(mat4 other);
 
 	Transform();
 	Transform(vector<Transform*> _children);

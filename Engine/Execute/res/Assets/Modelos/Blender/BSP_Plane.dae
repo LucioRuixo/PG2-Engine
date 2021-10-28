@@ -5,8 +5,8 @@
       <author>Blender User</author>
       <authoring_tool>Blender 2.93.4 commit date:2021-08-31, commit time:09:23, hash:b7205031cec4</authoring_tool>
     </contributor>
-    <created>2021-09-22T22:18:48</created>
-    <modified>2021-09-22T22:18:48</modified>
+    <created>2021-10-27T18:40:33</created>
+    <modified>2021-10-27T18:40:33</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
@@ -57,9 +57,9 @@
   </library_geometries>
   <library_visual_scenes>
     <visual_scene id="Scene" name="Scene">
-      <node id="BSP_A" name="BSP_A" type="NODE">
-        <matrix sid="transform">-4.37114e-8 0 1 0 0 1 0 0 -1 0 -4.37114e-8 0 0 0 0 1</matrix>
-        <instance_geometry url="#Plane-mesh" name="BSP_A"/>
+      <node id="BSP_Plane" name="BSP_Plane" type="NODE">
+        <matrix sid="transform">0.7071068 0 -0.7071068 0 0 1 0 0 0.7071068 0 0.7071068 0 0 0 0 1</matrix>
+        <instance_geometry url="#Plane-mesh" name="BSP_Plane"/>
       </node>
     </visual_scene>
   </library_visual_scenes>

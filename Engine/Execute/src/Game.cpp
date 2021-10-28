@@ -55,7 +55,7 @@ Cube* goldCube;
 //Model* revolver;
 
 // b* = Blender
-Model* bPlane;
+Model* bspPlane;
 
 Game::Game() {}
 
@@ -136,8 +136,8 @@ int Game::initialize()
 	//alien->getTransform()->setRotation(-90.0f, 0.0f, 0.0f);
 	//alien->getTransform()->setScale(0.05f, 0.05f, 0.05f);
 
-	bPlane = modelManager->importModel("res/Assets/Modelos/Blender/Plano.dae");
-	bPlane->getTransform()->setPosition(0.0f, 2.0f, -5.0f);
+	bspPlane = modelManager->importModel("res/Assets/Modelos/Blender/BSP_Plane.dae");
+	bspPlane->getTransform()->setPosition(0.0f, 2.0f, -5.0f);
 
 	//Lighting
 	lightingManager->addDirectionalLight(vec3(1.0f, -1.0f, 0.0f));
@@ -258,13 +258,13 @@ void Game::update()
 	//bPlane Rotation
 	if (input->getKeyPress(PrintableKey::I))
 	{
-		bPlane->getTransform()->rotate(0.0f, bPlaneRotationSpeed * time->getDeltaTime(), 0.0f);
+		bspPlane->getTransform()->rotate(0.0f, 0.0f, bPlaneRotationSpeed * time->getDeltaTime());
 
 		//vec3 normal = bPlane->getRootNode()->getChildren()[0]->getBSPNornal();
-		vec3 normal = dynamic_cast<ModelNode*>(bPlane->getRootNode()->getChildren()[0])->getBSPNornal();
-		cout << "BSP NORMAL: " << normal.x << ", " << normal.y << ", " << normal.z << endl;
+		//vec3 normal = dynamic_cast<ModelNode*>(bPlane->getRootNode()->getChildren()[0])->getBSPNornal();
+		//cout << "BSP NORMAL: " << normal.x << ", " << normal.y << ", " << normal.z << endl;
 	}
-	if (input->getKeyPress(PrintableKey::K)) bPlane->getTransform()->rotate(0.0f, -bPlaneRotationSpeed * time->getDeltaTime(), 0.0f);
+	if (input->getKeyPress(PrintableKey::K)) bspPlane->getTransform()->rotate(-bPlaneRotationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
 	//-----------
 
 	//DEBUG
@@ -318,7 +318,7 @@ void Game::update()
 	//revolver->draw();
 	//alien->draw();
 
-	bPlane->draw();
+	bspPlane->draw();
 #pragma endregion
 }
 
@@ -341,7 +341,7 @@ int Game::terminate()
 	//if (revolver) delete revolver;
 	//if (alien) delete alien;
 
-	if (bPlane) delete bPlane;
+	if (bspPlane) delete bspPlane;
 
 	return 0;
 }

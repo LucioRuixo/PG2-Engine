@@ -50,7 +50,7 @@ public:
 
 	Renderer* getRenderer();
 	virtual Transform* getTransform();
-	void updateModels(mat4 otherModel);
+	virtual void updateModels(mat4 otherModel);
 
 #pragma region Rendering
 	void setColor(vec3 value);

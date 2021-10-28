@@ -72,15 +72,13 @@ void Transform::updateLocalModel()
 
 void Transform::updateGlobalModel()
 {
-	//TODO: Comprobar que el orden de multiplicación esté bien
 	if (parent) globalModel = parent->getGlobalModel() * localModel.model;
-	//if (parent) globalModel = localModel.model * parent->getGlobalModel();
 	else globalModel = localModel.model;
 }
 
 void Transform::updateGlobalModel(mat4 other)
 {
-	if (parent) globalModel = other * localModel.model;
+	globalModel = other * localModel.model;
 }
 
 #pragma region Transformations
@@ -206,8 +204,6 @@ vec3 Transform::getForward() { return forward; }
 mat4 Transform::getLocalModel() { return localModel.model; }
 
 mat4 Transform::getGlobalModel() { return globalModel; }
-
-//ModelMatrix Transform::getTRS() { return model; }
 #pragma endregion
 
 #pragma region Children

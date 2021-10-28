@@ -19,10 +19,13 @@ public:
 	static void initializeRenderingObjects();
 
 	Plane();
+	//Plane(vec3 position, vec3 normal);
 	Plane(vec3 _color);
 	Plane(Material _material);
 	Plane(vec3 _color, Material _material);
 	~Plane();
+
+	bool sameSide(vec3 point, );
 
 	virtual void draw() override;
 };

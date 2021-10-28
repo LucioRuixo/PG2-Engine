@@ -101,6 +101,9 @@
     <Filter Include="src\Transform\ModelTransform">
       <UniqueIdentifier>{6b0087ca-8ddc-491c-8482-1d83f12e46ec}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Transform\ModelNodeTransform">
+      <UniqueIdentifier>{503b35c1-75e7-4360-986c-934ed424a8b2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\Shaders\LightSourceShader_FS.shader">
@@ -201,6 +204,9 @@
     <ClCompile Include="src\Transform\ModelTransform\ModelTransform.cpp">
       <Filter>src\Transform\ModelTransform</Filter>
     </ClCompile>
+    <ClCompile Include="src\Transform\ModelNodeTransform\ModelNodeTransform.cpp">
+      <Filter>src\Transform\ModelNodeTransform</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Animation\Animation.h">
@@ -295,6 +301,9 @@
     </ClInclude>
     <ClInclude Include="src\Transform\ModelTransform\ModelTransform.h">
       <Filter>src\Transform\ModelTransform</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Transform\ModelNodeTransform\ModelNodeTransform.h">
+      <Filter>src\Transform\ModelNodeTransform</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

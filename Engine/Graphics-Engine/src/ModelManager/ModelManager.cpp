@@ -21,6 +21,7 @@ ModelManager::~ModelManager()
 
 ModelNode* ModelManager::processNode(const aiScene* scene, aiNode* node)
 {
+	//Process meshes
 	vector<Mesh*> meshes;
 	for (unsigned int i = 0; i < node->mNumMeshes; i++)
 	{
@@ -28,6 +29,7 @@ ModelNode* ModelManager::processNode(const aiScene* scene, aiNode* node)
 		meshes.push_back(processMesh(scene, mesh));
 	}
 
+	//Process children nodes
 	cout << currentNodeLayer++ << " - processing node \"" << node->mName.C_Str() << "\"" << endl;
 	vector<Entity*> children;
 	for (unsigned int i = 0; i < node->mNumChildren; i++)
@@ -36,8 +38,28 @@ ModelNode* ModelManager::processNode(const aiScene* scene, aiNode* node)
 	}
 	cout << --currentNodeLayer << " - node \"" << node->mName.C_Str() << "\" and all its children processed" << endl;
 
+	//Get transformation
+	aiVector3D aiPosition;
+	aiQuaternion aiQuatRotation;
+	aiVector3D aiScale;
+	node->mTransformation.Decompose(aiScale, aiQuatRotation, aiPosition);
+
+	vec3 position = vec3(aiPosition.x, aiPosition.y, aiPosition.z);
+	vec3 scale = vec3(aiScale.x, aiScale.y, aiScale.z);
+
+	quat quatRotation = quat(aiQuatRotation.w, aiQuatRotation.x, aiQuatRotation.y, aiQuatRotation.z);
+	vec3 radiansRotation = eulerAngles(quatRotation);
+	vec3 eulerRotation = vec3(radiansRotation.x * (180.0f / pi<float>()), radiansRotation.y * (180.0f / pi<float>()), radiansRotation.z * (180.0f / pi<float>()));
+	vec3 times1000rotation = vec3(eulerRotation.x * 100.0f, eulerRotation.y * 100.0f, eulerRotation.z * 100.0f);
+
+	cout << "position: " << position.x << " | " << position.y << " | " << position.z << endl;
+	cout << "rotation: " << eulerRotation.x << " | " << eulerRotation.y << " | " << eulerRotation.z << endl;
+	cout << "scale: "    << scale.x    << " | " << scale.y    << " | " << scale.z << endl;
+
+	//Create node
 	ModelNode* newNode = new ModelNode(node->mName.C_Str(), meshes);
 	for (int i = 0; i < children.size(); i++) newNode->addChild(children[i]);
+	newNode->getTransform()->setRotation(eulerRotation.x, eulerRotation.y, eulerRotation.z);
 	return newNode;
 }
 

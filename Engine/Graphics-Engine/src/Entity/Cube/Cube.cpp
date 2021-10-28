@@ -10,18 +10,18 @@ float Cube::vertices[] =
 {
 	//Position              //Normal               //UV       
 	//-----------------
-	-0.5f, -0.5f, -0.5f,  	0.0f,  0.0f, -1.0f,    0.0f, 1.0f,
-	 0.5f, -0.5f, -0.5f,  	0.0f,  0.0f, -1.0f,    1.0f, 1.0f,
-	 0.5f,  0.5f, -0.5f,  	0.0f,  0.0f, -1.0f,    1.0f, 0.0f,
-	 0.5f,  0.5f, -0.5f,  	0.0f,  0.0f, -1.0f,    1.0f, 0.0f,
-	-0.5f,  0.5f, -0.5f,  	0.0f,  0.0f, -1.0f,    0.0f, 0.0f,
+	-0.5f, -0.5f, -0.5f,  	0.0f,  0.0f, -1.0f,    0.0f, 1.0f, //0 ---
+	 0.5f, -0.5f, -0.5f,  	0.0f,  0.0f, -1.0f,    1.0f, 1.0f, //1 +--
+	 0.5f,  0.5f, -0.5f,  	0.0f,  0.0f, -1.0f,    1.0f, 0.0f, //2 ++-
+	 0.5f,  0.5f, -0.5f,  	0.0f,  0.0f, -1.0f,    1.0f, 0.0f, 
+	-0.5f,  0.5f, -0.5f,  	0.0f,  0.0f, -1.0f,    0.0f, 0.0f, //4 -+-
 	-0.5f, -0.5f, -0.5f,  	0.0f,  0.0f, -1.0f,    0.0f, 1.0f,
 							
-	-0.5f, -0.5f,  0.5f,    0.0f,  0.0f,  1.0f,    0.0f, 1.0f,
-	 0.5f, -0.5f,  0.5f,  	0.0f,  0.0f,  1.0f,    1.0f, 1.0f,
-	 0.5f,  0.5f,  0.5f,  	0.0f,  0.0f,  1.0f,    1.0f, 0.0f,
+	-0.5f, -0.5f,  0.5f,    0.0f,  0.0f,  1.0f,    0.0f, 1.0f, //6 --+
+	 0.5f, -0.5f,  0.5f,  	0.0f,  0.0f,  1.0f,    1.0f, 1.0f, //7 +-+
+	 0.5f,  0.5f,  0.5f,  	0.0f,  0.0f,  1.0f,    1.0f, 0.0f, //8 +++
 	 0.5f,  0.5f,  0.5f,    0.0f,  0.0f,  1.0f,    1.0f, 0.0f,
-	-0.5f,  0.5f,  0.5f,  	0.0f,  0.0f,  1.0f,    0.0f, 0.0f,
+	-0.5f,  0.5f,  0.5f,  	0.0f,  0.0f,  1.0f,    0.0f, 0.0f, //10 -++
 	-0.5f, -0.5f,  0.5f,  	0.0f,  0.0f,  1.0f,    0.0f, 1.0f,
 							
 	-0.5f,  0.5f,  0.5f,   -1.0f,  0.0f,  0.0f,    0.0f, 1.0f,
@@ -52,6 +52,19 @@ float Cube::vertices[] =
 	-0.5f,  0.5f,  0.5f,  	0.0f,  1.0f,  0.0f,    0.0f, 0.0f,
 	-0.5f,  0.5f, -0.5f,  	0.0f,  1.0f,  0.0f,    0.0f, 1.0f
 	//-----------------
+};
+
+float Cube::vertexPositions[] =
+{
+	-0.5f, -0.5f, -0.5f,
+	 0.5f, -0.5f, -0.5f,
+	 0.5f,  0.5f, -0.5f,
+	-0.5f,  0.5f, -0.5f,
+
+	-0.5f, -0.5f,  0.5f,
+	 0.5f, -0.5f,  0.5f,
+	 0.5f,  0.5f,  0.5f,
+	-0.5f,  0.5f,  0.5f
 };
 
 unsigned int Cube::indices[] =
@@ -111,6 +124,26 @@ Cube::Cube(Material _material) : Entity(_material) {}
 Cube::Cube(vec3 _color, Material _material) : Entity(_color, _material) {}
 
 Cube::~Cube() {}
+
+vec3* Cube::getVertices()
+{
+	const int VERTEX_POSITIONS = 8;
+	vec3 vec3VertexPositions[VERTEX_POSITIONS];
+
+	for (int i = 0; i < VERTEX_POSITIONS; i++)
+	{
+		float x = vertexPositions[(3 * i)];
+		float y = vertexPositions[(3 * i) + 1];
+		float z = vertexPositions[(3 * i) + 2];
+
+		//TODO: probar esto
+		vec3VertexPositions[i] = (vec3(x, y, z) + transform->getPosition()) * transform->getScale();
+		cout << i << ": " << vec3VertexPositions[i].x << " | " << vec3VertexPositions[i].y << " | " << vec3VertexPositions[i].z << endl;
+	}
+
+
+	return vec3VertexPositions;
+}
 
 void Cube::draw()
 {
