@@ -5,7 +5,7 @@
 #include "../Entity.h"
 
 const int CUBE_VERTEX_COMPONENTS = 288;
-const int CUBE_VERTEX_POSITIONS_COMPONENTS = 24;
+//const int CUBE_VERTEX_POSITIONS_COMPONENTS = 24;
 const int CUBE_INDICES = 36;
 
 class GENGINE_API Cube : public Entity
@@ -16,7 +16,7 @@ protected:
 	static unsigned int ebo;
 
 	static float vertices[CUBE_VERTEX_COMPONENTS];
-	static float vertexPositions[CUBE_VERTEX_POSITIONS_COMPONENTS];
+	//static float vertexPositions[CUBE_VERTEX_POSITIONS_COMPONENTS];
 	static unsigned int indices[CUBE_INDICES];
 public:
 	static void initializeRenderingObjects();
@@ -27,7 +27,7 @@ public:
 	Cube(vec3 _color, Material _material);
 	~Cube();
 
-	vec3* getVertices();
+	//vec3* getVertices();
 
 	virtual void draw() override;
 };

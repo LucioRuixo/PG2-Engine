@@ -10,7 +10,7 @@ float cameraMovementSpeed = 1.0f;
 float cameraRotationSpeed = 50.0f;
 float spriteScaleAddition = 0.1f;
 
-float cubeTranslationSpeed = 10.0f;
+float cubeTranslationSpeed = 1.0f;
 float cubeRotationSpeed = 50.0f;
 float cubeScaleSpeed = 10.0f;
 
@@ -29,8 +29,8 @@ float cubeScaleSpeed = 10.0f;
 //float alienYRotation = 0.0f;
 //float alienRotationSpeed = 50.0f;
 
-float bPlaneTranslationSpeed = 10.0f;
-float bPlaneRotationSpeed = 50.0f;
+float planeTranslationSpeed = 10.0f;
+float planeRotationSpeed = 50.0f;
 
 vec3 lightSourcePosition = vec3(0.0f, 2.0f, -4.5f);
 vec3 cameraMovement;
@@ -39,8 +39,11 @@ vec3 cameraRotation;
 //Sprite* sprite1;
 //Sprite* sprite2;
 
-Cube* cube;
-Cube* cube2;
+Plane* plane;
+
+Cube* purpleCube;
+Cube* yellowCube;
+Cube* cyanCube;
 
 Cube* rubyCube;
 Cube* emeraldCube;
@@ -54,8 +57,8 @@ Cube* goldCube;
 //Model* alien;
 //Model* revolver;
 
-// b* = Blender
 Model* bspPlane;
+Model* cylinder;
 
 Game::Game() {}
 
@@ -63,24 +66,32 @@ Game::~Game() {}
 
 int Game::initialize()
 {
-	//Sprite 1
+	//Sprits
 	//sprite1 = new Sprite(textureManager, "res/Assets/gato 1.jpg", "gato 1");
 	//sprite1->getTransform()->setPosition(1.0f, -0.5f, -10.0f);
 	//
-	////Sprite 2
 	//sprite2 = new Sprite(textureManager, "res/Assets/gato 2.jpg", "gato 2");
 	//sprite2->getTransform()->setPosition(-1.0f, 0.0f, -3.0f);
 	
+	//Planes
+	plane = new Plane();
+	plane->getTransform()->setPosition(0.0f, 0.0f, -5.0f);
+	plane->getTransform()->rotate(0.0f, 90.0f, 0.0f);
+
 	//Cubes
-	cube = new Cube(vec3(0.9f, 0.1f, 0.9f));
-	cube2 = new Cube(vec3(0.9f, 0.9f, 0.1f));
+	purpleCube = new Cube(vec3(1.0f, 0.1f, 1.0f));
+	yellowCube = new Cube(vec3(1.0f, 1.0f, 0.1f));
+	cyanCube = new Cube(vec3(0.1f, 1.0f, 1.0f));
 	//cube->addChild(cube2);
 
-	cube->getTransform()->setScale(0.5f, 0.5f, 0.5f);
-	cube->getTransform()->setPosition(0.0f, 0.0f, -6.0f);
+	purpleCube->getTransform()->setScale(0.1f, 0.1f, 0.1f);
+	purpleCube->getTransform()->setPosition(1.0f, 0.0f, -4.5f);
 
-	cube2->getTransform()->setScale(0.4f, 0.4f, 0.4f);
-	cube2->getTransform()->setPosition(1.0f, -1.0f, 0.0f);
+	yellowCube->getTransform()->setScale(0.1f, 0.1f, 0.1f);
+	yellowCube->getTransform()->setPosition(-1.0f, 0.5f, -5.5f);
+
+	cyanCube->getTransform()->setScale(0.1f, 0.1f, 0.1f);
+	cyanCube->getTransform()->setPosition(-1.0f, -0.5f, -5.5f);
 
 	//Material cubes
 	Material ruby;
@@ -139,6 +150,11 @@ int Game::initialize()
 	bspPlane = modelManager->importModel("res/Assets/Modelos/Blender/BSP_Plane.dae");
 	bspPlane->getTransform()->setPosition(0.0f, 2.0f, -5.0f);
 
+	cylinder = modelManager->importModel("res/Assets/Modelos/Blender/Cilindro.obj");
+	cylinder->getTransform()->setScale(0.5f, 0.5f, 0.5f);
+	cylinder->getTransform()->setRotation(90.0, 0.0f, 0.0f);
+	cylinder->getTransform()->setPosition(0.0f, 0.0f, -5.0f);
+
 	//Lighting
 	lightingManager->addDirectionalLight(vec3(1.0f, -1.0f, 0.0f));
 
@@ -156,6 +172,7 @@ void Game::update()
 #pragma region Input
 	if (input->getKeyPress(FunctionKey::ESCAPE)) window->setWindowShouldClose(true);
 
+#pragma region Camera
 	//Move camera
 	//-----------
 	if (input->getKeyPress(PrintableKey::D)) camera->getTransform()->translate(cameraMovementSpeed * time->getDeltaTime(), 0.0f, 0.0f);
@@ -176,7 +193,9 @@ void Game::update()
 	if (input->getKeyPress(FunctionKey::RIGHT)) camera->getTransform()->rotate(0.0f, cameraRotationSpeed * time->getDeltaTime(), 0.0f);
 	if (input->getKeyPress(FunctionKey::LEFT)) camera->getTransform()->rotate(0.0f, -cameraRotationSpeed * time->getDeltaTime(), 0.0f);
 	//-----------
+#pragma endregion
 
+#pragma region Light
 	//Turn on/off light
 	//-----------
 	if (input->getKeyPress(PrintableKey::ONE) && !onePressed)
@@ -214,7 +233,9 @@ void Game::update()
 	}
 	else if (input->getKeyRelease(PrintableKey::FIVE)) fivePressed = false;
 	//-----------
+#pragma endregion
 
+#pragma region Models
 	//Model transformations
 	//-----------
 	//Cube 1 Translation
@@ -226,6 +247,18 @@ void Game::update()
 	//
 	//if (input->getKeyPress(PrintableKey::S)) cube->getTransform()->translate(0.0f, 0.0f, cubeTranslationSpeed * time->getDeltaTime());
 	//if (input->getKeyPress(PrintableKey::W)) cube->getTransform()->translate(0.0f, 0.0f, -cubeTranslationSpeed * time->getDeltaTime());
+#pragma endregion
+
+#pragma region Cubes
+	//Cube 1 Translation
+	if (input->getKeyPress(PrintableKey::J)) purpleCube->getTransform()->translate(cubeTranslationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
+	if (input->getKeyPress(PrintableKey::U)) purpleCube->getTransform()->translate(-cubeTranslationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
+	
+	if (input->getKeyPress(PrintableKey::K)) yellowCube->getTransform()->translate(cubeTranslationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
+	if (input->getKeyPress(PrintableKey::I)) yellowCube->getTransform()->translate(-cubeTranslationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
+
+	if (input->getKeyPress(PrintableKey::L)) cyanCube->getTransform()->translate(cubeTranslationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
+	if (input->getKeyPress(PrintableKey::O)) cyanCube->getTransform()->translate(-cubeTranslationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
 
 	//Cube 1 Rotation
 	//if (input->getKeyPress(PrintableKey::R)) cube->getTransform()->rotate(cubeRotationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
@@ -250,31 +283,25 @@ void Game::update()
 	//Cube add/remove child
 	//if (input->getKeyPress(PrintableKey::O)) cube->addChild(cube2);
 	//if (input->getKeyPress(PrintableKey::L)) cube->removeChild(cube2);
+#pragma endregion
 
-	//bPlane Translation
-	//if (input->getKeyPress(PrintableKey::I)) bPlane->getTransform()->translate(0.0f, 0.0f, bPlaneTranslationSpeed * time->getDeltaTime());
-	//if (input->getKeyPress(PrintableKey::K)) bPlane->getTransform()->translate(0.0f, 0.0f, -bPlaneTranslationSpeed * time->getDeltaTime());
+#pragma region Planes
+	//plane Rotation
+	//if (input->getKeyPress(PrintableKey::I)) plane->getTransform()->rotate(0.0f, planeRotationSpeed * time->getDeltaTime(), 0.0f);
+	//if (input->getKeyPress(PrintableKey::K)) plane->getTransform()->rotate(0.0f, -planeRotationSpeed * time->getDeltaTime(), 0.0f);
 
-	//bPlane Rotation
-	if (input->getKeyPress(PrintableKey::I))
-	{
-		bspPlane->getTransform()->rotate(0.0f, 0.0f, bPlaneRotationSpeed * time->getDeltaTime());
-
-		//vec3 normal = bPlane->getRootNode()->getChildren()[0]->getBSPNornal();
-		//vec3 normal = dynamic_cast<ModelNode*>(bPlane->getRootNode()->getChildren()[0])->getBSPNornal();
-		//cout << "BSP NORMAL: " << normal.x << ", " << normal.y << ", " << normal.z << endl;
-	}
-	if (input->getKeyPress(PrintableKey::K)) bspPlane->getTransform()->rotate(-bPlaneRotationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
+	//bspPlane Rotation
+	//if (input->getKeyPress(PrintableKey::I))
+	//{
+	//	bspPlane->getTransform()->rotate(0.0f, 0.0f, bPlaneRotationSpeed * time->getDeltaTime());
+	//
+	//	//vec3 normal = bPlane->getRootNode()->getChildren()[0]->getBSPNornal();
+	//	//vec3 normal = dynamic_cast<ModelNode*>(bPlane->getRootNode()->getChildren()[0])->getBSPNornal();
+	//	//cout << "BSP NORMAL: " << normal.x << ", " << normal.y << ", " << normal.z << endl;
+	//}
+	//if (input->getKeyPress(PrintableKey::K)) bspPlane->getTransform()->rotate(-bPlaneRotationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
 	//-----------
-
-	//DEBUG
-	//-----------
-	//cout << endl;
-	//cout << "position: " << cube->getTransform()->getPosition().x << " | y: " << cube->getTransform()->getPosition().y << " | z: " << cube->getTransform()->getPosition().z << endl;
-	//cout << "right: " << camera->getTransform()->getRight().x << " | y: " << camera->getTransform()->getRight().y << " | z: " << camera->getTransform()->getRight().z << endl;
-	//cout << "up: " << camera->getTransform()->getUp().x << " | y: " << camera->getTransform()->getUp().y << " | z: " << camera->getTransform()->getUp().z << endl;
-	//cout << "forward: " << camera->getTransform()->getForward().x << " | y: " << camera->getTransform()->getForward().y << " | z: " << camera->getTransform()->getForward().z << endl;
-	//-----------
+#pragma endregion
 #pragma endregion
 
 #pragma region Transformations
@@ -304,7 +331,11 @@ void Game::update()
 	//sprite1->draw();
 	//sprite2->draw();
 	
-	cube->draw();
+	//plane->draw();
+
+	//purpleCube->draw();
+	//yellowCube->draw();
+	//cyanCube->draw();
 
 	rubyCube->draw();
 	emeraldCube->draw();
@@ -318,7 +349,8 @@ void Game::update()
 	//revolver->draw();
 	//alien->draw();
 
-	bspPlane->draw();
+	//bspPlane->draw();
+	cylinder->draw();
 #pragma endregion
 }
 
@@ -327,8 +359,12 @@ int Game::terminate()
 	//if (sprite1) delete sprite1;
 	//if (sprite2) delete sprite2;
 
-	if (cube) delete cube;
-	if (cube2) delete cube2;
+	if (plane) delete plane;
+
+	if (purpleCube) delete purpleCube;
+	if (yellowCube) delete yellowCube;
+	if (cyanCube) delete yellowCube;
+
 	if (rubyCube) delete rubyCube;
 	if (emeraldCube) delete emeraldCube;
 	if (goldCube) delete goldCube;
@@ -342,6 +378,7 @@ int Game::terminate()
 	//if (alien) delete alien;
 
 	if (bspPlane) delete bspPlane;
+	if (cylinder) delete cylinder;
 
 	return 0;
 }

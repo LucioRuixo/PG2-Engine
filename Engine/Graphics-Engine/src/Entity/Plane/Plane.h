@@ -15,17 +15,22 @@ class GENGINE_API Plane : public Entity
 
 	static float vertices[PLANE_VERTEX_COMPONENTS];
 	static unsigned int indices[PLANE_INDICES];
+
 public:
 	static void initializeRenderingObjects();
 
 	Plane();
-	//Plane(vec3 position, vec3 normal);
-	Plane(vec3 _color);
+	Plane(vec3 _normal);
+	//Plane(vec3 _color);
 	Plane(Material _material);
 	Plane(vec3 _color, Material _material);
 	~Plane();
 
-	bool sameSide(vec3 point, );
+	vec3 getNormal();
+
+	float distanceToPoint(vec3 point);
+	bool sameSide(vec3 a, vec3 b);
+	bool sameSide(vec3 a, vec3 b[]);
 
 	virtual void draw() override;
 };

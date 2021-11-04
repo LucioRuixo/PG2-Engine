@@ -21,6 +21,8 @@ ModelManager::~ModelManager()
 
 ModelNode* ModelManager::processNode(const aiScene* scene, aiNode* node)
 {
+	cout << currentNodeLayer++ << " - processing node \"" << node->mName.C_Str() << "\"" << endl;
+
 	//Process meshes
 	vector<Mesh*> meshes;
 	for (unsigned int i = 0; i < node->mNumMeshes; i++)
@@ -30,13 +32,8 @@ ModelNode* ModelManager::processNode(const aiScene* scene, aiNode* node)
 	}
 
 	//Process children nodes
-	cout << currentNodeLayer++ << " - processing node \"" << node->mName.C_Str() << "\"" << endl;
 	vector<Entity*> children;
-	for (unsigned int i = 0; i < node->mNumChildren; i++)
-	{
-		children.push_back(processNode(scene, node->mChildren[i]));
-	}
-	cout << --currentNodeLayer << " - node \"" << node->mName.C_Str() << "\" and all its children processed" << endl;
+	for (unsigned int i = 0; i < node->mNumChildren; i++) children.push_back(processNode(scene, node->mChildren[i]));
 
 	//Get transformation
 	aiVector3D aiPosition;
@@ -50,15 +47,11 @@ ModelNode* ModelManager::processNode(const aiScene* scene, aiNode* node)
 	quat quatRotation = quat(aiQuatRotation.w, aiQuatRotation.x, aiQuatRotation.y, aiQuatRotation.z);
 	vec3 radiansRotation = eulerAngles(quatRotation);
 	vec3 eulerRotation = vec3(radiansRotation.x * (180.0f / pi<float>()), radiansRotation.y * (180.0f / pi<float>()), radiansRotation.z * (180.0f / pi<float>()));
-	vec3 times1000rotation = vec3(eulerRotation.x * 100.0f, eulerRotation.y * 100.0f, eulerRotation.z * 100.0f);
 
-	cout << "position: " << position.x << " | " << position.y << " | " << position.z << endl;
-	cout << "rotation: " << eulerRotation.x << " | " << eulerRotation.y << " | " << eulerRotation.z << endl;
-	cout << "scale: "    << scale.x    << " | " << scale.y    << " | " << scale.z << endl;
+	cout << --currentNodeLayer << " - node \"" << node->mName.C_Str() << "\" and all its children processed" << endl;
 
 	//Create node
-	ModelNode* newNode = new ModelNode(node->mName.C_Str(), meshes);
-	for (int i = 0; i < children.size(); i++) newNode->addChild(children[i]);
+	ModelNode* newNode = new ModelNode(node->mName.C_Str(), meshes, children);
 	newNode->getTransform()->setRotation(eulerRotation.x, eulerRotation.y, eulerRotation.z);
 	return newNode;
 }
