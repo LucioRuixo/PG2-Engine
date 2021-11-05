@@ -125,6 +125,7 @@ void Transform::rotate(float pitch, float yaw, float roll)
 	
 	forward = glm::rotate(forward, radians(pitch), right);
 	forward = glm::rotate(forward, radians(yaw), up);
+	forward.x *= -1.0f;
 	forward = normalize(forward);
 
 	if (forward.z > 0.0f)

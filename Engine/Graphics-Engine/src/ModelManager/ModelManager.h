@@ -25,7 +25,7 @@ class GENGINE_API ModelManager
 	Renderer* renderer;
 	TextureManager* textureManager;
 
-	ModelNode* processNode(const aiScene* scene, aiNode* node);
+	ModelNode* processNode(const aiScene* scene, aiNode* node, vector<Plane*> &bspPlanes);
 
 	Mesh* processMesh(const aiScene* scene, aiMesh* mesh);
 	vector<Texture> loadMaterialTextures(aiMaterial* material, aiTextureType type, string typeName);

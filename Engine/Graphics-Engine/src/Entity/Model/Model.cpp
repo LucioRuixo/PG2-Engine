@@ -8,9 +8,19 @@ Model::Model(string _directory, ModelNode* _rootNode) : Entity()
 	transform = new ModelTransform(rootNode);
 
 	addChild(rootNode);
+}
 
-	//material.diffuseTexturesActive = true;
-	//material.specularTexturesActive = true;
+Model::Model(string _directory, ModelNode * _rootNode, vector<Plane*> _bspPlanes)
+{
+	directory = _directory;
+	rootNode = _rootNode;
+
+	bspPlanes = _bspPlanes;
+	isBSPScene = true;
+
+	transform = new ModelTransform(rootNode);
+
+	addChild(rootNode);
 }
 
 Model::~Model()
@@ -24,12 +34,18 @@ ModelNode* Model::getRootNode() { return rootNode; }
 
 ModelTransform * Model::getTransform() { return transform; }
 
+bool Model::getIsBSPScene() { return isBSPScene; }
+
 void Model::draw()
 {
 	setUniformValues();
-	//renderer->setModel(renderer->getShaderProgram(shader), transform->getGlobalModel());
-	//renderer->drawElements(vao, vbo, ebo, CUBE_INDICES);
 
 	rootNode->draw();
-	//Entity::draw();
+}
+
+void Model::drawAsBSPScene(vec3 cameraPosition, bool drawPlanes)
+{
+	setUniformValues();
+
+	rootNode->drawAsBSPNode(cameraPosition, bspPlanes, drawPlanes);
 }

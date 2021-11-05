@@ -19,9 +19,16 @@ ModelManager::~ModelManager()
 	}
 }
 
-ModelNode* ModelManager::processNode(const aiScene* scene, aiNode* node)
+ModelNode* ModelManager::processNode(const aiScene* scene, aiNode* node, vector<Plane*> &bspPlanes)
 {
-	cout << currentNodeLayer++ << " - processing node \"" << node->mName.C_Str() << "\"" << endl;
+	//cout << "-";
+	//for (int i = 0; i < currentNodeLayer; i++) cout << "--";
+	//cout << "> " << node->mName.C_Str();
+	//if (currentNodeLayer == 0) cout << " (root)";
+	//cout << endl;
+
+	bool isRoot = currentNodeLayer == 0;
+	currentNodeLayer++;
 
 	//Process meshes
 	vector<Mesh*> meshes;
@@ -33,7 +40,7 @@ ModelNode* ModelManager::processNode(const aiScene* scene, aiNode* node)
 
 	//Process children nodes
 	vector<Entity*> children;
-	for (unsigned int i = 0; i < node->mNumChildren; i++) children.push_back(processNode(scene, node->mChildren[i]));
+	for (unsigned int i = 0; i < node->mNumChildren; i++) children.push_back(processNode(scene, node->mChildren[i], bspPlanes));
 
 	//Get transformation
 	aiVector3D aiPosition;
@@ -48,11 +55,11 @@ ModelNode* ModelManager::processNode(const aiScene* scene, aiNode* node)
 	vec3 radiansRotation = eulerAngles(quatRotation);
 	vec3 eulerRotation = vec3(radiansRotation.x * (180.0f / pi<float>()), radiansRotation.y * (180.0f / pi<float>()), radiansRotation.z * (180.0f / pi<float>()));
 
-	cout << --currentNodeLayer << " - node \"" << node->mName.C_Str() << "\" and all its children processed" << endl;
-
 	//Create node
-	ModelNode* newNode = new ModelNode(node->mName.C_Str(), meshes, children);
+	ModelNode* newNode = new ModelNode(node->mName.C_Str(), isRoot, meshes, children);
+
 	newNode->getTransform()->setRotation(eulerRotation.x, eulerRotation.y, eulerRotation.z);
+	if (newNode->getTransform()->getIsBSPPlane()) bspPlanes.push_back(newNode->getTransform()->getBSPPlane());
 	return newNode;
 }
 
@@ -155,7 +162,10 @@ Model* ModelManager::importModel(string path)
 {
 	Importer importer;
 	cout << "importing model from \"" << path << "\"" << endl;
+	cout << "##########" << endl;
 	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate);
+
+	currentNodeLayer = 0;
 
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 	{
@@ -165,10 +175,14 @@ Model* ModelManager::importModel(string path)
 	string directory = path.substr(0, path.find_last_of('/'));
 	importingDirectory = directory;
 
-	ModelNode* rootNode = processNode(scene, scene->mRootNode);
+	vector<Plane*> bspPlanes;
+	ModelNode* rootNode = processNode(scene, scene->mRootNode, bspPlanes);
+	cout << "##########" << endl;
 	cout << "model loaded from \"" << path << "\"" << endl << endl;
 
-	Model* model = new Model(directory, rootNode);
+	Model* model;
+	if (bspPlanes.size() > 0) model = new Model(directory, rootNode, bspPlanes);
+	else model = new Model(directory, rootNode);
 	models.push_back(model);
 	return model;
 }

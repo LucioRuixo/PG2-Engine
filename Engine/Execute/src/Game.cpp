@@ -57,8 +57,9 @@ Cube* goldCube;
 //Model* alien;
 //Model* revolver;
 
-Model* bspPlane;
-Model* cylinder;
+Model* bspScene;
+//Model* bspPlane;
+//Model* cylinder;
 
 Game::Game() {}
 
@@ -147,13 +148,16 @@ int Game::initialize()
 	//alien->getTransform()->setRotation(-90.0f, 0.0f, 0.0f);
 	//alien->getTransform()->setScale(0.05f, 0.05f, 0.05f);
 
-	bspPlane = modelManager->importModel("res/Assets/Modelos/Blender/BSP_Plane.dae");
-	bspPlane->getTransform()->setPosition(0.0f, 2.0f, -5.0f);
+	bspScene = modelManager->importModel("res/Assets/Modelos/Blender/Escena.obj");
+	bspScene->getTransform()->setPosition(0.0f, 0.0f, -5.0f);
+	
+	//bspPlane = modelManager->importModel("res/Assets/Modelos/Blender/BSP_Plane.dae");
+	//bspPlane->getTransform()->setPosition(0.0f, 0.0f, -5.0f);
 
-	cylinder = modelManager->importModel("res/Assets/Modelos/Blender/Cilindro.obj");
-	cylinder->getTransform()->setScale(0.5f, 0.5f, 0.5f);
-	cylinder->getTransform()->setRotation(90.0, 0.0f, 0.0f);
-	cylinder->getTransform()->setPosition(0.0f, 0.0f, -5.0f);
+	//cylinder = modelManager->importModel("res/Assets/Modelos/Blender/Cilindro.obj");
+	//cylinder->getTransform()->setScale(0.5f, 0.5f, 0.5f);
+	//cylinder->getTransform()->setRotation(90.0, 0.0f, 0.0f);
+	//cylinder->getTransform()->setPosition(0.0f, 0.0f, -5.0f);
 
 	//Lighting
 	lightingManager->addDirectionalLight(vec3(1.0f, -1.0f, 0.0f));
@@ -171,7 +175,7 @@ void Game::update()
 {
 #pragma region Input
 	if (input->getKeyPress(FunctionKey::ESCAPE)) window->setWindowShouldClose(true);
-
+	
 #pragma region Camera
 	//Move camera
 	//-----------
@@ -349,8 +353,10 @@ void Game::update()
 	//revolver->draw();
 	//alien->draw();
 
-	//bspPlane->draw();
-	cylinder->draw();
+	//cout << "camera position: " << camera->getTransform()->getPosition().x << " | " << camera->getTransform()->getPosition().y << " | " << camera->getTransform()->getPosition().z << endl;
+	bspScene->drawAsBSPScene(camera->getTransform()->getPosition(), true);
+	//bspPlane->drawAsBSPScene(camera->getTransform()->getPosition(), true);
+	//cylinder->draw();
 #pragma endregion
 }
 
@@ -377,8 +383,9 @@ int Game::terminate()
 	//if (revolver) delete revolver;
 	//if (alien) delete alien;
 
-	if (bspPlane) delete bspPlane;
-	if (cylinder) delete cylinder;
+	if (bspScene) delete bspScene;
+	//if (bspPlane) delete bspPlane;
+	//if (cylinder) delete cylinder;
 
 	return 0;
 }

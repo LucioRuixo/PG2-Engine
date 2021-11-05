@@ -15,18 +15,25 @@ using namespace std;
 class GENGINE_API Model : public Entity
 {
 	string directory;
+	bool isBSPScene = false;
+
+	vector<Plane*> bspPlanes;
 
 	ModelNode* rootNode = NULL;
 	ModelTransform* transform;
 public:
 	Model(string _directory, ModelNode* _rootNode);
+	Model(string _directory, ModelNode* _rootNode, vector<Plane*> _bspPlanes);
 	~Model();
 
 	string getDirectory();
 	ModelNode* getRootNode();
 	ModelTransform* getTransform() override;
 
+	bool getIsBSPScene();
+
 	void draw() override;
+	void drawAsBSPScene(vec3 cameraPosition, bool drawPlanes);
 };
 
 #endif // !MODEL_H

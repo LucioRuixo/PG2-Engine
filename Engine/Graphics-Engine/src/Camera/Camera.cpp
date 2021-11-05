@@ -5,10 +5,6 @@ Camera::Camera(Renderer* _renderer) : Entity()
 	renderer = _renderer;
 
 	transform = new CameraTransform(renderer);
-
-	//Cube* childCube = new Cube(vec3(0.1f, 1.0f, 0.1f));
-	//addChild(childCube);
-	//childCube->getTransform()->setPosition(transform->getForward().x * 5.0f, transform->getForward().y * 5.0f, transform->getForward().z * 5.0f);
 }
 
 Camera::~Camera() { if (transform) delete transform; }
