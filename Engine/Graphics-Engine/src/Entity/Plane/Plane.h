@@ -20,8 +20,7 @@ public:
 	static void initializeRenderingObjects();
 
 	Plane();
-	Plane(vec3 _normal);
-	//Plane(vec3 _color);
+	Plane(vec3 _color);
 	Plane(Material _material);
 	Plane(vec3 _color, Material _material);
 	~Plane();

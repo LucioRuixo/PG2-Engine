@@ -55,18 +55,6 @@ void Transform::updateLocalModel()
 	//TODO: revisar esto y rotate() para que la rotación en todos los ejes sea local
 	localModel.model = localModel.translation * localModel.rotation * localModel.scale;
 
-	//localModel.model = localModel.translation * localModel.rotation * localModel.scale;
-
-	//localModel.model = mat4(1.0f);
-	
-	//localModel.model = glm::translate(localModel.model, vec3(transformData.position.x, transformData.position.y, transformData.position.z));
-	
-	//localModel.model = glm::rotate(localModel.model, radians(transformData.rotation.x), vec3(1.0f, 0.0f, 0.0f));
-	//localModel.model = glm::rotate(localModel.model, radians(transformData.rotation.y), vec3(0.0f, 1.0f, 0.0f));
-	//localModel.model = glm::rotate(localModel.model, radians(transformData.rotation.z), vec3(0.0f, 0.0f, 1.0f));
-	
-	//localModel.model = glm::scale(localModel.model, vec3(transformData.scale.x, transformData.scale.y, transformData.scale.z));
-
 	updateGlobalModel();
 }
 
@@ -76,23 +64,25 @@ void Transform::updateGlobalModel()
 	else globalModel = localModel.model;
 }
 
-void Transform::updateGlobalModel(mat4 other)
-{
-	globalModel = other * localModel.model;
-}
+void Transform::updateGlobalModel(mat4 other) { globalModel = other * localModel.model; }
 
 #pragma region Transformations
 void Transform::translate(float x, float y, float z)
 {
-	transformData.position.x += x;
+	//TODO: arreglar esto
+	transformData.position.x -= x;
+	//transformData.position.x += x;
 	transformData.position.y += y;
 	transformData.position.z += z;
 	
-	localModel.translation = glm::translate(mat4(1.0f), transformData.position);
+	vec3 position = transformData.position;
+	position.x *= -1.0f;
+
+	//localModel.translation = glm::translate(mat4(1.0f), transformData.position);
+	localModel.translation = glm::translate(mat4(1.0f), position);
 	updateLocalModel();
 
-	//localModel.model = glm::translate(localModel.model, vec3(x, y, z));
-	//updateGlobalModel();
+	//transformData.position.x *= -1.0f;
 
 	if (!children.empty())
 		for (int i = 0; i < children.size(); i++) children[i]->updateGlobalModel();
@@ -106,7 +96,21 @@ void Transform::setPosition(float x, float y, float z)
 
 	translate(translationX, translationY, translationZ);
 }
-vec3 Transform::getPosition() { return transformData.position; }
+vec3 Transform::getPosition()
+{
+	vec3 position = transformData.position;
+	//position.x *= -1.0f;
+
+	return position;
+}
+
+vec3 Transform::getGlobalPosition()
+{
+	vec3 position = getPosition();
+	if (parent) position += parent->getGlobalPosition();
+
+	return position;
+}
 
 void Transform::rotate(float pitch, float yaw, float roll)
 {
@@ -151,11 +155,6 @@ void Transform::rotate(float pitch, float yaw, float roll)
 	localModel.rotation = localModel.rotationZ * localModel.rotationY * localModel.rotationX;
 	updateLocalModel();
 
-	//if (pitch != 0.0f) localModel.model = glm::rotate(localModel.model, radians(pitch), vec3(1.0f, 0.0f, 0.0f));
-	//if (yaw != 0.0f) localModel.model = glm::rotate(localModel.model, radians(yaw), vec3(0.0f, 1.0f, 0.0f));
-	//if (roll != 0.0f) localModel.model = glm::rotate(localModel.model, radians(roll), vec3(0.0f, 0.0f, 1.0f));
-	//updateGlobalModel();
-
 	if (!children.empty())
 		for (int i = 0; i < children.size(); i++) children[i]->updateGlobalModel();
 }
@@ -178,9 +177,6 @@ void Transform::scale(float x, float y, float z)
 
 	localModel.scale = glm::scale(mat4(1.0f), transformData.scale);
 	updateLocalModel();
-
-	//localModel.model = glm::scale(localModel.model, vec3(x, y, z));
-	//updateGlobalModel();
 
 	if (!children.empty())
 		for (int i = 0; i < children.size(); i++) children[i]->updateGlobalModel();

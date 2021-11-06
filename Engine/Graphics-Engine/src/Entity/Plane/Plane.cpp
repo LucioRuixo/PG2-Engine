@@ -68,89 +68,7 @@ void Plane::initializeRenderingObjects()
 
 Plane::Plane() : Entity() {}
 
-Plane::Plane(vec3 _normal) : Entity()
-{
-	//transform->setPosition(position.x, position.y, position.z);
-	//transform->setRotation(-90.0f, 0.0f, 0.0f);
-	//
-	//// TODO: rotar en base a la normal
-	////cout << "----------" << endl;
-	////Pitch
-	////----------
-	//float forwardX = transform->getForward().y == 0.0f & transform->getForward().z == 0.0f ? 1.0f : 0.0f;
-	//vec3 forward = normalize(vec3(forwardX, transform->getForward().y, transform->getForward().z));
-	//
-	//float pitchX = normal.y == 0.0f && normal.z == 0.0f ? 1.0f : 0.0f;
-	//vec3 pitchNormal = normalize(vec3(pitchX, normal.y, normal.z));
-	//
-	//float pitch = angle(forward, pitchNormal);
-	//if (transform->getForward().y < normal.y) pitch *= -1.0f;
-	//
-	//float pitchEuler = pitch * (180.0f / glm::pi<float>());
-	//if (pitchEuler == 360.0f) pitchEuler = 0.0f;
-	//
-	//transform->rotate(pitchEuler, 0.0f, 0.0f);
-	////----------
-	//
-	////Yaw
-	////----------
-	//float forwardY = transform->getForward().x == 0.0f & transform->getForward().z == 0.0f ? 1.0f : 0.0f;
-	//forward = normalize(vec3(transform->getForward().x, forwardY, transform->getForward().z));
-	//
-	//float yawY = normal.x == 0.0f & normal.z == 0.0f ? 1.0f : 0.0f;
-	//vec3 yawNormal = normalize(vec3(normal.x, yawY, normal.z));
-	//
-	////cout << "yaw forward: " << forward.x << ", " << forward.y << ", " << forward.z << endl;
-	////cout << "yaw normal: " << normal.x << ", " << yawY << ", " << normal.z << endl;
-	////cout << endl;
-	//float yaw = angle(forward, yawNormal);
-	//if (transform->getForward().x > normal.x) yaw *= -1.0f;
-	//
-	//float yawEuler = yaw * (180.0f / glm::pi<float>());
-	//if (yawEuler == 360.0f) yawEuler = 0.0f;
-	//
-	//transform->rotate(0.0f, yawEuler, 0.0f);
-	////----------
-	//
-	////Roll
-	////----------
-	//float rightZ = transform->getRight().x == 0.0f & transform->getRight().y == 0.0f ? 1.0f : 0.0f;
-	//vec3 right = normalize(vec3(transform->getRight().x, transform->getRight().y, rightZ));
-	//
-	//vec3 normalPerp;
-	//if (normal == vec3(0.0f, 1.0f, 0.0f)) normalPerp = vec3(1.0f, 0.0f, 0.0f);
-	//else
-	//{
-	//	normalPerp = cross(vec3(0.0f, 1.0f, 0.0f), normal);
-	//	normalPerp.z = 0.0f;
-	//	normalPerp = normalize(normalPerp);
-	//}
-	//
-	//float roll = angle(right, normalPerp);
-	//if (transform->getRight().y < normal.y) roll *= -1.0f;
-	//
-	//float rollEuler = roll * (180.0f / glm::pi<float>());
-	//if (rollEuler == 360.0f) rollEuler = 0.0f;
-	//
-	////transform->rotate(0.0f, 0.0f, rollEuler);
-	//
-	////cout << "normal: " << normal.x << ", " << normal.y << ", " << normal.z << endl;
-	////cout << "normal perp: " << normalPerp.x << ", " << normalPerp.y << ", " << normalPerp.z << endl;
-	////cout << "forward: " << transform->getForward().x << ", " << transform->getForward().y << ", " << transform->getForward().z << endl;
-	////cout << "right: " << transform->getRight().x << ", " << transform->getRight().y << ", " << transform->getRight().z << endl;
-	////----------
-	//
-	////cout << endl;
-	////cout << "pitch: " << pitchEuler << endl;
-	////cout << "yaw: " << yawEuler << endl;
-	////cout << "roll: " << rollEuler << endl;
-	////cout << "----------" << endl;
-	//
-	////transform->rotate(pitchEuler, yawEuler, rollEuler);
-	////transform->rotate(pitchEuler, yawEuler, 0.0f);
-}
-
-//Plane::Plane(vec3 _color) : Entity(_color) {}
+Plane::Plane(vec3 _color) : Entity(_color) {}
 
 Plane::Plane(Material _material) : Entity(_material) {}
 
@@ -164,7 +82,8 @@ float Plane::distanceToPoint(vec3 point)
 {
 	vec3 normal = getNormal();
 	//cout << "normal: " << normal.x << " | " << normal.y << " | " << normal.z << endl;
-	return dot(point - transform->getPosition(), normal) / length(normal);
+	//cout << "plane position: " << transform->getGlobalPosition().x << " | " << transform->getGlobalPosition().y << " | " << transform->getGlobalPosition().z << endl;
+	return dot(point - transform->getGlobalPosition(), normal) / length(normal);
 }
 
 bool Plane::sameSide(vec3 a, vec3 b)
@@ -178,6 +97,7 @@ bool Plane::sameSide(vec3 a, vec3 b[])
 {
 	for (int i = 0; i < b->length(); i++)
 	{
+		//cout << "distance to camera: " << distanceToPoint(a) << endl;
 		bool onPositiveSide = (distanceToPoint(a) >= 0) && (distanceToPoint(b[i]) >= 0);
 		bool onNegativeSide = (distanceToPoint(a) <= 0) && (distanceToPoint(b[i]) <= 0);
 		if (onPositiveSide || onNegativeSide) return true;

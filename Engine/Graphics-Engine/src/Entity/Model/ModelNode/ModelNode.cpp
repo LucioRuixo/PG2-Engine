@@ -14,7 +14,7 @@ ModelNode::ModelNode(string _name, bool _isRoot, vector<Mesh*> _meshes, vector<E
 	{
 		vec3 position = Entity::transform->getPosition();
 		vec3 normal = mat3(transpose(inverse(Entity::transform->getGlobalModel()))) * meshes[0]->getVertices()[0].Normal;
-		Plane* bspPlane = new Plane(normal);
+		Plane* bspPlane = new Plane();
 
 		transform = new ModelNodeTransform(bspPlane);
 	}
@@ -99,7 +99,12 @@ void ModelNode::processBSP(bool shouldBeDrawn, vec3 cameraPosition, vector<Plane
 			}
 		}
 
-		if (draw) drawMeshes();
+		if (draw)
+		{
+			//cout << "drawing " << name << endl;
+			drawMeshes();
+		}
+		//else cout << "NOT drawing " << name << endl;
 
 		drawChildrenAsBSPNode(draw, cameraPosition, planes, drawPlanes);
 	}

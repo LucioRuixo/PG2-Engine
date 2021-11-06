@@ -21,11 +21,12 @@ ModelManager::~ModelManager()
 
 ModelNode* ModelManager::processNode(const aiScene* scene, aiNode* node, vector<Plane*> &bspPlanes)
 {
-	//cout << "-";
-	//for (int i = 0; i < currentNodeLayer; i++) cout << "--";
-	//cout << "> " << node->mName.C_Str();
-	//if (currentNodeLayer == 0) cout << " (root)";
-	//cout << endl;
+	string name = node->mName.C_Str();
+	cout << currentNodeLayer << " -";
+	for (int i = 0; i < currentNodeLayer; i++) cout << "--";
+	cout << "> " << name;
+	if (currentNodeLayer == 0) cout << " (root)";
+	cout << endl;
 
 	bool isRoot = currentNodeLayer == 0;
 	currentNodeLayer++;
@@ -41,8 +42,9 @@ ModelNode* ModelManager::processNode(const aiScene* scene, aiNode* node, vector<
 	//Process children nodes
 	vector<Entity*> children;
 	for (unsigned int i = 0; i < node->mNumChildren; i++) children.push_back(processNode(scene, node->mChildren[i], bspPlanes));
+	currentNodeLayer--;
 
-	//Get transformation
+	//Transformation
 	aiVector3D aiPosition;
 	aiQuaternion aiQuatRotation;
 	aiVector3D aiScale;
@@ -55,11 +57,29 @@ ModelNode* ModelManager::processNode(const aiScene* scene, aiNode* node, vector<
 	vec3 radiansRotation = eulerAngles(quatRotation);
 	vec3 eulerRotation = vec3(radiansRotation.x * (180.0f / pi<float>()), radiansRotation.y * (180.0f / pi<float>()), radiansRotation.z * (180.0f / pi<float>()));
 
-	//Create node
-	ModelNode* newNode = new ModelNode(node->mName.C_Str(), isRoot, meshes, children);
+	//cout << name << " position: " << position.x << " | " << position.y << " | " << position.z << endl;
+	//cout << name << " rotation: " << eulerRotation.x << " | " << eulerRotation.y << " | " << eulerRotation.z << endl;
+	//cout << name << " scale: " << scale.x << " | " << scale.y << " | " << scale.z << endl;
+	//cout << endl;
 
-	newNode->getTransform()->setRotation(eulerRotation.x, eulerRotation.y, eulerRotation.z);
-	if (newNode->getTransform()->getIsBSPPlane()) bspPlanes.push_back(newNode->getTransform()->getBSPPlane());
+	//Create node
+	ModelNode* newNode = new ModelNode(name, isRoot, meshes, children);
+	
+	ModelNodeTransform* transform = newNode->getTransform();
+	transform->setPosition(position.x, position.y, position.z);
+	transform->setRotation(eulerRotation.x, eulerRotation.y, eulerRotation.z);
+	transform->setScale(scale.x, scale.y, scale.z);
+
+	if (newNode->getTransform()->getIsBSPPlane())
+	{
+		Plane* bspPlane = newNode->getTransform()->getBSPPlane();
+		bspPlane->getTransform()->setRotation(eulerRotation.y, eulerRotation.z, eulerRotation.x);
+		bspPlane->getTransform()->rotate(0.0f, -90.0f, 0.0f);
+		transform->addChild(bspPlane->getTransform());
+
+		bspPlanes.push_back(newNode->getTransform()->getBSPPlane());
+	}
+
 	return newNode;
 }
 

@@ -24,7 +24,7 @@ void ModelNodeTransform::translate(float x, float y, float z)
 {
 	Transform::translate(x, y, z);
 
-	bspPlane->getTransform()->translate(x, y, z);
+	if (bspPlane) bspPlane->getTransform()->translate(x, y, z);
 }
 
 void ModelNodeTransform::setPosition(float x, float y, float z)
@@ -56,7 +56,7 @@ void ModelNodeTransform::scale(float x, float y, float z)
 {
 	Transform::scale(x, y, z);
 
-	bspPlane->getTransform()->scale(x, y, z);
+	if (bspPlane) bspPlane->getTransform()->scale(x, y, z);
 }
 
 void ModelNodeTransform::setScale(float x, float y, float z)

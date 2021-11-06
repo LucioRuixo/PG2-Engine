@@ -45,7 +45,10 @@ void Model::draw()
 
 void Model::drawAsBSPScene(vec3 cameraPosition, bool drawPlanes)
 {
-	setUniformValues();
-
-	rootNode->drawAsBSPNode(cameraPosition, bspPlanes, drawPlanes);
+	if (bspPlanes.size() > 0)
+	{
+		setUniformValues();
+		rootNode->drawAsBSPNode(cameraPosition, bspPlanes, drawPlanes);
+	}
+	else draw();
 }

@@ -57,6 +57,7 @@ public:
 	virtual void translate(float x, float y, float z);
 	virtual void setPosition(float x, float y, float z);
 	vec3 getPosition();
+	vec3 getGlobalPosition();
 
 	virtual void rotate(float pitch, float yaw, float roll);
 	virtual void setRotation(float pitch, float yaw, float roll);

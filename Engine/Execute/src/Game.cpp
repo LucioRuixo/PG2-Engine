@@ -121,7 +121,7 @@ int Game::initialize()
 
 	//Models
 	//alarak = modelManager->importModel("res/Assets/Modelos/Alarak/source/Alarak-Protoss/Alarak VR.fbx");
-	//alarak->getTransform()->setPosition(-1.5f, -1.0f, -9.0f);
+	//alarak->getTransform()->setPosition(-1.0f, 0.0f, -5.0f);
 
 	//dagger = modelManager->importModel("res/Assets/Modelos/Dagger/source/Dagger.obj");
 	//dagger->getTransform()->setPosition(-1.5f, 0.0f, -4.0f);
@@ -149,7 +149,7 @@ int Game::initialize()
 	//alien->getTransform()->setScale(0.05f, 0.05f, 0.05f);
 
 	bspScene = modelManager->importModel("res/Assets/Modelos/Blender/Escena.obj");
-	bspScene->getTransform()->setPosition(0.0f, 0.0f, -5.0f);
+	bspScene->getTransform()->setPosition(1.0f, 0.0f, -5.0f);
 	
 	//bspPlane = modelManager->importModel("res/Assets/Modelos/Blender/BSP_Plane.dae");
 	//bspPlane->getTransform()->setPosition(0.0f, 0.0f, -5.0f);
@@ -251,18 +251,26 @@ void Game::update()
 	//
 	//if (input->getKeyPress(PrintableKey::S)) cube->getTransform()->translate(0.0f, 0.0f, cubeTranslationSpeed * time->getDeltaTime());
 	//if (input->getKeyPress(PrintableKey::W)) cube->getTransform()->translate(0.0f, 0.0f, -cubeTranslationSpeed * time->getDeltaTime());
+
+	ModelNode* bspCube = dynamic_cast<ModelNode*>(bspScene->getChildren()[0]->getChildren()[1]);
+
+	if (input->getKeyPress(PrintableKey::K)) bspCube->getTransform()->translate(0.0f, 0.0f, cubeTranslationSpeed * time->getDeltaTime());
+	if (input->getKeyPress(PrintableKey::I)) bspCube->getTransform()->translate(0.0f, 0.0f, -cubeTranslationSpeed * time->getDeltaTime());
+
+	if (input->getKeyPress(PrintableKey::J)) bspCube->getTransform()->translate(cubeTranslationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
+	if (input->getKeyPress(PrintableKey::L)) bspCube->getTransform()->translate(-cubeTranslationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
 #pragma endregion
 
 #pragma region Cubes
 	//Cube 1 Translation
-	if (input->getKeyPress(PrintableKey::J)) purpleCube->getTransform()->translate(cubeTranslationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
-	if (input->getKeyPress(PrintableKey::U)) purpleCube->getTransform()->translate(-cubeTranslationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
-	
-	if (input->getKeyPress(PrintableKey::K)) yellowCube->getTransform()->translate(cubeTranslationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
-	if (input->getKeyPress(PrintableKey::I)) yellowCube->getTransform()->translate(-cubeTranslationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
-
-	if (input->getKeyPress(PrintableKey::L)) cyanCube->getTransform()->translate(cubeTranslationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
-	if (input->getKeyPress(PrintableKey::O)) cyanCube->getTransform()->translate(-cubeTranslationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
+	//if (input->getKeyPress(PrintableKey::J)) purpleCube->getTransform()->translate(cubeTranslationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
+	//if (input->getKeyPress(PrintableKey::U)) purpleCube->getTransform()->translate(-cubeTranslationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
+	//
+	//if (input->getKeyPress(PrintableKey::K)) yellowCube->getTransform()->translate(cubeTranslationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
+	//if (input->getKeyPress(PrintableKey::I)) yellowCube->getTransform()->translate(-cubeTranslationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
+	//
+	//if (input->getKeyPress(PrintableKey::L)) cyanCube->getTransform()->translate(cubeTranslationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
+	//if (input->getKeyPress(PrintableKey::O)) cyanCube->getTransform()->translate(-cubeTranslationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
 
 	//Cube 1 Rotation
 	//if (input->getKeyPress(PrintableKey::R)) cube->getTransform()->rotate(cubeRotationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
@@ -354,6 +362,7 @@ void Game::update()
 	//alien->draw();
 
 	//cout << "camera position: " << camera->getTransform()->getPosition().x << " | " << camera->getTransform()->getPosition().y << " | " << camera->getTransform()->getPosition().z << endl;
+	//bspScene->draw();
 	bspScene->drawAsBSPScene(camera->getTransform()->getPosition(), true);
 	//bspPlane->drawAsBSPScene(camera->getTransform()->getPosition(), true);
 	//cylinder->draw();
