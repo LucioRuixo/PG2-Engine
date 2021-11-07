@@ -41,14 +41,26 @@ ModelNode* ModelManager::processNode(const aiScene* scene, aiNode* node, vector<
 
 	//Process children nodes
 	vector<Entity*> children;
-	for (unsigned int i = 0; i < node->mNumChildren; i++) children.push_back(processNode(scene, node->mChildren[i], bspPlanes));
+	for (unsigned int i = 0; i < node->mNumChildren; i++)
+	{
+		ModelNode* childNode = processNode(scene, node->mChildren[i], bspPlanes);
+		children.push_back(childNode);
+	}
 	currentNodeLayer--;
 
-	//Transformation
+	//Create node
+	ModelNode* newNode = new ModelNode(name, isRoot, meshes, children);
+	for (int i = 0; i < children.size(); i++) setUpNodeTransform(node->mChildren[i], dynamic_cast<ModelNode*>(children[i]), bspPlanes);
+
+	return newNode;
+}
+
+void ModelManager::setUpNodeTransform(aiNode* assimpNode, ModelNode* node, vector<Plane*> &bspPlanes)
+{
 	aiVector3D aiPosition;
 	aiQuaternion aiQuatRotation;
 	aiVector3D aiScale;
-	node->mTransformation.Decompose(aiScale, aiQuatRotation, aiPosition);
+	assimpNode->mTransformation.Decompose(aiScale, aiQuatRotation, aiPosition);
 
 	vec3 position = vec3(aiPosition.x, aiPosition.y, aiPosition.z);
 	vec3 scale = vec3(aiScale.x, aiScale.y, aiScale.z);
@@ -57,30 +69,26 @@ ModelNode* ModelManager::processNode(const aiScene* scene, aiNode* node, vector<
 	vec3 radiansRotation = eulerAngles(quatRotation);
 	vec3 eulerRotation = vec3(radiansRotation.x * (180.0f / pi<float>()), radiansRotation.y * (180.0f / pi<float>()), radiansRotation.z * (180.0f / pi<float>()));
 
+	//string name = assimpNode->mName.C_Str();
 	//cout << name << " position: " << position.x << " | " << position.y << " | " << position.z << endl;
 	//cout << name << " rotation: " << eulerRotation.x << " | " << eulerRotation.y << " | " << eulerRotation.z << endl;
 	//cout << name << " scale: " << scale.x << " | " << scale.y << " | " << scale.z << endl;
 	//cout << endl;
 
-	//Create node
-	ModelNode* newNode = new ModelNode(name, isRoot, meshes, children);
-	
-	ModelNodeTransform* transform = newNode->getTransform();
+	ModelNodeTransform* transform = node->getTransform();
 	transform->setPosition(position.x, position.y, position.z);
 	transform->setRotation(eulerRotation.x, eulerRotation.y, eulerRotation.z);
 	transform->setScale(scale.x, scale.y, scale.z);
 
-	if (newNode->getTransform()->getIsBSPPlane())
+	if (node->getTransform()->getIsBSPPlane())
 	{
-		Plane* bspPlane = newNode->getTransform()->getBSPPlane();
+		Plane* bspPlane = node->getTransform()->getBSPPlane();
 		bspPlane->getTransform()->setRotation(eulerRotation.y, eulerRotation.z, eulerRotation.x);
 		bspPlane->getTransform()->rotate(0.0f, -90.0f, 0.0f);
 		transform->addChild(bspPlane->getTransform());
 
-		bspPlanes.push_back(newNode->getTransform()->getBSPPlane());
+		bspPlanes.push_back(node->getTransform()->getBSPPlane());
 	}
-
-	return newNode;
 }
 
 Mesh* ModelManager::processMesh(const aiScene* scene, aiMesh* mesh)
@@ -197,6 +205,7 @@ Model* ModelManager::importModel(string path)
 
 	vector<Plane*> bspPlanes;
 	ModelNode* rootNode = processNode(scene, scene->mRootNode, bspPlanes);
+	setUpNodeTransform(scene->mRootNode, rootNode, bspPlanes);
 	cout << "##########" << endl;
 	cout << "model loaded from \"" << path << "\"" << endl << endl;
 

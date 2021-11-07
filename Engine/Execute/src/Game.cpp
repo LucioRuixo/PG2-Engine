@@ -148,8 +148,8 @@ int Game::initialize()
 	//alien->getTransform()->setRotation(-90.0f, 0.0f, 0.0f);
 	//alien->getTransform()->setScale(0.05f, 0.05f, 0.05f);
 
-	bspScene = modelManager->importModel("res/Assets/Modelos/Blender/Escena.obj");
-	bspScene->getTransform()->setPosition(1.0f, 0.0f, -5.0f);
+	bspScene = modelManager->importModel("res/Assets/Modelos/Blender/Escena.dae");
+	bspScene->getRootNode()/*->getChildren()[0]*/->getTransform()->setPosition(0.0f, 0.0f, -5.0f);
 	
 	//bspPlane = modelManager->importModel("res/Assets/Modelos/Blender/BSP_Plane.dae");
 	//bspPlane->getTransform()->setPosition(0.0f, 0.0f, -5.0f);
@@ -173,6 +173,9 @@ int Game::initialize()
 
 void Game::update()
 {
+	//cout << "children: " << bspScene->getRootNode()->getChildren().size() << endl;
+	//cout << "transform children: " << bspScene->getRootNode()->getTransform()->getChildren().size() << endl;
+
 #pragma region Input
 	if (input->getKeyPress(FunctionKey::ESCAPE)) window->setWindowShouldClose(true);
 	
@@ -252,7 +255,8 @@ void Game::update()
 	//if (input->getKeyPress(PrintableKey::S)) cube->getTransform()->translate(0.0f, 0.0f, cubeTranslationSpeed * time->getDeltaTime());
 	//if (input->getKeyPress(PrintableKey::W)) cube->getTransform()->translate(0.0f, 0.0f, -cubeTranslationSpeed * time->getDeltaTime());
 
-	ModelNode* bspCube = dynamic_cast<ModelNode*>(bspScene->getChildren()[0]->getChildren()[1]);
+	ModelNode* bspCube = dynamic_cast<ModelNode*>(bspScene->getRootNode()->getChildren()[0]);
+	//cout << "cube position: " << bspCube->getTransform()->getPosition().x << " | " << bspCube->getTransform()->getPosition().y << " | " << bspCube->getTransform()->getPosition().z << endl;
 
 	if (input->getKeyPress(PrintableKey::K)) bspCube->getTransform()->translate(0.0f, 0.0f, cubeTranslationSpeed * time->getDeltaTime());
 	if (input->getKeyPress(PrintableKey::I)) bspCube->getTransform()->translate(0.0f, 0.0f, -cubeTranslationSpeed * time->getDeltaTime());

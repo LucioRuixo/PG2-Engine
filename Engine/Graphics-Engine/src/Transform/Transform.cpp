@@ -6,9 +6,12 @@ Transform::Transform()
 	up = vec3(0.0f, 1.0f, 0.0f);
 	forward = vec3(0.0f, 0.0f, 1.0f);
 
-	transformData.position = vec3(0.0f, 0.0f, 0.0f);
-	transformData.rotation = vec3(0.0f, 0.0f, 0.0f);
-	transformData.scale = vec3(1.0f, 1.0f, 1.0f);
+	setPosition(0.0f, 0.0f, 0.0f);
+	setRotation(0.0f, 0.0f, 0.0f);
+	setScale(1.0f, 1.0f, 1.0f);
+	//transformData.position = vec3(0.0f, 0.0f, 0.0f);
+	//transformData.rotation = vec3(0.0f, 0.0f, 0.0f);
+	//transformData.scale = vec3(1.0f, 1.0f, 1.0f);
 
 	localModel.model = mat4(1.0f);
 	localModel.translation = mat4(1.0f);
@@ -60,8 +63,16 @@ void Transform::updateLocalModel()
 
 void Transform::updateGlobalModel()
 {
-	if (parent) globalModel = parent->getGlobalModel() * localModel.model;
-	else globalModel = localModel.model;
+	if (parent)
+	{
+		//cout << "parent NOT null" << endl;
+		globalModel = parent->getGlobalModel() * localModel.model;
+	}
+	else
+	{
+		//cout << "parent null" << endl;
+		globalModel = localModel.model;
+	}
 }
 
 void Transform::updateGlobalModel(mat4 other) { globalModel = other * localModel.model; }
@@ -69,9 +80,7 @@ void Transform::updateGlobalModel(mat4 other) { globalModel = other * localModel
 #pragma region Transformations
 void Transform::translate(float x, float y, float z)
 {
-	//TODO: arreglar esto
-	transformData.position.x -= x;
-	//transformData.position.x += x;
+	transformData.position.x += x;
 	transformData.position.y += y;
 	transformData.position.z += z;
 	
@@ -82,10 +91,9 @@ void Transform::translate(float x, float y, float z)
 	localModel.translation = glm::translate(mat4(1.0f), position);
 	updateLocalModel();
 
-	//transformData.position.x *= -1.0f;
-
-	if (!children.empty())
-		for (int i = 0; i < children.size(); i++) children[i]->updateGlobalModel();
+	//cout << "updating children global models: " << children.size() << endl;
+	if (!children.empty()) for (int i = 0; i < children.size(); i++) children[i]->updateGlobalModel();
+	//cout << "children global models updated" << endl << endl;
 }
 
 void Transform::setPosition(float x, float y, float z)
@@ -96,13 +104,7 @@ void Transform::setPosition(float x, float y, float z)
 
 	translate(translationX, translationY, translationZ);
 }
-vec3 Transform::getPosition()
-{
-	vec3 position = transformData.position;
-	//position.x *= -1.0f;
-
-	return position;
-}
+vec3 Transform::getPosition() { return transformData.position; }
 
 vec3 Transform::getGlobalPosition()
 {

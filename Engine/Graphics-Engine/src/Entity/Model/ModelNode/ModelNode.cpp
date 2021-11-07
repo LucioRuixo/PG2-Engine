@@ -6,8 +6,6 @@ ModelNode::ModelNode(string _name, bool _isRoot, vector<Mesh*> _meshes, vector<E
 	isRoot = _isRoot;
 	meshes = _meshes;
 
-	for (int i = 0; i < _children.size(); i++) addChild(_children[i]);
-
 	generateCollisonBox();
 
 	if (name.substr(0, 3) == "BSP" && meshes.size() > 0)
@@ -19,6 +17,8 @@ ModelNode::ModelNode(string _name, bool _isRoot, vector<Mesh*> _meshes, vector<E
 		transform = new ModelNodeTransform(bspPlane);
 	}
 	else transform = new ModelNodeTransform();
+
+	for (int i = 0; i < _children.size(); i++) addChild(_children[i]);
 }
 
 ModelNode::~ModelNode()
@@ -164,9 +164,49 @@ vec3* ModelNode::getCollisionBoxVertices()
 
 ModelNodeTransform * ModelNode::getTransform() { return transform; }
 
+#pragma region Children
+void ModelNode::addChild(Entity* child)
+{
+	for (int i = 0; i < children.size(); i++)
+	{
+		if (children[i] == child)
+		{
+			cout << "Entity intended to be added to parent is already a child" << endl;
+
+			return;
+		}
+	}
+
+	children.push_back(child);
+	child->setParent(this);
+
+	transform->addChild(child->getTransform());
+}
+
+void ModelNode::removeChild(Entity* child)
+{
+	vector<Entity*>::iterator iterator;
+	for (iterator = children.begin(); iterator < children.end(); iterator++)
+	{
+		if (*iterator == child)
+		{
+			children.erase(iterator);
+			transform->removeChild(child->getTransform());
+			child->setParent(NULL);
+
+			return;
+		}
+	}
+
+	cout << "Child entity intended to be removed from parent was not found" << endl;
+}
+#pragma endregion
+
 void ModelNode::drawMeshes()
 {
+	setUniformValues();
 	renderer->setModel(renderer->getShaderProgram(shader), transform->getGlobalModel());
+
 	for (int i = 0; i < meshes.size(); i++) if (meshes[i]) meshes[i]->draw();
 }
 

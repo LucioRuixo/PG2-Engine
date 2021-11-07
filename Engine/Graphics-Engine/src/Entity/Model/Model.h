@@ -12,7 +12,7 @@
 
 using namespace std;
 
-class GENGINE_API Model : public Entity
+class GENGINE_API Model// : public Entity
 {
 	string directory;
 	bool isBSPScene = false;
@@ -28,11 +28,11 @@ public:
 
 	string getDirectory();
 	ModelNode* getRootNode();
-	ModelTransform* getTransform() override;
+	//ModelTransform* getTransform() override;
 
 	bool getIsBSPScene();
 
-	void draw() override;
+	void draw();
 	void drawAsBSPScene(vec3 cameraPosition, bool drawPlanes);
 };
 

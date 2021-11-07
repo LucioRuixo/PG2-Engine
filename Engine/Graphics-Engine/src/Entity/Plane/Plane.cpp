@@ -83,6 +83,7 @@ float Plane::distanceToPoint(vec3 point)
 	vec3 normal = getNormal();
 	//cout << "normal: " << normal.x << " | " << normal.y << " | " << normal.z << endl;
 	//cout << "plane position: " << transform->getGlobalPosition().x << " | " << transform->getGlobalPosition().y << " | " << transform->getGlobalPosition().z << endl;
+
 	return dot(point - transform->getGlobalPosition(), normal) / length(normal);
 }
 

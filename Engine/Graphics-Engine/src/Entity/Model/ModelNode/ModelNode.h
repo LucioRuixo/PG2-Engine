@@ -42,6 +42,11 @@ public:
 	vec3* getCollisionBoxVertices();
 	ModelNodeTransform* getTransform() override;
 
+#pragma region Children
+	void addChild(Entity* child) override;
+	void removeChild(Entity* child) override;
+#pragma endregion
+
 	void drawMeshes();
 	void draw() override;
 	void drawAsBSPNode(vec3 cameraPosition, vector<Plane*> planes, bool drawPlanes);
