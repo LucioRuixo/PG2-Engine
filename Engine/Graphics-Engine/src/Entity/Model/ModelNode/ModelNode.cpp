@@ -46,21 +46,18 @@ void ModelNode::generateCollisonBox()
 		}
 	}
 
-	for (int k = 0; k < children.size(); k++)
-	{
-		ModelNode* child = dynamic_cast<ModelNode*>(children[k]);
-
-		collisionBox.minEdge.x = glm::min(collisionBox.minEdge.x, child->getRawCollisionBox().minEdge.x);
-		collisionBox.minEdge.y = glm::min(collisionBox.minEdge.y, child->getRawCollisionBox().minEdge.y);
-		collisionBox.minEdge.z = glm::min(collisionBox.minEdge.z, child->getRawCollisionBox().minEdge.z);
-
-		collisionBox.maxEdge.x = glm::max(child->getRawCollisionBox().maxEdge.x, collisionBox.maxEdge.x);
-		collisionBox.maxEdge.y = glm::max(child->getRawCollisionBox().maxEdge.y, collisionBox.maxEdge.y);
-		collisionBox.maxEdge.z = glm::max(child->getRawCollisionBox().maxEdge.z, collisionBox.maxEdge.z);
-	}
-
-	//cout << "min edgdes: " << collisionBox.minEdge.x << " | " << collisionBox.minEdge.y << " | " << collisionBox.minEdge.z << endl;
-	//cout << "max edgdes: " << collisionBox.maxEdge.x << " | " << collisionBox.maxEdge.y << " | " << collisionBox.maxEdge.z << endl;
+	//for (int k = 0; k < children.size(); k++)
+	//{
+	//	ModelNode* child = dynamic_cast<ModelNode*>(children[k]);
+	//
+	//	collisionBox.minEdge.x = glm::min(collisionBox.minEdge.x, child->getRawCollisionBox().minEdge.x);
+	//	collisionBox.minEdge.y = glm::min(collisionBox.minEdge.y, child->getRawCollisionBox().minEdge.y);
+	//	collisionBox.minEdge.z = glm::min(collisionBox.minEdge.z, child->getRawCollisionBox().minEdge.z);
+	//
+	//	collisionBox.maxEdge.x = glm::max(child->getRawCollisionBox().maxEdge.x, collisionBox.maxEdge.x);
+	//	collisionBox.maxEdge.y = glm::max(child->getRawCollisionBox().maxEdge.y, collisionBox.maxEdge.y);
+	//	collisionBox.maxEdge.z = glm::max(child->getRawCollisionBox().maxEdge.z, collisionBox.maxEdge.z);
+	//}
 }
 
 void ModelNode::processBSP(bool shouldBeDrawn, vec3 cameraPosition, vector<Plane*> planes, bool drawPlanes)
@@ -85,27 +82,23 @@ void ModelNode::processBSP(bool shouldBeDrawn, vec3 cameraPosition, vector<Plane
 	}
 	else
 	{
-		bool draw = false;
+		bool draw = true;
 
 		if (shouldBeDrawn)
 		{
+			//cout << endl;
 			for (int i = 0; i < planes.size(); i++)
 			{
-				if (planes[i]->sameSide(cameraPosition, getCollisionBoxVertices()))
+				if (!planes[i]->sameSide(cameraPosition, getCollisionBoxVertices()))
 				{
-					draw = true;
+					draw = false;
 					break;
 				}
 			}
 		}
 
-		if (draw)
-		{
-			//cout << "drawing " << name << endl;
-			drawMeshes();
-		}
-		//else cout << "NOT drawing " << name << endl;
-
+		//cout << (draw ? "draw" : "DON'T draw") << endl;
+		if (draw) drawMeshes();
 		drawChildrenAsBSPNode(draw, cameraPosition, planes, drawPlanes);
 	}
 }
@@ -131,33 +124,42 @@ CollisionBox ModelNode::getRawCollisionBox() { return collisionBox; }
 CollisionBox ModelNode::getCollisionBox()
 {
 	CollisionBox transformedCollisionBox;
-	transformedCollisionBox.minEdge = (collisionBox.minEdge + transform->getPosition()) * transform->getScale();
-	transformedCollisionBox.maxEdge = (collisionBox.maxEdge + transform->getPosition()) * transform->getScale();
+
+	vec4 minEdge = transform->getGlobalModel() * vec4(collisionBox.minEdge, 1.0f);
+	vec4 maxEdge = transform->getGlobalModel() * vec4(collisionBox.maxEdge, 1.0f);
+	transformedCollisionBox.minEdge = vec3(-minEdge.x, minEdge.y, minEdge.z);
+	transformedCollisionBox.maxEdge = vec3(-maxEdge.x, maxEdge.y, maxEdge.z);
 
 	return transformedCollisionBox;
 }
 
-vec3* ModelNode::getCollisionBoxVertices()
+vector<vec3> ModelNode::getCollisionBoxVertices()
 {
-	//0 ---
-	//1 +--
-	//2 ++-
-	//3 -+-
-	//4 --+
-	//5 +-+
-	//6 +++
-	//7 -++
-	vec3 vertices[8]
+	CollisionBox transformedCollisionBox = collisionBox;
+
+	vector<vec3> vertices
 	{
-		vec3(collisionBox.minEdge.x, collisionBox.minEdge.y, collisionBox.minEdge.z),
-		vec3(collisionBox.maxEdge.x, collisionBox.minEdge.y, collisionBox.minEdge.z),
-		vec3(collisionBox.maxEdge.x, collisionBox.maxEdge.y, collisionBox.minEdge.z),
-		vec3(collisionBox.minEdge.x, collisionBox.maxEdge.y, collisionBox.minEdge.z),
-		vec3(collisionBox.minEdge.x, collisionBox.minEdge.y, collisionBox.maxEdge.z),
-		vec3(collisionBox.maxEdge.x, collisionBox.minEdge.y, collisionBox.maxEdge.z),
-		vec3(collisionBox.maxEdge.x, collisionBox.maxEdge.y, collisionBox.maxEdge.z),
-		vec3(collisionBox.minEdge.x, collisionBox.maxEdge.y, collisionBox.maxEdge.z)
+		vec3(transformedCollisionBox.minEdge.x, transformedCollisionBox.minEdge.y, transformedCollisionBox.minEdge.z), //0 ---
+		vec3(transformedCollisionBox.maxEdge.x, transformedCollisionBox.minEdge.y, transformedCollisionBox.minEdge.z), //1 +--
+		vec3(transformedCollisionBox.maxEdge.x, transformedCollisionBox.maxEdge.y, transformedCollisionBox.minEdge.z), //2 ++-
+		vec3(transformedCollisionBox.minEdge.x, transformedCollisionBox.maxEdge.y, transformedCollisionBox.minEdge.z), //3 -+-
+		vec3(transformedCollisionBox.minEdge.x, transformedCollisionBox.minEdge.y, transformedCollisionBox.maxEdge.z), //4 --+
+		vec3(transformedCollisionBox.maxEdge.x, transformedCollisionBox.minEdge.y, transformedCollisionBox.maxEdge.z), //5 +-+
+		vec3(transformedCollisionBox.maxEdge.x, transformedCollisionBox.maxEdge.y, transformedCollisionBox.maxEdge.z), //6 +++
+		vec3(transformedCollisionBox.minEdge.x, transformedCollisionBox.maxEdge.y, transformedCollisionBox.maxEdge.z)  //7 -++
 	};
+
+	//cout << endl;
+	//cout << "#####" << endl;
+	//cout << "raw vertices" << endl;
+	for (int i = 0; i < vertices.size(); i++)
+	{
+		vec4 vertex = transform->getGlobalModel() * vec4(vertices[i], 1.0f);
+		vertices[i] = vec3(-vertex.x, vertex.y, vertex.z);
+		
+		//cout << "vertex " << i << ": " << vertices[i].x << " | " << vertices[i].y << " | " << vertices[i].z << endl;
+	}
+	//cout << "#####" << endl;
 
 	return vertices;
 }
@@ -213,7 +215,7 @@ void ModelNode::drawMeshes()
 void ModelNode::draw()
 {
 	drawMeshes();
-	if (transform->getIsBSPPlane()) transform->getBSPPlane()->draw();
+	//if (transform->getIsBSPPlane()) transform->getBSPPlane()->draw();
 
 	Entity::draw();
 }

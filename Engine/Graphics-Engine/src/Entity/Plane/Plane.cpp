@@ -81,8 +81,9 @@ vec3 Plane::getNormal() { return transform->getForward(); }
 float Plane::distanceToPoint(vec3 point)
 {
 	vec3 normal = getNormal();
+
 	//cout << "normal: " << normal.x << " | " << normal.y << " | " << normal.z << endl;
-	//cout << "plane position: " << transform->getGlobalPosition().x << " | " << transform->getGlobalPosition().y << " | " << transform->getGlobalPosition().z << endl;
+	//cout << "global posititon: " << transform->getGlobalPosition().x << " | " << transform->getGlobalPosition().y << " | " << transform->getGlobalPosition().z << endl;
 
 	return dot(point - transform->getGlobalPosition(), normal) / length(normal);
 }
@@ -94,16 +95,34 @@ bool Plane::sameSide(vec3 a, vec3 b)
 	return onPositiveSide || onNegativeSide;
 }
 
-bool Plane::sameSide(vec3 a, vec3 b[])
+bool Plane::sameSide(vec3 a, vector<vec3> b)
 {
-	for (int i = 0; i < b->length(); i++)
+	//cout << "#####" << endl;
+	//cout << "camera position: " << a.x << " | " << a.y << " | " << a.z << endl;
+	//vec3 planePosition = transform->getGlobalPosition();
+	//cout << "plane position: " << planePosition.x << " | " << planePosition.y << " | " << planePosition.z << endl;
+	//cout << "distance to camera: " << distanceToPoint(a) << endl;
+
+	for (int i = 0; i < b.size(); i++)
 	{
-		//cout << "distance to camera: " << distanceToPoint(a) << endl;
+		//cout << "vertex " << i << ": " << b[i].x << " | " << b[i].y << " | " << b[i].z << endl;
+		//cout << "distance to vertex " << i << ": " << distanceToPoint(b[i]) << endl;
+	}
+
+	for (int i = 0; i < b.size(); i++)
+	{
 		bool onPositiveSide = (distanceToPoint(a) >= 0) && (distanceToPoint(b[i]) >= 0);
 		bool onNegativeSide = (distanceToPoint(a) <= 0) && (distanceToPoint(b[i]) <= 0);
-		if (onPositiveSide || onNegativeSide) return true;
+		if (onPositiveSide || onNegativeSide)
+		{
+			//cout << "same side" << endl;
+			//cout << "#####" << endl;
+			return true;
+		}
 	}
 	
+	//cout << "NOT same side" << endl;
+	//cout << "#####" << endl;
 	return false;
 }
 

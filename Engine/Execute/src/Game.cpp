@@ -6,28 +6,13 @@ bool threePressed = false;
 bool fourPressed = false;
 bool fivePressed = false;
 
-float cameraMovementSpeed = 1.0f;
+float cameraMovementSpeed = 2.0f;
 float cameraRotationSpeed = 50.0f;
 float spriteScaleAddition = 0.1f;
 
 float cubeTranslationSpeed = 1.0f;
 float cubeRotationSpeed = 50.0f;
 float cubeScaleSpeed = 10.0f;
-
-//float treeYRotation = 0.0f;
-//float treeRotationSpeed = 50.0f;
-//float daggerYRotation = 0.0f;
-//float daggerRotationSpeed = 50.0f;
-//float sniperRifleYRotation = 0.0f;
-//float sniperRifleRotationSpeed = 50.0f;
-//float plantYRotation = 0.0f;
-//float plantRotationSpeed = 50.0f;
-//float alarakYRotation = 0.0f;
-//float alarakRotationSpeed = 50.0f;
-//float revolverYRotation = 0.0f;
-//float revolverRotationSpeed = 50.0f;
-//float alienYRotation = 0.0f;
-//float alienRotationSpeed = 50.0f;
 
 float planeTranslationSpeed = 10.0f;
 float planeRotationSpeed = 50.0f;
@@ -36,30 +21,25 @@ vec3 lightSourcePosition = vec3(0.0f, 2.0f, -4.5f);
 vec3 cameraMovement;
 vec3 cameraRotation;
 
-//Sprite* sprite1;
-//Sprite* sprite2;
-
-Plane* plane;
-
-Cube* purpleCube;
-Cube* yellowCube;
-Cube* cyanCube;
-
 Cube* rubyCube;
 Cube* emeraldCube;
 Cube* goldCube;
 
-//Model* alarak;
-//Model* dagger;
-//Model* tree;
-//Model* sniperRifle;
-//Model* plant;
-//Model* alien;
-//Model* revolver;
+//Cube* p1;
+//Cube* p2;
+//Cube* p3;
+//Cube* vMin;
+//Cube* vMax;
+Cube* v0;
+Cube* v1;
+Cube* v2;
+Cube* v3;
+Cube* v4;
+Cube* v5;
+Cube* v6;
+Cube* v7;
 
-Model* bspScene;
-//Model* bspPlane;
-//Model* cylinder;
+Model* bsp;
 
 Game::Game() {}
 
@@ -67,34 +47,7 @@ Game::~Game() {}
 
 int Game::initialize()
 {
-	//Sprits
-	//sprite1 = new Sprite(textureManager, "res/Assets/gato 1.jpg", "gato 1");
-	//sprite1->getTransform()->setPosition(1.0f, -0.5f, -10.0f);
-	//
-	//sprite2 = new Sprite(textureManager, "res/Assets/gato 2.jpg", "gato 2");
-	//sprite2->getTransform()->setPosition(-1.0f, 0.0f, -3.0f);
-	
-	//Planes
-	plane = new Plane();
-	plane->getTransform()->setPosition(0.0f, 0.0f, -5.0f);
-	plane->getTransform()->rotate(0.0f, 90.0f, 0.0f);
-
-	//Cubes
-	purpleCube = new Cube(vec3(1.0f, 0.1f, 1.0f));
-	yellowCube = new Cube(vec3(1.0f, 1.0f, 0.1f));
-	cyanCube = new Cube(vec3(0.1f, 1.0f, 1.0f));
-	//cube->addChild(cube2);
-
-	purpleCube->getTransform()->setScale(0.1f, 0.1f, 0.1f);
-	purpleCube->getTransform()->setPosition(1.0f, 0.0f, -4.5f);
-
-	yellowCube->getTransform()->setScale(0.1f, 0.1f, 0.1f);
-	yellowCube->getTransform()->setPosition(-1.0f, 0.5f, -5.5f);
-
-	cyanCube->getTransform()->setScale(0.1f, 0.1f, 0.1f);
-	cyanCube->getTransform()->setPosition(-1.0f, -0.5f, -5.5f);
-
-	//Material cubes
+#pragma region Material Cubes
 	Material ruby;
 	ruby.diffuse = vec3(0.61424f, 0.04136f, 0.04136f);
 	ruby.specular = vec3(0.727811f, 0.626959f, 0.626959f);
@@ -118,64 +71,54 @@ int Game::initialize()
 	goldCube = new Cube(vec3(0.905f, 0.741f, 0.258f), gold);
 	goldCube->getTransform()->setPosition(1.0f, 1.0f, -15.0f);
 	goldCube->getTransform()->setScale(1.0f, 3.0f, 1.0f);
+#pragma endregion
 
-	//Models
-	//alarak = modelManager->importModel("res/Assets/Modelos/Alarak/source/Alarak-Protoss/Alarak VR.fbx");
-	//alarak->getTransform()->setPosition(-1.0f, 0.0f, -5.0f);
+#pragma region Models
+	bsp = modelManager->importModel("res/Assets/Modelos/Blender/Escena.dae");
 
-	//dagger = modelManager->importModel("res/Assets/Modelos/Dagger/source/Dagger.obj");
-	//dagger->getTransform()->setPosition(-1.5f, 0.0f, -4.0f);
-	//dagger->getTransform()->setScale(0.005f, 0.005f, 0.005f);
+	//p1 = new Cube(vec3(1.0f, 0.0f, 0.0f));
+	//p2 = new Cube(vec3(1.0f, 0.0f, 0.0f));
+	//p3 = new Cube(vec3(1.0f, 0.0f, 0.0f));
+	//vMin = new Cube(vec3(0.0f, 1.0f, 0.0f));
+	//vMax = new Cube(vec3(0.0f, 1.0f, 0.0f));
+	v0 = new Cube(vec3(1.0f, 0.0f, 0.0f));
+	v1 = new Cube(vec3(1.0f, 0.0f, 0.0f));
+	v2 = new Cube(vec3(1.0f, 0.0f, 0.0f));
+	v3 = new Cube(vec3(1.0f, 0.0f, 0.0f));
+	v4 = new Cube(vec3(1.0f, 0.0f, 0.0f));
+	v5 = new Cube(vec3(1.0f, 0.0f, 0.0f));
+	v6 = new Cube(vec3(1.0f, 0.0f, 0.0f));
+	v7 = new Cube(vec3(1.0f, 0.0f, 0.0f));
 
-	//tree = modelManager->importModel("res/Assets/Modelos/Tree/Lowpoly_tree_sample.obj");
-	//tree->getTransform()->setPosition(-3.0f, -1.0f, -4.0f);
-	//tree->getTransform()->setScale(0.075f, 0.075f, 0.075f);
-	//
-	//sniperRifle = modelManager->importModel("res/Assets/Modelos/Sniper Rifle/OBJ/Sniper_Rifle.obj");
-	//sniperRifle->getTransform()->setPosition(0.0f, 0.5f, -4.0f);
-	//sniperRifle->getTransform()->setScale(0.25f, 0.25f, 0.25f);
-	//
-	//plant = modelManager->importModel("res/Assets/Modelos/Plant/A1.obj");
-	//plant->getTransform()->setPosition(1.5f, -1.0f, -4.0f);
-	//
-	//revolver = modelManager->importModel("res/Assets/Modelos/Revolver/Gun.dae");
-	//revolver->getTransform()->setPosition(-1.0f, 2.5f, -6.0f);
-	//revolver->getTransform()->setRotation(-90.0f, 0.0f, 0.0f);
-	//revolver->getTransform()->setScale(2.0f, 2.0f, 2.0f);
-	//
-	//alien = modelManager->importModel("res/Assets/Modelos/Alien/Alien Animal.dae");
-	//alien->getTransform()->setPosition(1.0f, 2.0f, -6.0f);
-	//alien->getTransform()->setRotation(-90.0f, 0.0f, 0.0f);
-	//alien->getTransform()->setScale(0.05f, 0.05f, 0.05f);
+	//p1->getTransform()->setScale(0.2f, 0.2f, 0.2f);
+	//p2->getTransform()->setScale(0.2f, 0.2f, 0.2f);
+	//p3->getTransform()->setScale(0.2f, 0.2f, 0.2f);
+	//vMin->getTransform()->setScale(0.2f, 0.2f, 0.2f);
+	//vMax->getTransform()->setScale(0.2f, 0.2f, 0.2f);
+	v0->getTransform()->setScale(0.2f, 0.2f, 0.2f);
+	v1->getTransform()->setScale(0.2f, 0.2f, 0.2f);
+	v2->getTransform()->setScale(0.2f, 0.2f, 0.2f);
+	v3->getTransform()->setScale(0.2f, 0.2f, 0.2f);
+	v4->getTransform()->setScale(0.2f, 0.2f, 0.2f);
+	v5->getTransform()->setScale(0.2f, 0.2f, 0.2f);
+	v6->getTransform()->setScale(0.2f, 0.2f, 0.2f);
+	v7->getTransform()->setScale(0.2f, 0.2f, 0.2f);
+#pragma endregion
 
-	bspScene = modelManager->importModel("res/Assets/Modelos/Blender/Escena.dae");
-	bspScene->getRootNode()/*->getChildren()[0]*/->getTransform()->setPosition(0.0f, 0.0f, -5.0f);
-	
-	//bspPlane = modelManager->importModel("res/Assets/Modelos/Blender/BSP_Plane.dae");
-	//bspPlane->getTransform()->setPosition(0.0f, 0.0f, -5.0f);
-
-	//cylinder = modelManager->importModel("res/Assets/Modelos/Blender/Cilindro.obj");
-	//cylinder->getTransform()->setScale(0.5f, 0.5f, 0.5f);
-	//cylinder->getTransform()->setRotation(90.0, 0.0f, 0.0f);
-	//cylinder->getTransform()->setPosition(0.0f, 0.0f, -5.0f);
-
-	//Lighting
+#pragma region Light
 	lightingManager->addDirectionalLight(vec3(1.0f, -1.0f, 0.0f));
 
 	lightingManager->addPointLight(0, vec3(0.0f, 0.0f, -12.0f));
 	lightingManager->addPointLight(1, vec3(0.0f, 0.0f, -8.0f));
-
-	lightingManager->addSpotlight(0, vec3(0.0f, 1.0f, -4.5f), vec3(0.0f, -1.0f, -1.0f));
-	lightingManager->addSpotlight(1, vec3(0.0f, 0.0f, 1.0f), vec3(0.0f, 0.0f, -1.0f));
+	lightingManager->addPointLight(2, vec3(0.0f, 1.0f, -4.5f));
+	lightingManager->addPointLight(3, vec3(0.0f, 0.0f, 1.0f));
+#pragma endregion
 	
-	return 0;
+	return 1;
 }
 
 void Game::update()
 {
-	//cout << "children: " << bspScene->getRootNode()->getChildren().size() << endl;
-	//cout << "transform children: " << bspScene->getRootNode()->getTransform()->getChildren().size() << endl;
-
 #pragma region Input
 	if (input->getKeyPress(FunctionKey::ESCAPE)) window->setWindowShouldClose(true);
 	
@@ -243,162 +186,87 @@ void Game::update()
 #pragma endregion
 
 #pragma region Models
-	//Model transformations
-	//-----------
-	//Cube 1 Translation
-	//if (input->getKeyPress(PrintableKey::D)) cube->getTransform()->translate(cubeTranslationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
-	//if (input->getKeyPress(PrintableKey::A)) cube->getTransform()->translate(-cubeTranslationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
-	//
-	//if (input->getKeyPress(PrintableKey::Z)) cube->getTransform()->translate(0.0f, cubeTranslationSpeed * time->getDeltaTime(), 0.0f);
-	//if (input->getKeyPress(PrintableKey::X)) cube->getTransform()->translate(0.0f, -cubeTranslationSpeed * time->getDeltaTime(), 0.0f);
-	//
-	//if (input->getKeyPress(PrintableKey::S)) cube->getTransform()->translate(0.0f, 0.0f, cubeTranslationSpeed * time->getDeltaTime());
-	//if (input->getKeyPress(PrintableKey::W)) cube->getTransform()->translate(0.0f, 0.0f, -cubeTranslationSpeed * time->getDeltaTime());
+	ModelNode* bspScene = dynamic_cast<ModelNode*>(bsp->getRootNode());
+	ModelNode* bspChild = dynamic_cast<ModelNode*>(bsp->getRootNode()->getChildren()[0]);
+	//vec3 pp1 = dynamic_cast<ModelNode*>(bsp->getRootNode()->getChildren()[1]->getChildren()[0])->getTransform()->getBSPPlane()->getTransform()->getGlobalPosition();
+	//vec3 f = dynamic_cast<ModelNode*>(bsp->getRootNode()->getChildren()[1]->getChildren()[0])->getTransform()->getBSPPlane()->getTransform()->getForward();
+	//vec3 pp2 = dynamic_cast<ModelNode*>(bsp->getRootNode()->getChildren()[1]->getChildren()[1])->getTransform()->getBSPPlane()->getTransform()->getGlobalPosition();
+	//vec3 pp3 = dynamic_cast<ModelNode*>(bsp->getRootNode()->getChildren()[1]->getChildren()[2])->getTransform()->getBSPPlane()->getTransform()->getGlobalPosition();
 
-	ModelNode* bspCube = dynamic_cast<ModelNode*>(bspScene->getRootNode()->getChildren()[0]);
-	//cout << "cube position: " << bspCube->getTransform()->getPosition().x << " | " << bspCube->getTransform()->getPosition().y << " | " << bspCube->getTransform()->getPosition().z << endl;
+	CollisionBox cb = bspChild->getCollisionBox();
+	vector<vec3> v = bspChild->getCollisionBoxVertices();
 
-	if (input->getKeyPress(PrintableKey::K)) bspCube->getTransform()->translate(0.0f, 0.0f, cubeTranslationSpeed * time->getDeltaTime());
-	if (input->getKeyPress(PrintableKey::I)) bspCube->getTransform()->translate(0.0f, 0.0f, -cubeTranslationSpeed * time->getDeltaTime());
+	//cout << endl;
+	//p1->getTransform()->setPosition(pp1.x + f.x, pp1.y + f.y, pp1.z + f.z);
+	//p2->getTransform()->setPosition(pp2.x, pp2.y, pp2.z);
+	//p3->getTransform()->setPosition(pp3.x, pp3.y, pp3.z);
+	//vMin->getTransform()->setPosition(cb.minEdge.x, cb.minEdge.y, cb.minEdge.z);
+	//vMax->getTransform()->setPosition(cb.maxEdge.x, cb.maxEdge.y, cb.maxEdge.z);
+	v0->getTransform()->setPosition(v[0].x, v[0].y, v[0].z);
+	v1->getTransform()->setPosition(v[1].x, v[1].y, v[1].z);
+	v2->getTransform()->setPosition(v[2].x, v[2].y, v[2].z);
+	v3->getTransform()->setPosition(v[3].x, v[3].y, v[3].z);
+	v4->getTransform()->setPosition(v[4].x, v[4].y, v[4].z);
+	v5->getTransform()->setPosition(v[5].x, v[5].y, v[5].z);
+	v6->getTransform()->setPosition(v[6].x, v[6].y, v[6].z);
+	v7->getTransform()->setPosition(v[7].x, v[7].y, v[7].z);
 
-	if (input->getKeyPress(PrintableKey::J)) bspCube->getTransform()->translate(cubeTranslationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
-	if (input->getKeyPress(PrintableKey::L)) bspCube->getTransform()->translate(-cubeTranslationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
+	if (input->getKeyPress(PrintableKey::J)) bspChild->getTransform()->translate(cubeTranslationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
+	if (input->getKeyPress(PrintableKey::L)) bspChild->getTransform()->translate(-cubeTranslationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
+
+	if (input->getKeyPress(PrintableKey::M)) bspChild->getTransform()->rotate(0.0f, cubeRotationSpeed * time->getDeltaTime(), 0.0f);
+	if (input->getKeyPress(PrintableKey::N)) bspChild->getTransform()->rotate(0.0f, -cubeRotationSpeed * time->getDeltaTime(), 0.0f);
+
+	if (input->getKeyPress(PrintableKey::K)) bspChild->getTransform()->translate(0.0f, 0.0f, cubeTranslationSpeed * time->getDeltaTime());
+	if (input->getKeyPress(PrintableKey::I)) bspChild->getTransform()->translate(0.0f, 0.0f, -cubeTranslationSpeed * time->getDeltaTime());
 #pragma endregion
-
-#pragma region Cubes
-	//Cube 1 Translation
-	//if (input->getKeyPress(PrintableKey::J)) purpleCube->getTransform()->translate(cubeTranslationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
-	//if (input->getKeyPress(PrintableKey::U)) purpleCube->getTransform()->translate(-cubeTranslationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
-	//
-	//if (input->getKeyPress(PrintableKey::K)) yellowCube->getTransform()->translate(cubeTranslationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
-	//if (input->getKeyPress(PrintableKey::I)) yellowCube->getTransform()->translate(-cubeTranslationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
-	//
-	//if (input->getKeyPress(PrintableKey::L)) cyanCube->getTransform()->translate(cubeTranslationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
-	//if (input->getKeyPress(PrintableKey::O)) cyanCube->getTransform()->translate(-cubeTranslationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
-
-	//Cube 1 Rotation
-	//if (input->getKeyPress(PrintableKey::R)) cube->getTransform()->rotate(cubeRotationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
-	//if (input->getKeyPress(PrintableKey::F)) cube->getTransform()->rotate(-cubeRotationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
-	//
-	//if (input->getKeyPress(PrintableKey::T)) cube->getTransform()->rotate(0.0f, cubeRotationSpeed * time->getDeltaTime(), 0.0f);
-	//if (input->getKeyPress(PrintableKey::G)) cube->getTransform()->rotate(0.0f, -cubeRotationSpeed * time->getDeltaTime(), 0.0f);
-	//
-	//if (input->getKeyPress(PrintableKey::Y)) cube->getTransform()->rotate(0.0f, 0.0f, cubeRotationSpeed * time->getDeltaTime());
-	//if (input->getKeyPress(PrintableKey::H)) cube->getTransform()->rotate(0.0f, 0.0f, -cubeRotationSpeed * time->getDeltaTime());
-
-	//Cube 1 Scale
-	//if (input->getKeyPress(PrintableKey::U)) cube->getTransform()->scale(cubeScaleSpeed * time->getDeltaTime(), 0.0f, 0.0f);
-	//if (input->getKeyPress(PrintableKey::J)) cube->getTransform()->scale(-cubeScaleSpeed * time->getDeltaTime(), 0.0f, 0.0f);
-	//
-	//if (input->getKeyPress(PrintableKey::I)) cube->getTransform()->scale(0.0f, cubeScaleSpeed * time->getDeltaTime(), 0.0f);
-	//if (input->getKeyPress(PrintableKey::K)) cube->getTransform()->scale(0.0f, -cubeScaleSpeed * time->getDeltaTime(), 0.0f);
-	//
-	//if (input->getKeyPress(PrintableKey::O)) cube->getTransform()->scale(0.0f, 0.0f, cubeScaleSpeed * time->getDeltaTime());
-	//if (input->getKeyPress(PrintableKey::L)) cube->getTransform()->scale(0.0f, 0.0f, -cubeScaleSpeed * time->getDeltaTime());
-
-	//Cube add/remove child
-	//if (input->getKeyPress(PrintableKey::O)) cube->addChild(cube2);
-	//if (input->getKeyPress(PrintableKey::L)) cube->removeChild(cube2);
-#pragma endregion
-
-#pragma region Planes
-	//plane Rotation
-	//if (input->getKeyPress(PrintableKey::I)) plane->getTransform()->rotate(0.0f, planeRotationSpeed * time->getDeltaTime(), 0.0f);
-	//if (input->getKeyPress(PrintableKey::K)) plane->getTransform()->rotate(0.0f, -planeRotationSpeed * time->getDeltaTime(), 0.0f);
-
-	//bspPlane Rotation
-	//if (input->getKeyPress(PrintableKey::I))
-	//{
-	//	bspPlane->getTransform()->rotate(0.0f, 0.0f, bPlaneRotationSpeed * time->getDeltaTime());
-	//
-	//	//vec3 normal = bPlane->getRootNode()->getChildren()[0]->getBSPNornal();
-	//	//vec3 normal = dynamic_cast<ModelNode*>(bPlane->getRootNode()->getChildren()[0])->getBSPNornal();
-	//	//cout << "BSP NORMAL: " << normal.x << ", " << normal.y << ", " << normal.z << endl;
-	//}
-	//if (input->getKeyPress(PrintableKey::K)) bspPlane->getTransform()->rotate(-bPlaneRotationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
-	//-----------
-#pragma endregion
-#pragma endregion
-
-#pragma region Transformations
-	//alarakYRotation += alarakRotationSpeed * time->getDeltaTime();
-	//alarak->getTransform()->setRotation(-90.0f, 0.0f, alarakYRotation);
-
-	//daggerYRotation += daggerRotationSpeed * time->getDeltaTime();
-	//dagger->getTransform()->setRotation(0.0f, daggerYRotation, -90.0f);
-
-	//treeYRotation += treeRotationSpeed * time->getDeltaTime();
-	//tree->getTransform()->setRotation(0.0f, treeYRotation, 0.0f);
-	//
-	//sniperRifleYRotation += sniperRifleRotationSpeed * time->getDeltaTime();
-	//sniperRifle->getTransform()->setRotation(0.0f, sniperRifleYRotation, -90.0f);
-	//
-	//plantYRotation += plantRotationSpeed * time->getDeltaTime();
-	//plant->getTransform()->setRotation(0.0f, plantYRotation, 0.0f);
-	//
-	//revolverYRotation += revolverRotationSpeed * time->getDeltaTime();
-	//revolver->getTransform()->setRotation(-90.0f, 0.0f, revolverYRotation);
-	//
-	//alienYRotation += alienRotationSpeed * time->getDeltaTime();
-	//alien->getTransform()->setRotation(-90.0f, 0.0f, alienYRotation);
 #pragma endregion
 
 #pragma region Rendering
-	//sprite1->draw();
-	//sprite2->draw();
-	
-	//plane->draw();
-
-	//purpleCube->draw();
-	//yellowCube->draw();
-	//cyanCube->draw();
-
 	rubyCube->draw();
 	emeraldCube->draw();
 	goldCube->draw();
 
-	//alarak->draw();
-	//dagger->draw();
-	//tree->draw();
-	//sniperRifle->draw();
-	//plant->draw();
-	//revolver->draw();
-	//alien->draw();
+	//bsp->draw();
+	bsp->drawAsBSPScene(camera->getTransform()->getPosition(), true);
 
-	//cout << "camera position: " << camera->getTransform()->getPosition().x << " | " << camera->getTransform()->getPosition().y << " | " << camera->getTransform()->getPosition().z << endl;
-	//bspScene->draw();
-	bspScene->drawAsBSPScene(camera->getTransform()->getPosition(), true);
-	//bspPlane->drawAsBSPScene(camera->getTransform()->getPosition(), true);
-	//cylinder->draw();
+	//p1->draw();
+	//p2->draw();
+	//p3->draw();
+	//vMin->draw();
+	//vMax->draw();
+	v0->draw();
+	v1->draw();
+	v2->draw();
+	v3->draw();
+	v4->draw();
+	v5->draw();
+	v6->draw();
+	v7->draw();
 #pragma endregion
 }
 
 int Game::terminate()
 {
-	//if (sprite1) delete sprite1;
-	//if (sprite2) delete sprite2;
-
-	if (plane) delete plane;
-
-	if (purpleCube) delete purpleCube;
-	if (yellowCube) delete yellowCube;
-	if (cyanCube) delete yellowCube;
-
 	if (rubyCube) delete rubyCube;
 	if (emeraldCube) delete emeraldCube;
 	if (goldCube) delete goldCube;
 
-	//if (alarak) delete alarak;
-	//if (dagger) delete dagger;
-	//if (tree) delete tree;
-	//if (sniperRifle) delete sniperRifle;
-	//if (plant) delete plant;
-	//if (revolver) delete revolver;
-	//if (alien) delete alien;
+	if (bsp) delete bsp;
 
-	if (bspScene) delete bspScene;
-	//if (bspPlane) delete bspPlane;
-	//if (cylinder) delete cylinder;
+	//if (p1) delete p1;
+	//if (p2) delete p2;
+	//if (p3) delete p3;
+	//if (vMin) delete v0;
+	//if (vMax) delete v0;
+	if (v0) delete v0;
+	if (v1) delete v0;
+	if (v2) delete v0;
+	if (v3) delete v0;
+	if (v4) delete v0;
+	if (v5) delete v0;
+	if (v6) delete v0;
+	if (v7) delete v0;
 
 	return 0;
 }

@@ -1,9 +1,6 @@
 #ifndef TRANSFORM_H
 #define TRANSFORM_H
 
-#include <vector>
-#include <glm/gtx/vector_angle.hpp>
-#include <glm/gtx/rotate_vector.hpp>
 #include "Tools/Includes.h"
 
 using namespace std;
@@ -16,7 +13,7 @@ struct GENGINE_API TransformData
 	vec3 scale;
 };
 
-struct GENGINE_API LocalModelMatrix
+struct GENGINE_API ModelMatrix
 {
 	mat4 model;
 
@@ -35,7 +32,7 @@ protected:
 	vec3 up;
 	vec3 forward;
 
-	LocalModelMatrix localModel;
+	ModelMatrix localModel;
 	mat4 globalModel;
 
 	TransformData transformData;
@@ -43,7 +40,18 @@ protected:
 	Transform* parent = NULL;
 	vector<Transform*> children;
 
+	float positiveDegrees(float degrees);
+	float eulerAngles(float radians);
+	vec3 eulerAngles(vec3 radians);
+	void decompose(mat4 matrix); // Debug
+	void decompose(mat4 matrix, vec3& translation, vec3& eulerRotation, vec3& scale);
+	void decompose(mat4 matrix, vec3& translation, quat& quatRotation, vec3& scale);
+
+	void processRotation(float pitch, float yaw, float roll);
+
 public:
+	void updateDirectionVectors(float pitch, float yaw, float roll);
+	void updateChildrenDirectionVectors(float pitch, float yaw, float roll, vec3 xAxis, vec3 yAxis, vec3 zAxis);
 	void updateLocalModel();
 	void updateGlobalModel();
 	virtual void updateGlobalModel(mat4 other);
@@ -52,16 +60,16 @@ public:
 	Transform(vector<Transform*> _children);
 	~Transform();
 
-	//TODO: como las transformaciones por ahora son locales, agregar también métodos globales
 #pragma region Transformations
 	virtual void translate(float x, float y, float z);
 	virtual void setPosition(float x, float y, float z);
-	vec3 getPosition();
+	virtual vec3 getPosition();
 	vec3 getGlobalPosition();
 
 	virtual void rotate(float pitch, float yaw, float roll);
 	virtual void setRotation(float pitch, float yaw, float roll);
 	vec3 getRotation();
+	vec3 getGlobalRotation();
 
 	virtual void scale(float x, float y, float z);
 	virtual void setScale(float x, float y, float z);
@@ -73,7 +81,6 @@ public:
 
 	mat4 getLocalModel();
 	mat4 getGlobalModel();
-	//ModelMatrix getTRS();
 #pragma endregion
 
 #pragma region Children
@@ -82,7 +89,6 @@ public:
 	void removeChild(Transform* child);
 #pragma endregion
 
-	//TODO: comprobar que las transformaciones sigan bien después de modificar el padre
 #pragma region Parent
 	void setParent(Transform* _parent);
 	Transform* getParent();

@@ -19,12 +19,12 @@ public:
 	void updateGlobalModel(mat4 other) override;
 
 #pragma region Transformations
-	void translate(float x, float y, float z) override;
-	void setPosition(float x, float y, float z) override;
-	void rotate(float pitch, float yaw, float roll) override;
-	void setRotation(float pitch, float yaw, float roll) override;
-	void scale(float x, float y, float z) override;
-	void setScale(float x, float y, float z) override;
+	//void translate(float x, float y, float z) override;
+	//void setPosition(float x, float y, float z) override;
+	//void rotate(float pitch, float yaw, float roll) override;
+	//void setRotation(float pitch, float yaw, float roll) override;
+	//void scale(float x, float y, float z) override;
+	//void setScale(float x, float y, float z) override;
 #pragma endregion
 
 #pragma region BSP

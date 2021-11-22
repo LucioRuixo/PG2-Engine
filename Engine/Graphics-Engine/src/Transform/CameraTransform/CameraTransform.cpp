@@ -44,6 +44,7 @@ void CameraTransform::setPosition(float x, float y, float z)
 
 	translate(translationX, translationY, translationZ);
 }
+vec3 CameraTransform::getPosition() { return transformData.position; }
 
 void CameraTransform::rotate(float pitch, float yaw, float roll)
 {

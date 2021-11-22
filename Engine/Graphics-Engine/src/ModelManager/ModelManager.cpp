@@ -50,12 +50,12 @@ ModelNode* ModelManager::processNode(const aiScene* scene, aiNode* node, vector<
 
 	//Create node
 	ModelNode* newNode = new ModelNode(name, isRoot, meshes, children);
-	for (int i = 0; i < children.size(); i++) setUpNodeTransform(node->mChildren[i], dynamic_cast<ModelNode*>(children[i]), bspPlanes);
+	for (int i = 0; i < children.size(); i++) setUpNodeTransform(node->mChildren[i], dynamic_cast<ModelNode*>(children[i]), bspPlanes, false);
 
 	return newNode;
 }
 
-void ModelManager::setUpNodeTransform(aiNode* assimpNode, ModelNode* node, vector<Plane*> &bspPlanes)
+void ModelManager::setUpNodeTransform(aiNode* assimpNode, ModelNode* node, vector<Plane*> &bspPlanes, bool isRoot)
 {
 	aiVector3D aiPosition;
 	aiQuaternion aiQuatRotation;
@@ -69,26 +69,25 @@ void ModelManager::setUpNodeTransform(aiNode* assimpNode, ModelNode* node, vecto
 	vec3 radiansRotation = eulerAngles(quatRotation);
 	vec3 eulerRotation = vec3(radiansRotation.x * (180.0f / pi<float>()), radiansRotation.y * (180.0f / pi<float>()), radiansRotation.z * (180.0f / pi<float>()));
 
-	//string name = assimpNode->mName.C_Str();
-	//cout << name << " position: " << position.x << " | " << position.y << " | " << position.z << endl;
-	//cout << name << " rotation: " << eulerRotation.x << " | " << eulerRotation.y << " | " << eulerRotation.z << endl;
-	//cout << name << " scale: " << scale.x << " | " << scale.y << " | " << scale.z << endl;
-	//cout << endl;
+	string name = assimpNode->mName.C_Str();
+	cout << endl;
+	cout << name << " position: " << position.x << " | " << position.y << " | " << position.z << endl;
+	cout << name << " rotation: " << eulerRotation.y << " | " << eulerRotation.x << " | " << eulerRotation.z << endl;
+	cout << name << " scale: " << scale.x << " | " << scale.y << " | " << scale.z << endl;
 
 	ModelNodeTransform* transform = node->getTransform();
-	transform->setPosition(position.x, position.y, position.z);
-	transform->setRotation(eulerRotation.x, eulerRotation.y, eulerRotation.z);
-	transform->setScale(scale.x, scale.y, scale.z);
 
-	if (node->getTransform()->getIsBSPPlane())
-	{
-		Plane* bspPlane = node->getTransform()->getBSPPlane();
-		bspPlane->getTransform()->setRotation(eulerRotation.y, eulerRotation.z, eulerRotation.x);
-		bspPlane->getTransform()->rotate(0.0f, -90.0f, 0.0f);
-		transform->addChild(bspPlane->getTransform());
+	cout << "setting position of " << name << ": " << -position.y << " | " << position.z << " | " << position.x << endl;
+	transform->setPosition(-position.y, position.z, position.x);
 
-		bspPlanes.push_back(node->getTransform()->getBSPPlane());
-	}
+	cout << endl;
+	cout << "setting rotation of " << name << ": " << eulerRotation.y << " | " << eulerRotation.x << " | " << eulerRotation.z << endl;
+	if (!isRoot) transform->setRotation(eulerRotation.y, eulerRotation.z, eulerRotation.x);
+	//if (!isRoot) transform->setRotation(0.0f, 0.0f, 0.0f);
+
+	transform->setScale(scale.y, scale.z, scale.x);
+
+	if (node->getTransform()->getIsBSPPlane()) bspPlanes.push_back(node->getTransform()->getBSPPlane());
 }
 
 Mesh* ModelManager::processMesh(const aiScene* scene, aiMesh* mesh)
@@ -205,7 +204,7 @@ Model* ModelManager::importModel(string path)
 
 	vector<Plane*> bspPlanes;
 	ModelNode* rootNode = processNode(scene, scene->mRootNode, bspPlanes);
-	setUpNodeTransform(scene->mRootNode, rootNode, bspPlanes);
+	setUpNodeTransform(scene->mRootNode, rootNode, bspPlanes, true);
 	cout << "##########" << endl;
 	cout << "model loaded from \"" << path << "\"" << endl << endl;
 

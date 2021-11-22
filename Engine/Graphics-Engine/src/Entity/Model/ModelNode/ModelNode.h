@@ -1,8 +1,6 @@
 #ifndef MODEL_NODE_H
 #define MODEL_NODE_H
 
-#include <string>
-#include <vector>
 #include "Tools/Includes.h"
 #include "Entity/Plane/Plane.h"
 #include "Entity/Model/Mesh/Mesh.h"
@@ -39,7 +37,7 @@ public:
 	bool getIsRoot();
 	CollisionBox getRawCollisionBox();
 	CollisionBox getCollisionBox();
-	vec3* getCollisionBoxVertices();
+	vector<vec3> getCollisionBoxVertices();
 	ModelNodeTransform* getTransform() override;
 
 #pragma region Children

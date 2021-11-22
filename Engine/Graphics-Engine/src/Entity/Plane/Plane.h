@@ -29,7 +29,7 @@ public:
 
 	float distanceToPoint(vec3 point);
 	bool sameSide(vec3 a, vec3 b);
-	bool sameSide(vec3 a, vec3 b[]);
+	bool sameSide(vec3 a, vector<vec3> b);
 
 	virtual void draw() override;
 };
