@@ -193,7 +193,7 @@ void Game::update()
 	//vec3 pp2 = dynamic_cast<ModelNode*>(bsp->getRootNode()->getChildren()[1]->getChildren()[1])->getTransform()->getBSPPlane()->getTransform()->getGlobalPosition();
 	//vec3 pp3 = dynamic_cast<ModelNode*>(bsp->getRootNode()->getChildren()[1]->getChildren()[2])->getTransform()->getBSPPlane()->getTransform()->getGlobalPosition();
 
-	CollisionBox cb = bspChild->getCollisionBox();
+	CollisionBoxEdges cb = bspChild->getCollisionBox();
 	vector<vec3> v = bspChild->getCollisionBoxVertices();
 
 	//cout << endl;

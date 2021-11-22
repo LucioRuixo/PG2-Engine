@@ -6,7 +6,7 @@ ModelNode::ModelNode(string _name, bool _isRoot, vector<Mesh*> _meshes, vector<E
 	isRoot = _isRoot;
 	meshes = _meshes;
 
-	generateCollisonBox();
+	setUpCollisionBox();
 
 	if (name.substr(0, 3) == "BSP" && meshes.size() > 0)
 	{
@@ -28,36 +28,82 @@ ModelNode::~ModelNode()
 	if (!meshes.empty()) meshes.clear();
 }
 
-void ModelNode::generateCollisonBox()
+void ModelNode::setUpCollisionBox()
 {
+	CollisionBoxEdges edges;
+	if (meshes.size() > 0)
+	{
+		edges.minEdge.x = meshes[0]->getVertices()[0].Position.x;
+		edges.minEdge.y = meshes[0]->getVertices()[0].Position.y;
+		edges.minEdge.z = meshes[0]->getVertices()[0].Position.z;
+
+		edges.maxEdge.x = meshes[0]->getVertices()[0].Position.x;
+		edges.maxEdge.y = meshes[0]->getVertices()[0].Position.y;
+		edges.maxEdge.z = meshes[0]->getVertices()[0].Position.z;
+	}
+
 	for (int i = 0; i < meshes.size(); i++)
 	{
 		vector<Vertex> vertices = meshes[i]->getVertices();
 
 		for (int j = 0; j < vertices.size(); j++)
 		{
-			collisionBox.minEdge.x = glm::min(collisionBox.minEdge.x, vertices[j].Position.x);
-			collisionBox.minEdge.y = glm::min(collisionBox.minEdge.y, vertices[j].Position.y);
-			collisionBox.minEdge.z = glm::min(collisionBox.minEdge.z, vertices[j].Position.z);
+			edges.minEdge.x = glm::min(edges.minEdge.x, vertices[j].Position.x);
+			edges.minEdge.y = glm::min(edges.minEdge.y, vertices[j].Position.y);
+			edges.minEdge.z = glm::min(edges.minEdge.z, vertices[j].Position.z);
 
-			collisionBox.maxEdge.x = glm::max(vertices[j].Position.x, collisionBox.maxEdge.x);
-			collisionBox.maxEdge.y = glm::max(vertices[j].Position.y, collisionBox.maxEdge.y);
-			collisionBox.maxEdge.z = glm::max(vertices[j].Position.z, collisionBox.maxEdge.z);
+			edges.maxEdge.x = glm::max(vertices[j].Position.x, edges.maxEdge.x);
+			edges.maxEdge.y = glm::max(vertices[j].Position.y, edges.maxEdge.y);
+			edges.maxEdge.z = glm::max(vertices[j].Position.z, edges.maxEdge.z);
 		}
 	}
 
-	//for (int k = 0; k < children.size(); k++)
-	//{
-	//	ModelNode* child = dynamic_cast<ModelNode*>(children[k]);
-	//
-	//	collisionBox.minEdge.x = glm::min(collisionBox.minEdge.x, child->getRawCollisionBox().minEdge.x);
-	//	collisionBox.minEdge.y = glm::min(collisionBox.minEdge.y, child->getRawCollisionBox().minEdge.y);
-	//	collisionBox.minEdge.z = glm::min(collisionBox.minEdge.z, child->getRawCollisionBox().minEdge.z);
-	//
-	//	collisionBox.maxEdge.x = glm::max(child->getRawCollisionBox().maxEdge.x, collisionBox.maxEdge.x);
-	//	collisionBox.maxEdge.y = glm::max(child->getRawCollisionBox().maxEdge.y, collisionBox.maxEdge.y);
-	//	collisionBox.maxEdge.z = glm::max(child->getRawCollisionBox().maxEdge.z, collisionBox.maxEdge.z);
-	//}
+	collisionBoxVertices = generateCollisonBoxVertices(edges);
+}
+
+vector<vec3> ModelNode::generateCollisonBoxVertices(CollisionBoxEdges edges)
+{
+	vector<vec3> vertices = vector<vec3>
+	{
+		vec3(edges.minEdge.x, edges.minEdge.y, edges.minEdge.z), //0 ---
+		vec3(edges.maxEdge.x, edges.minEdge.y, edges.minEdge.z), //1 +--
+		vec3(edges.maxEdge.x, edges.maxEdge.y, edges.minEdge.z), //2 ++-
+		vec3(edges.minEdge.x, edges.maxEdge.y, edges.minEdge.z), //3 -+-
+		vec3(edges.minEdge.x, edges.minEdge.y, edges.maxEdge.z), //4 --+
+		vec3(edges.maxEdge.x, edges.minEdge.y, edges.maxEdge.z), //5 +-+
+		vec3(edges.maxEdge.x, edges.maxEdge.y, edges.maxEdge.z), //6 +++
+		vec3(edges.minEdge.x, edges.maxEdge.y, edges.maxEdge.z)  //7 -++
+	};
+
+	return vertices;
+}
+
+CollisionBoxEdges ModelNode::generateCollisonBoxEdges(vector<vec3> vertices)
+{
+	CollisionBoxEdges edges;
+	if (vertices.size() > 0)
+	{
+		edges.minEdge.x = vertices[0].x;
+		edges.minEdge.y = vertices[0].y;
+		edges.minEdge.z = vertices[0].z;
+
+		edges.maxEdge.x = vertices[0].x;
+		edges.maxEdge.y = vertices[0].y;
+		edges.maxEdge.z = vertices[0].z;
+	}
+
+	for (int i = 0; i < vertices.size(); i++)
+	{
+		edges.minEdge.x = glm::min(edges.minEdge.x, vertices[i].x);
+		edges.minEdge.y = glm::min(edges.minEdge.y, vertices[i].y);
+		edges.minEdge.z = glm::min(edges.minEdge.z, vertices[i].z);
+
+		edges.maxEdge.x = glm::max(vertices[i].x, edges.maxEdge.x);
+		edges.maxEdge.y = glm::max(vertices[i].y, edges.maxEdge.y);
+		edges.maxEdge.z = glm::max(vertices[i].z, edges.maxEdge.z);
+	}
+
+	return edges;
 }
 
 void ModelNode::processBSP(bool shouldBeDrawn, vec3 cameraPosition, vector<Plane*> planes, bool drawPlanes)
@@ -119,14 +165,14 @@ string ModelNode::getName() { return name; }
 
 bool ModelNode::getIsRoot() { return isRoot; }
 
-CollisionBox ModelNode::getRawCollisionBox() { return collisionBox; }
+CollisionBoxEdges ModelNode::getRawCollisionBox() { return collisionBoxEdges; }
 
-CollisionBox ModelNode::getCollisionBox()
+CollisionBoxEdges ModelNode::getCollisionBox()
 {
-	CollisionBox transformedCollisionBox;
+	CollisionBoxEdges transformedCollisionBox;
 
-	vec4 minEdge = transform->getGlobalModel() * vec4(collisionBox.minEdge, 1.0f);
-	vec4 maxEdge = transform->getGlobalModel() * vec4(collisionBox.maxEdge, 1.0f);
+	vec4 minEdge = transform->getGlobalModel() * vec4(collisionBoxEdges.minEdge, 1.0f);
+	vec4 maxEdge = transform->getGlobalModel() * vec4(collisionBoxEdges.maxEdge, 1.0f);
 	transformedCollisionBox.minEdge = vec3(-minEdge.x, minEdge.y, minEdge.z);
 	transformedCollisionBox.maxEdge = vec3(-maxEdge.x, maxEdge.y, maxEdge.z);
 
@@ -135,33 +181,33 @@ CollisionBox ModelNode::getCollisionBox()
 
 vector<vec3> ModelNode::getCollisionBoxVertices()
 {
-	CollisionBox transformedCollisionBox = collisionBox;
-
-	vector<vec3> vertices
+	vector<vec3> transformedVertices;
+	for (int i = 0; i < collisionBoxVertices.size(); i++)
 	{
-		vec3(transformedCollisionBox.minEdge.x, transformedCollisionBox.minEdge.y, transformedCollisionBox.minEdge.z), //0 ---
-		vec3(transformedCollisionBox.maxEdge.x, transformedCollisionBox.minEdge.y, transformedCollisionBox.minEdge.z), //1 +--
-		vec3(transformedCollisionBox.maxEdge.x, transformedCollisionBox.maxEdge.y, transformedCollisionBox.minEdge.z), //2 ++-
-		vec3(transformedCollisionBox.minEdge.x, transformedCollisionBox.maxEdge.y, transformedCollisionBox.minEdge.z), //3 -+-
-		vec3(transformedCollisionBox.minEdge.x, transformedCollisionBox.minEdge.y, transformedCollisionBox.maxEdge.z), //4 --+
-		vec3(transformedCollisionBox.maxEdge.x, transformedCollisionBox.minEdge.y, transformedCollisionBox.maxEdge.z), //5 +-+
-		vec3(transformedCollisionBox.maxEdge.x, transformedCollisionBox.maxEdge.y, transformedCollisionBox.maxEdge.z), //6 +++
-		vec3(transformedCollisionBox.minEdge.x, transformedCollisionBox.maxEdge.y, transformedCollisionBox.maxEdge.z)  //7 -++
-	};
-
-	//cout << endl;
-	//cout << "#####" << endl;
-	//cout << "raw vertices" << endl;
-	for (int i = 0; i < vertices.size(); i++)
-	{
-		vec4 vertex = transform->getGlobalModel() * vec4(vertices[i], 1.0f);
-		vertices[i] = vec3(-vertex.x, vertex.y, vertex.z);
-		
-		//cout << "vertex " << i << ": " << vertices[i].x << " | " << vertices[i].y << " | " << vertices[i].z << endl;
+		vec4 vertex = transform->getGlobalModel() * vec4(collisionBoxVertices[i], 1.0f);
+		transformedVertices.push_back(vec3(-vertex.x, vertex.y, vertex.z));
 	}
-	//cout << "#####" << endl;
 
-	return vertices;
+	if (children.size() > 0)
+	{
+		CollisionBoxEdges transformedEdges = generateCollisonBoxEdges(transformedVertices);
+		for (int i = 0; i < children.size(); i++)
+		{
+			vector<vec3> childVertices = dynamic_cast<ModelNode*>(children[i])->getCollisionBoxVertices();
+			CollisionBoxEdges childEdges = generateCollisonBoxEdges(childVertices);
+
+			transformedEdges.minEdge.x = glm::min(transformedEdges.minEdge.x, childEdges.minEdge.x);
+			transformedEdges.minEdge.y = glm::min(transformedEdges.minEdge.y, childEdges.minEdge.y);
+			transformedEdges.minEdge.z = glm::min(transformedEdges.minEdge.z, childEdges.minEdge.z);
+
+			transformedEdges.maxEdge.x = glm::max(childEdges.maxEdge.x, transformedEdges.maxEdge.x);
+			transformedEdges.maxEdge.y = glm::max(childEdges.maxEdge.y, transformedEdges.maxEdge.y);
+			transformedEdges.maxEdge.z = glm::max(childEdges.maxEdge.z, transformedEdges.maxEdge.z);
+		}
+
+		return generateCollisonBoxVertices(transformedEdges);
+	}
+	else return transformedVertices;
 }
 
 ModelNodeTransform * ModelNode::getTransform() { return transform; }

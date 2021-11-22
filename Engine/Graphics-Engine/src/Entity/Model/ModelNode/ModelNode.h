@@ -8,7 +8,7 @@
 
 using namespace std;
 
-struct CollisionBox
+struct CollisionBoxEdges
 {
 	vec3 minEdge = vec3(0.0f);
 	vec3 maxEdge = vec3(0.0f);
@@ -19,12 +19,17 @@ class GENGINE_API ModelNode : public Entity
 	string name;
 	bool isRoot;
 
-	CollisionBox collisionBox;
+	CollisionBoxEdges collisionBoxEdges;
+	vector<vec3> collisionBoxVertices;
+
 	ModelNodeTransform* transform;
 
 	vector<Mesh*> meshes;
 
-	void generateCollisonBox();
+	void setUpCollisionBox();
+	vector<vec3> generateCollisonBoxVertices(CollisionBoxEdges edges);
+	CollisionBoxEdges generateCollisonBoxEdges(vector<vec3> vertices);
+
 	void processBSP(bool shouldBeDrawn, vec3 cameraPosition, vector<Plane*> planes, bool drawPlanes);
 	void drawChildrenAsBSPNode(bool shouldBeDrawn, vec3 cameraPosition, vector<Plane*> planes, bool drawPlanes);
 public:
@@ -35,8 +40,8 @@ public:
 
 	string getName();
 	bool getIsRoot();
-	CollisionBox getRawCollisionBox();
-	CollisionBox getCollisionBox();
+	CollisionBoxEdges getRawCollisionBox();
+	CollisionBoxEdges getCollisionBox();
 	vector<vec3> getCollisionBoxVertices();
 	ModelNodeTransform* getTransform() override;
 
