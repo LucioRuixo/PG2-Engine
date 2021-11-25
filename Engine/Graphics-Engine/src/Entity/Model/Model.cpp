@@ -27,6 +27,8 @@ void Model::draw() { rootNode->draw(); }
 
 void Model::drawAsBSPScene(vec3 cameraPosition, bool drawPlanes)
 {
-	if (bspPlanes.size() > 0) rootNode->drawAsBSPNode(cameraPosition, bspPlanes, drawPlanes);
+	if (drawPlanes) for (int i = 0; i < bspPlanes.size(); i++) bspPlanes[i]->draw();
+
+	if (bspPlanes.size() > 0) rootNode->drawAsBSPNode(cameraPosition, bspPlanes);
 	else draw();
 }

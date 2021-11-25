@@ -6,8 +6,6 @@ ModelNode::ModelNode(string _name, bool _isRoot, vector<Mesh*> _meshes, vector<E
 	isRoot = _isRoot;
 	meshes = _meshes;
 
-	setUpCollisionBox();
-
 	if (name.substr(0, 3) == "BSP" && meshes.size() > 0)
 	{
 		vec3 position = Entity::transform->getPosition();
@@ -28,39 +26,58 @@ ModelNode::~ModelNode()
 	if (!meshes.empty()) meshes.clear();
 }
 
-void ModelNode::setUpCollisionBox()
+void ModelNode::updateModels(mat4 otherModel)
 {
-	CollisionBoxEdges edges;
-	if (meshes.size() > 0)
+	transform->updateGlobalModel(otherModel);
+
+	for (int i = 0; i < children.size(); i++) dynamic_cast<ModelNode*>(children[i])->updateModels(otherModel);
+}
+
+string ModelNode::getName() { return name; }
+
+bool ModelNode::getIsRoot() { return isRoot; }
+
+ModelNodeTransform * ModelNode::getTransform() { return transform; }
+
+#pragma region Children
+void ModelNode::addChild(Entity* child)
+{
+	for (int i = 0; i < children.size(); i++)
 	{
-		edges.minEdge.x = meshes[0]->getVertices()[0].Position.x;
-		edges.minEdge.y = meshes[0]->getVertices()[0].Position.y;
-		edges.minEdge.z = meshes[0]->getVertices()[0].Position.z;
-
-		edges.maxEdge.x = meshes[0]->getVertices()[0].Position.x;
-		edges.maxEdge.y = meshes[0]->getVertices()[0].Position.y;
-		edges.maxEdge.z = meshes[0]->getVertices()[0].Position.z;
-	}
-
-	for (int i = 0; i < meshes.size(); i++)
-	{
-		vector<Vertex> vertices = meshes[i]->getVertices();
-
-		for (int j = 0; j < vertices.size(); j++)
+		if (children[i] == child)
 		{
-			edges.minEdge.x = glm::min(edges.minEdge.x, vertices[j].Position.x);
-			edges.minEdge.y = glm::min(edges.minEdge.y, vertices[j].Position.y);
-			edges.minEdge.z = glm::min(edges.minEdge.z, vertices[j].Position.z);
+			cout << "Entity intended to be added to parent is already a child" << endl;
 
-			edges.maxEdge.x = glm::max(vertices[j].Position.x, edges.maxEdge.x);
-			edges.maxEdge.y = glm::max(vertices[j].Position.y, edges.maxEdge.y);
-			edges.maxEdge.z = glm::max(vertices[j].Position.z, edges.maxEdge.z);
+			return;
 		}
 	}
 
-	collisionBoxVertices = generateCollisonBoxVertices(edges);
+	children.push_back(child);
+	child->setParent(this);
+
+	transform->addChild(child->getTransform());
 }
 
+void ModelNode::removeChild(Entity* child)
+{
+	vector<Entity*>::iterator iterator;
+	for (iterator = children.begin(); iterator < children.end(); iterator++)
+	{
+		if (*iterator == child)
+		{
+			children.erase(iterator);
+			transform->removeChild(child->getTransform());
+			child->setParent(NULL);
+
+			return;
+		}
+	}
+
+	cout << "Child entity intended to be removed from parent was not found" << endl;
+}
+#pragma endregion
+
+#pragma region Collision Box
 vector<vec3> ModelNode::generateCollisonBoxVertices(CollisionBoxEdges edges)
 {
 	vector<vec3> vertices = vector<vec3>
@@ -106,147 +123,182 @@ CollisionBoxEdges ModelNode::generateCollisonBoxEdges(vector<vec3> vertices)
 	return edges;
 }
 
-void ModelNode::processBSP(bool shouldBeDrawn, vec3 cameraPosition, vector<Plane*> planes, bool drawPlanes)
+vector<vec3> ModelNode::getTransformedVertices()
 {
-	if (isRoot)
+	CollisionBoxEdges edges;
+	if (meshes.size() > 0)
 	{
-		drawMeshes();
-		drawChildrenAsBSPNode(shouldBeDrawn, cameraPosition, planes, drawPlanes);
+		edges.minEdge.x = meshes[0]->getVertices()[0].Position.x;
+		edges.minEdge.y = meshes[0]->getVertices()[0].Position.y;
+		edges.minEdge.z = meshes[0]->getVertices()[0].Position.z;
 
-		return;
+		edges.maxEdge.x = meshes[0]->getVertices()[0].Position.x;
+		edges.maxEdge.y = meshes[0]->getVertices()[0].Position.y;
+		edges.maxEdge.z = meshes[0]->getVertices()[0].Position.z;
 	}
 
-	if (transform->getIsBSPPlane())
+	for (int i = 0; i < meshes.size(); i++)
 	{
-		if (drawPlanes)
+		vector<Vertex> meshVertices = meshes[i]->getVertices();
+
+		for (int j = 0; j < meshVertices.size(); j++)
 		{
-			drawMeshes();
-			transform->getBSPPlane()->draw();
-		}
+			edges.minEdge.x = glm::min(edges.minEdge.x, meshVertices[j].Position.x);
+			edges.minEdge.y = glm::min(edges.minEdge.y, meshVertices[j].Position.y);
+			edges.minEdge.z = glm::min(edges.minEdge.z, meshVertices[j].Position.z);
 
-		drawChildrenAsBSPNode(shouldBeDrawn, cameraPosition, planes, drawPlanes);
+			edges.maxEdge.x = glm::max(meshVertices[j].Position.x, edges.maxEdge.x);
+			edges.maxEdge.y = glm::max(meshVertices[j].Position.y, edges.maxEdge.y);
+			edges.maxEdge.z = glm::max(meshVertices[j].Position.z, edges.maxEdge.z);
+		}
 	}
-	else
+	vector<vec3> vertices = generateCollisonBoxVertices(edges);
+
+	vector<vec3> transformedVertices;
+	for (int i = 0; i < vertices.size(); i++)
 	{
-		bool draw = true;
-
-		if (shouldBeDrawn)
-		{
-			//cout << endl;
-			for (int i = 0; i < planes.size(); i++)
-			{
-				if (!planes[i]->sameSide(cameraPosition, getCollisionBoxVertices()))
-				{
-					draw = false;
-					break;
-				}
-			}
-		}
-
-		//cout << (draw ? "draw" : "DON'T draw") << endl;
-		if (draw) drawMeshes();
-		drawChildrenAsBSPNode(draw, cameraPosition, planes, drawPlanes);
+		vec3 vertex = vec3(transform->getGlobalModel() * vec4(vertices[i], 1.0f));
+		vertex.x *= -1.0f;
+		transformedVertices.push_back(vertex);
 	}
+
+	return transformedVertices;
 }
 
-void ModelNode::drawChildrenAsBSPNode(bool shouldBeDrawn, vec3 cameraPosition, vector<Plane*> planes, bool drawPlanes)
+CollisionBoxEdges ModelNode::getTransformedEdges()
 {
-	for (int i = 0; i < children.size(); i++) dynamic_cast<ModelNode*>(children[i])->drawAsBSPNode(cameraPosition, planes, drawPlanes);
-}
+	CollisionBoxEdges edges;
+	if (meshes.size() > 0)
+	{
+		vec3 vertex = vec3(transform->getGlobalModel() * vec4(meshes[0]->getVertices()[0].Position, 1.0f));
+		vertex.x *= -1.0f;
 
-void ModelNode::updateModels(mat4 otherModel)
-{
-	transform->updateGlobalModel(otherModel);
+		edges.minEdge.x = vertex.x;
+		edges.minEdge.y = vertex.y;
+		edges.minEdge.z = vertex.z;
 
-	for (int i = 0; i < children.size(); i++) dynamic_cast<ModelNode*>(children[i])->updateModels(otherModel);
-}
+		edges.maxEdge.x = vertex.x;
+		edges.maxEdge.y = vertex.y;
+		edges.maxEdge.z = vertex.z;
+	}
 
-string ModelNode::getName() { return name; }
+	for (int i = 0; i < meshes.size(); i++)
+	{
+		vector<Vertex> meshVertices = meshes[i]->getVertices();
 
-bool ModelNode::getIsRoot() { return isRoot; }
+		for (int j = 0; j < meshVertices.size(); j++)
+		{
+			vec3 vertex = vec3(transform->getGlobalModel() * vec4(meshVertices[j].Position, 1.0f));
+			vertex.x *= -1.0f;
 
-CollisionBoxEdges ModelNode::getRawCollisionBox() { return collisionBoxEdges; }
+			edges.minEdge.x = glm::min(edges.minEdge.x, vertex.x);
+			edges.minEdge.y = glm::min(edges.minEdge.y, vertex.y);
+			edges.minEdge.z = glm::min(edges.minEdge.z, vertex.z);
 
-CollisionBoxEdges ModelNode::getCollisionBox()
-{
-	CollisionBoxEdges transformedCollisionBox;
+			edges.maxEdge.x = glm::max(vertex.x, edges.maxEdge.x);
+			edges.maxEdge.y = glm::max(vertex.y, edges.maxEdge.y);
+			edges.maxEdge.z = glm::max(vertex.z, edges.maxEdge.z);
+		}
+	}
 
-	vec4 minEdge = transform->getGlobalModel() * vec4(collisionBoxEdges.minEdge, 1.0f);
-	vec4 maxEdge = transform->getGlobalModel() * vec4(collisionBoxEdges.maxEdge, 1.0f);
-	transformedCollisionBox.minEdge = vec3(-minEdge.x, minEdge.y, minEdge.z);
-	transformedCollisionBox.maxEdge = vec3(-maxEdge.x, maxEdge.y, maxEdge.z);
-
-	return transformedCollisionBox;
+	return edges;
 }
 
 vector<vec3> ModelNode::getCollisionBoxVertices()
 {
-	vector<vec3> transformedVertices;
-	for (int i = 0; i < collisionBoxVertices.size(); i++)
+	if (transform->getTransformedSinceCBUpdate())
 	{
-		vec4 vertex = transform->getGlobalModel() * vec4(collisionBoxVertices[i], 1.0f);
-		transformedVertices.push_back(vec3(-vertex.x, vertex.y, vertex.z));
+		if (children.size() > 0)
+		{
+			vector<vec3> transformedVertices = getTransformedVertices();
+			CollisionBoxEdges transformedEdges = generateCollisonBoxEdges(transformedVertices);
+	
+			for (int i = 0; i < children.size(); i++)
+			{
+				vector<vec3> childVertices = dynamic_cast<ModelNode*>(children[i])->getCollisionBoxVertices();
+				CollisionBoxEdges childEdges = generateCollisonBoxEdges(childVertices);
+	
+				transformedEdges.minEdge.x = glm::min(transformedEdges.minEdge.x, childEdges.minEdge.x);
+				transformedEdges.minEdge.y = glm::min(transformedEdges.minEdge.y, childEdges.minEdge.y);
+				transformedEdges.minEdge.z = glm::min(transformedEdges.minEdge.z, childEdges.minEdge.z);
+	
+				transformedEdges.maxEdge.x = glm::max(childEdges.maxEdge.x, transformedEdges.maxEdge.x);
+				transformedEdges.maxEdge.y = glm::max(childEdges.maxEdge.y, transformedEdges.maxEdge.y);
+				transformedEdges.maxEdge.z = glm::max(childEdges.maxEdge.z, transformedEdges.maxEdge.z);
+			}
+	
+			collisionBoxVertices = generateCollisonBoxVertices(transformedEdges);
+		}
+		else collisionBoxVertices = generateCollisonBoxVertices(getTransformedEdges());
+	
+		transform->setTransformedSinceCBUpdate(false);
 	}
 
-	if (children.size() > 0)
+	return collisionBoxVertices;
+}
+#pragma endregion
+
+#pragma region BSP
+void ModelNode::processBSP(bool shouldBeDrawn, vec3 cameraPosition, vector<Plane*> planes)
+{
+	if (isRoot)
 	{
-		CollisionBoxEdges transformedEdges = generateCollisonBoxEdges(transformedVertices);
-		for (int i = 0; i < children.size(); i++)
+		drawMeshes();
+		drawChildrenAsBSPNode(shouldBeDrawn, cameraPosition, planes);
+
+		return;
+	}
+
+	//if (transform->getIsBSPPlane())
+	//{
+	//	if (drawPlanes)
+	//	{
+	//		drawMeshes();
+	//		//transform->getBSPPlane()->draw();
+	//	}
+	//
+	//	drawChildrenAsBSPNode(shouldBeDrawn, cameraPosition, planes, drawPlanes);
+	//}
+	//else
+	if (!transform->getIsBSPPlane())
+	{
+		bool sameSideAsCamera = false;
+
+		if (shouldBeDrawn)
 		{
-			vector<vec3> childVertices = dynamic_cast<ModelNode*>(children[i])->getCollisionBoxVertices();
-			CollisionBoxEdges childEdges = generateCollisonBoxEdges(childVertices);
+			bool sameSideAsAllPlanes = true;
 
-			transformedEdges.minEdge.x = glm::min(transformedEdges.minEdge.x, childEdges.minEdge.x);
-			transformedEdges.minEdge.y = glm::min(transformedEdges.minEdge.y, childEdges.minEdge.y);
-			transformedEdges.minEdge.z = glm::min(transformedEdges.minEdge.z, childEdges.minEdge.z);
+			for (int i = 0; i < planes.size(); i++)
+			{
+				if (!planes[i]->sameSide(cameraPosition, getCollisionBoxVertices()))
+				{
+					sameSideAsAllPlanes = false;
+					break;
+				}
+			}
 
-			transformedEdges.maxEdge.x = glm::max(childEdges.maxEdge.x, transformedEdges.maxEdge.x);
-			transformedEdges.maxEdge.y = glm::max(childEdges.maxEdge.y, transformedEdges.maxEdge.y);
-			transformedEdges.maxEdge.z = glm::max(childEdges.maxEdge.z, transformedEdges.maxEdge.z);
+			if (sameSideAsAllPlanes) sameSideAsCamera = true;
 		}
 
-		return generateCollisonBoxVertices(transformedEdges);
+		//if (sameSideAsCamera) drawMeshes();
+		//if (sameSideAsCamera || drawPlanes) drawChildrenAsBSPNode(sameSideAsCamera, cameraPosition, planes, drawPlanes);
+		if (sameSideAsCamera)
+		{
+			drawMeshes();
+			drawChildrenAsBSPNode(sameSideAsCamera, cameraPosition, planes);
+		}
 	}
-	else return transformedVertices;
+	else drawChildrenAsBSPNode(true, cameraPosition, planes);
 }
 
-ModelNodeTransform * ModelNode::getTransform() { return transform; }
-
-#pragma region Children
-void ModelNode::addChild(Entity* child)
+void ModelNode::drawChildrenAsBSPNode(bool shouldBeDrawn, vec3 cameraPosition, vector<Plane*> planes)
 {
-	for (int i = 0; i < children.size(); i++)
-	{
-		if (children[i] == child)
-		{
-			cout << "Entity intended to be added to parent is already a child" << endl;
-
-			return;
-		}
-	}
-
-	children.push_back(child);
-	child->setParent(this);
-
-	transform->addChild(child->getTransform());
+	for (int i = 0; i < children.size(); i++) dynamic_cast<ModelNode*>(children[i])->drawAsBSPNode(cameraPosition, planes);
 }
 
-void ModelNode::removeChild(Entity* child)
+void ModelNode::drawAsBSPNode(vec3 cameraPosition, vector<Plane*> planes)
 {
-	vector<Entity*>::iterator iterator;
-	for (iterator = children.begin(); iterator < children.end(); iterator++)
-	{
-		if (*iterator == child)
-		{
-			children.erase(iterator);
-			transform->removeChild(child->getTransform());
-			child->setParent(NULL);
-
-			return;
-		}
-	}
-
-	cout << "Child entity intended to be removed from parent was not found" << endl;
+	processBSP(true, cameraPosition, planes);
 }
 #pragma endregion
 
@@ -261,9 +313,6 @@ void ModelNode::drawMeshes()
 void ModelNode::draw()
 {
 	drawMeshes();
-	//if (transform->getIsBSPPlane()) transform->getBSPPlane()->draw();
 
 	Entity::draw();
 }
-
-void ModelNode::drawAsBSPNode(vec3 cameraPosition, vector<Plane*> planes, bool drawPlanes) { processBSP(true, cameraPosition, planes, drawPlanes); }

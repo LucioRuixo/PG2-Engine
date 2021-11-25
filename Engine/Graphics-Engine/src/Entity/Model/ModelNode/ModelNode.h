@@ -19,19 +19,23 @@ class GENGINE_API ModelNode : public Entity
 	string name;
 	bool isRoot;
 
-	CollisionBoxEdges collisionBoxEdges;
-	vector<vec3> collisionBoxVertices;
-
 	ModelNodeTransform* transform;
-
 	vector<Mesh*> meshes;
 
-	void setUpCollisionBox();
+#pragma Collision Box
+	vector<vec3> collisionBoxVertices;
+
 	vector<vec3> generateCollisonBoxVertices(CollisionBoxEdges edges);
 	CollisionBoxEdges generateCollisonBoxEdges(vector<vec3> vertices);
 
-	void processBSP(bool shouldBeDrawn, vec3 cameraPosition, vector<Plane*> planes, bool drawPlanes);
-	void drawChildrenAsBSPNode(bool shouldBeDrawn, vec3 cameraPosition, vector<Plane*> planes, bool drawPlanes);
+	vector<vec3> getTransformedVertices();
+	CollisionBoxEdges getTransformedEdges();
+#pragma endregion
+
+#pragma BSP
+	void processBSP(bool shouldBeDrawn, vec3 cameraPosition, vector<Plane*> planes);
+	void drawChildrenAsBSPNode(bool shouldBeDrawn, vec3 cameraPosition, vector<Plane*> planes);
+#pragma endregion
 public:
 	ModelNode(string _name, bool _isRoot, vector<Mesh*> _meshes, vector<Entity*> _children);
 	~ModelNode();
@@ -40,19 +44,23 @@ public:
 
 	string getName();
 	bool getIsRoot();
-	CollisionBoxEdges getRawCollisionBox();
-	CollisionBoxEdges getCollisionBox();
-	vector<vec3> getCollisionBoxVertices();
-	ModelNodeTransform* getTransform() override;
 
 #pragma region Children
 	void addChild(Entity* child) override;
 	void removeChild(Entity* child) override;
+	ModelNodeTransform* getTransform() override;
+#pragma endregion
+
+#pragma Collision Box
+	vector<vec3> getCollisionBoxVertices();
+#pragma endregion
+
+#pragma region BSP
+	void drawAsBSPNode(vec3 cameraPosition, vector<Plane*> planes);
 #pragma endregion
 
 	void drawMeshes();
 	void draw() override;
-	void drawAsBSPNode(vec3 cameraPosition, vector<Plane*> planes, bool drawPlanes);
 };
 
 #endif // !MODEL_NODE_H

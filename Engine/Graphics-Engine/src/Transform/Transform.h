@@ -47,13 +47,13 @@ protected:
 	void decompose(mat4 matrix, vec3& translation, vec3& eulerRotation, vec3& scale);
 	void decompose(mat4 matrix, vec3& translation, quat& quatRotation, vec3& scale);
 
-	void processRotation(float pitch, float yaw, float roll);
+	virtual void processRotation(float pitch, float yaw, float roll);
 
 public:
 	void updateDirectionVectors(float pitch, float yaw, float roll);
 	void updateChildrenDirectionVectors(float pitch, float yaw, float roll, vec3 xAxis, vec3 yAxis, vec3 zAxis);
-	void updateLocalModel();
-	void updateGlobalModel();
+	virtual void updateLocalModel();
+	virtual void updateGlobalModel();
 	virtual void updateGlobalModel(mat4 other);
 
 	Transform();

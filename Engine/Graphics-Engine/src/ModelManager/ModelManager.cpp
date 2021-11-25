@@ -83,7 +83,6 @@ void ModelManager::setUpNodeTransform(aiNode* assimpNode, ModelNode* node, vecto
 	cout << endl;
 	cout << "setting rotation of " << name << ": " << eulerRotation.y << " | " << eulerRotation.x << " | " << eulerRotation.z << endl;
 	if (!isRoot) transform->setRotation(eulerRotation.y, eulerRotation.z, eulerRotation.x);
-	//if (!isRoot) transform->setRotation(0.0f, 0.0f, 0.0f);
 
 	transform->setScale(scale.y, scale.z, scale.x);
 

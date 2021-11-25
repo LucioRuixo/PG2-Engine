@@ -25,11 +25,6 @@ Cube* rubyCube;
 Cube* emeraldCube;
 Cube* goldCube;
 
-//Cube* p1;
-//Cube* p2;
-//Cube* p3;
-//Cube* vMin;
-//Cube* vMax;
 Cube* v0;
 Cube* v1;
 Cube* v2;
@@ -75,12 +70,8 @@ int Game::initialize()
 
 #pragma region Models
 	bsp = modelManager->importModel("res/Assets/Modelos/Blender/Escena.dae");
+	bsp->getRootNode()->getTransform()->translate(0.0f, 0.0f, -4.0f);
 
-	//p1 = new Cube(vec3(1.0f, 0.0f, 0.0f));
-	//p2 = new Cube(vec3(1.0f, 0.0f, 0.0f));
-	//p3 = new Cube(vec3(1.0f, 0.0f, 0.0f));
-	//vMin = new Cube(vec3(0.0f, 1.0f, 0.0f));
-	//vMax = new Cube(vec3(0.0f, 1.0f, 0.0f));
 	v0 = new Cube(vec3(1.0f, 0.0f, 0.0f));
 	v1 = new Cube(vec3(1.0f, 0.0f, 0.0f));
 	v2 = new Cube(vec3(1.0f, 0.0f, 0.0f));
@@ -90,11 +81,6 @@ int Game::initialize()
 	v6 = new Cube(vec3(1.0f, 0.0f, 0.0f));
 	v7 = new Cube(vec3(1.0f, 0.0f, 0.0f));
 
-	//p1->getTransform()->setScale(0.2f, 0.2f, 0.2f);
-	//p2->getTransform()->setScale(0.2f, 0.2f, 0.2f);
-	//p3->getTransform()->setScale(0.2f, 0.2f, 0.2f);
-	//vMin->getTransform()->setScale(0.2f, 0.2f, 0.2f);
-	//vMax->getTransform()->setScale(0.2f, 0.2f, 0.2f);
 	v0->getTransform()->setScale(0.2f, 0.2f, 0.2f);
 	v1->getTransform()->setScale(0.2f, 0.2f, 0.2f);
 	v2->getTransform()->setScale(0.2f, 0.2f, 0.2f);
@@ -187,21 +173,10 @@ void Game::update()
 
 #pragma region Models
 	ModelNode* bspScene = dynamic_cast<ModelNode*>(bsp->getRootNode());
+	ModelNode* bspRoot = dynamic_cast<ModelNode*>(bsp->getRootNode()->getChildren()[0]);
 	ModelNode* bspChild = dynamic_cast<ModelNode*>(bsp->getRootNode()->getChildren()[0]);
-	//vec3 pp1 = dynamic_cast<ModelNode*>(bsp->getRootNode()->getChildren()[1]->getChildren()[0])->getTransform()->getBSPPlane()->getTransform()->getGlobalPosition();
-	//vec3 f = dynamic_cast<ModelNode*>(bsp->getRootNode()->getChildren()[1]->getChildren()[0])->getTransform()->getBSPPlane()->getTransform()->getForward();
-	//vec3 pp2 = dynamic_cast<ModelNode*>(bsp->getRootNode()->getChildren()[1]->getChildren()[1])->getTransform()->getBSPPlane()->getTransform()->getGlobalPosition();
-	//vec3 pp3 = dynamic_cast<ModelNode*>(bsp->getRootNode()->getChildren()[1]->getChildren()[2])->getTransform()->getBSPPlane()->getTransform()->getGlobalPosition();
-
-	CollisionBoxEdges cb = bspChild->getCollisionBox();
 	vector<vec3> v = bspChild->getCollisionBoxVertices();
 
-	//cout << endl;
-	//p1->getTransform()->setPosition(pp1.x + f.x, pp1.y + f.y, pp1.z + f.z);
-	//p2->getTransform()->setPosition(pp2.x, pp2.y, pp2.z);
-	//p3->getTransform()->setPosition(pp3.x, pp3.y, pp3.z);
-	//vMin->getTransform()->setPosition(cb.minEdge.x, cb.minEdge.y, cb.minEdge.z);
-	//vMax->getTransform()->setPosition(cb.maxEdge.x, cb.maxEdge.y, cb.maxEdge.z);
 	v0->getTransform()->setPosition(v[0].x, v[0].y, v[0].z);
 	v1->getTransform()->setPosition(v[1].x, v[1].y, v[1].z);
 	v2->getTransform()->setPosition(v[2].x, v[2].y, v[2].z);
@@ -211,14 +186,14 @@ void Game::update()
 	v6->getTransform()->setPosition(v[6].x, v[6].y, v[6].z);
 	v7->getTransform()->setPosition(v[7].x, v[7].y, v[7].z);
 
-	if (input->getKeyPress(PrintableKey::J)) bspChild->getTransform()->translate(cubeTranslationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
-	if (input->getKeyPress(PrintableKey::L)) bspChild->getTransform()->translate(-cubeTranslationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
+	if (input->getKeyPress(PrintableKey::J)) bspRoot->getTransform()->translate(cubeTranslationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
+	if (input->getKeyPress(PrintableKey::L)) bspRoot->getTransform()->translate(-cubeTranslationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
 
-	if (input->getKeyPress(PrintableKey::M)) bspChild->getTransform()->rotate(0.0f, cubeRotationSpeed * time->getDeltaTime(), 0.0f);
-	if (input->getKeyPress(PrintableKey::N)) bspChild->getTransform()->rotate(0.0f, -cubeRotationSpeed * time->getDeltaTime(), 0.0f);
+	if (input->getKeyPress(PrintableKey::M)) bspRoot->getTransform()->rotate(0.0f, cubeRotationSpeed * time->getDeltaTime(), 0.0f);
+	if (input->getKeyPress(PrintableKey::N)) bspRoot->getTransform()->rotate(0.0f, -cubeRotationSpeed * time->getDeltaTime(), 0.0f);
 
-	if (input->getKeyPress(PrintableKey::K)) bspChild->getTransform()->translate(0.0f, 0.0f, cubeTranslationSpeed * time->getDeltaTime());
-	if (input->getKeyPress(PrintableKey::I)) bspChild->getTransform()->translate(0.0f, 0.0f, -cubeTranslationSpeed * time->getDeltaTime());
+	if (input->getKeyPress(PrintableKey::K)) bspRoot->getTransform()->translate(0.0f, 0.0f, cubeTranslationSpeed * time->getDeltaTime());
+	if (input->getKeyPress(PrintableKey::I)) bspRoot->getTransform()->translate(0.0f, 0.0f, -cubeTranslationSpeed * time->getDeltaTime());
 #pragma endregion
 #pragma endregion
 
@@ -227,14 +202,8 @@ void Game::update()
 	emeraldCube->draw();
 	goldCube->draw();
 
-	//bsp->draw();
-	bsp->drawAsBSPScene(camera->getTransform()->getPosition(), true);
+	bsp->drawAsBSPScene(camera->getTransform()->getPosition(), false);
 
-	//p1->draw();
-	//p2->draw();
-	//p3->draw();
-	//vMin->draw();
-	//vMax->draw();
 	v0->draw();
 	v1->draw();
 	v2->draw();
@@ -254,11 +223,6 @@ int Game::terminate()
 
 	if (bsp) delete bsp;
 
-	//if (p1) delete p1;
-	//if (p2) delete p2;
-	//if (p3) delete p3;
-	//if (vMin) delete v0;
-	//if (vMax) delete v0;
 	if (v0) delete v0;
 	if (v1) delete v0;
 	if (v2) delete v0;
