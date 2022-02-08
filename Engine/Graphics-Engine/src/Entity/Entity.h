@@ -21,11 +21,15 @@ struct GENGINE_API Material
 
 class GENGINE_API Entity
 {
+	static vector<Entity*> renderizableEntities;
+
 protected:
 	static Renderer* renderer;
 	static TextureManager* textureManager;
 
 	ShaderType shader = ShaderType::Main;
+	bool renderizable = true;
+	bool shouldBeDrawn = true;
 
 	float spriteTextureActive = false;
 	vec3 color = vec3(0.5f, 0.5f, 0.5f);
@@ -37,22 +41,28 @@ protected:
 	vector<Entity*> children;
 
 	void setUniformValues();
+
 public:
+	static vector<Entity*> getRenderizableEntities();
 	static void setRenderer(Renderer* _renderer);
 	static void setTextureManager(TextureManager* _textureManager);
 
-	Entity();
-	Entity(vector<Entity*> _children);
-	Entity(vec3 _color);
-	Entity(Material _material);
-	Entity(vec3 _color, Material _material);
+	Entity(bool _renderizable = true);
+	Entity(vector<Entity*> _children, bool _renderizable = true);
+	Entity(vec3 _color, bool _renderizable = true);
+	Entity(Material _material, bool _renderizable = true);
+	Entity(vec3 _color, Material _material, bool _renderizable = true);
 	~Entity();
 
+	void initialize(bool _renderizable);
+	
 	Renderer* getRenderer();
 	virtual Transform* getTransform();
 	virtual void updateModels(mat4 otherModel);
 
 #pragma region Rendering
+	void setShouldBeDrawn(bool _shouldBeDrawn);
+	bool getShouldBeDrawn();
 	void setColor(vec3 value);
 	vec3 getColor();
 	void setMaterial(Material value);

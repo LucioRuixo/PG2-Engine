@@ -1,6 +1,6 @@
 #include "Camera.h"
 
-Camera::Camera(Renderer* _renderer) : Entity()
+Camera::Camera(Renderer* _renderer) : Entity(false)
 {
 	renderer = _renderer;
 
@@ -64,4 +64,52 @@ void Camera::setParent(Entity* _parent)
 }
 
 Entity* Camera::getParent() { return parent; }
+#pragma endregion
+
+#pragma region Frustum Culling
+Frustum* Camera::getFrustum()
+{ 
+	if (!frustumCulling)
+	{
+		cout << "Frustum culling is not enabled, returning null" << endl;
+		return NULL;
+	}
+	else return frustum;
+}
+
+void Camera::enableFrustumCulling(FrustumData frustumData)
+{
+	frustum = new Frustum(frustumData, transform);
+	//addChild(dynamic_cast<Entity*>(frustum));
+
+	frustumCulling = true;
+}
+
+void Camera::disableFrustumCulling()
+{
+	if (frustum) delete frustum;
+	//removeChild(dynamic_cast<Entity*>(frustum));
+
+	frustumCulling = false;
+}
+
+void Camera::processFrustumCulling()
+{
+	for (int i = 0; i < Entity::getRenderizableEntities().size(); i++)
+	{
+		Entity* entity = Entity::getRenderizableEntities()[i];
+
+		if (entity->getShouldBeDrawn()) entity->draw();
+	}
+}
+
+void Camera::drawFrustum()
+{
+	if (frustumCulling)
+	{
+		if (frustum) frustum->draw();
+		else cout << "Can not draw camera frustum: frustum object is null" << endl;
+	}
+	else cout << "Can not draw camera frustum: frustum culling is not enabled" << endl;
+}
 #pragma endregion

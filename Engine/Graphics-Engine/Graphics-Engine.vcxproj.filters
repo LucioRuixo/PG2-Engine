@@ -101,6 +101,9 @@
     <Filter Include="src\Transform\ModelNodeTransform">
       <UniqueIdentifier>{503b35c1-75e7-4360-986c-934ed424a8b2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Camera\Frustum">
+      <UniqueIdentifier>{d5ae4c57-f17c-4be4-a4be-708cb55f35ed}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\Shaders\LightSourceShader_FS.shader">
@@ -201,6 +204,9 @@
     <ClCompile Include="src\Transform\ModelNodeTransform\ModelNodeTransform.cpp">
       <Filter>src\Transform\ModelNodeTransform</Filter>
     </ClCompile>
+    <ClCompile Include="src\Camera\Frustum\Frustum.cpp">
+      <Filter>src\Camera\Frustum</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Animation\Animation.h">
@@ -295,6 +301,9 @@
     </ClInclude>
     <ClInclude Include="src\Transform\ModelNodeTransform\ModelNodeTransform.h">
       <Filter>src\Transform\ModelNodeTransform</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Camera\Frustum\Frustum.h">
+      <Filter>src\Camera\Frustum</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

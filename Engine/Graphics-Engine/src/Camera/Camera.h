@@ -2,9 +2,10 @@
 #define CAMERA_H
 
 #include "Tools/Includes.h"
-#include "Renderer/Renderer.h"
 #include "Entity/Cube/Cube.h"
 #include "Entity/Plane/Plane.h"
+#include "Frustum/Frustum.h"
+#include "Renderer/Renderer.h"
 #include "Transform/CameraTransform/CameraTransform.h"
 
 using namespace glm;
@@ -13,6 +14,9 @@ class GENGINE_API Camera : public Entity
 {
 	bool bspCulling = false;
 	vector<Plane*> bspPlanes;
+
+	bool frustumCulling = false;
+	Frustum* frustum;
 
 	Renderer* renderer;
 	CameraTransform* transform;
@@ -32,6 +36,15 @@ public:
 #pragma region Parent
 	void setParent(Entity* _parent) override;
 	Entity* getParent() override;
+#pragma endregion
+
+#pragma region Frustum Culling
+	Frustum* getFrustum();
+
+	void enableFrustumCulling(FrustumData frustumData);
+	void disableFrustumCulling();
+	void processFrustumCulling();
+	void drawFrustum();
 #pragma endregion
 };
 

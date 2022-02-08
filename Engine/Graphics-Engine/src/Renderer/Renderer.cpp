@@ -1,16 +1,13 @@
 #include "Renderer.h"
 
-Renderer::Renderer(float fov, float windowWidth, float windowHeight, float near, float far)
+//Renderer::Renderer(float fov, float windowWidth, float windowHeight, float near, float far)
+Renderer::Renderer(FrustumData frustum)
 {
 	unsigned int _posAttrib = 0;
 	unsigned int _colorAttrib = 1;
 
-	perspectiveData.fov = fov;
-	perspectiveData.width = windowWidth;
-	perspectiveData.height = windowHeight;
-	perspectiveData.near = near;
-	perspectiveData.far = far;
-	aspect = perspectiveData.width / perspectiveData.height;
+	frustumData = frustum;
+	aspect = frustumData.width / frustumData.height;
 
 	backgroundColor = vec3(0.025f, 0.025f, 0.025f);
 
@@ -24,7 +21,7 @@ Renderer::Renderer(float fov, float windowWidth, float windowHeight, float near,
 Renderer::~Renderer() {}
 
 #pragma region Perspective
-PerspectiveData Renderer::getPerspectiveData() { return perspectiveData; }
+FrustumData Renderer::getFrustumData() { return frustumData; }
 
 float Renderer::getAspect() { return aspect; }
 #pragma endregion
@@ -100,7 +97,7 @@ mat4 Renderer::getProjection() { return vpMatrix.projection; }
 
 void Renderer::updateProjection(mat4 &projection)
 {
-	projection = perspective(radians(perspectiveData.fov), aspect, perspectiveData.near, perspectiveData.far);
+	projection = perspective(radians(frustumData.verticalFOV), aspect, frustumData.near, frustumData.far);
 	//projection = ortho(0.0f, 1280.0f, 0.0f, 720.0f);
 }
 #pragma endregion

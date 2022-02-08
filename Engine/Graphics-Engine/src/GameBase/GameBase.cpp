@@ -94,8 +94,10 @@ GameBase::GameBase()
 		return;
 	}
 
-	window = new Window(1280, 720);
-	renderer = new Renderer(45.0f, 1280, 720, 0.1f, 100.0f);
+	FrustumData frustum;
+
+	window = new Window(frustum.width, frustum.height);
+	renderer = new Renderer(frustum);
 	camera = new Camera(renderer);
 	textureManager = new TextureManager(renderer);
 	modelManager = new ModelManager(textureManager);
@@ -140,10 +142,6 @@ GameBase::GameBase()
 
 	//Lighting
 	lightingManager->initializeShaderValues();
-
-	//Camera
-	camera->getTransform()->setPosition(0.0f, 0.0f, 0.0f);
-	camera->getTransform()->setRotation(0.0f, 180.0f, 0.0f);
 }
 
 GameBase::~GameBase()
@@ -171,10 +169,12 @@ void GameBase::run()
 	while (!window->getWindowShouldClose())
 	{
 		renderer->clearBackground();
-
 		renderer->useShader(ShaderType::Main);
+
 		update();
+
 		camera->draw();
+		camera->processFrustumCulling();
 
 		renderer->useShader(ShaderType::LightSource);
 		for (int i = 0; i < MAX_POINT_LIGHT_AMOUNT; i++)

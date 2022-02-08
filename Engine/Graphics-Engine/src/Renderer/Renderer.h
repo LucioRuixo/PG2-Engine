@@ -18,22 +18,22 @@ enum ShaderType
 	Size
 };
 
-struct PerspectiveData
+struct GENGINE_API FrustumData
 {
-	float fov;
-	float width;
-	float height;
-	float near;
-	float far;
+	float verticalFOV = 45.0f;
+	float width = 1280.0f;
+	float height = 720.0f;
+	float near = 0.1f;
+	float far = 100.0f;
 };
 
-struct Shader
+struct GENGINE_API Shader
 {
 	ShaderType type;
 	unsigned int programID;
 };
 
-struct VPMatrix
+struct GENGINE_API VPMatrix
 {
 	mat4 view;
 	mat4 projection;
@@ -48,7 +48,7 @@ class GENGINE_API Renderer
 	unsigned int colorAttribute;
 	unsigned int normalAttributeLocation;
 
-	PerspectiveData perspectiveData;
+	FrustumData frustumData;
 	float aspect;
 
 	vec3 backgroundColor;
@@ -58,11 +58,12 @@ class GENGINE_API Renderer
 
 	VPMatrix vpMatrix;
 public:
-	Renderer(float fov, float windowWidth, float windowHeight, float near, float far);
+	//Renderer(float fov, float windowWidth, float windowHeight, float near, float far);
+	Renderer(FrustumData frustum);
 	~Renderer();
 
 #pragma region Perspective
-	PerspectiveData getPerspectiveData();
+	FrustumData getFrustumData();
 	float getAspect();
 #pragma endregion
 

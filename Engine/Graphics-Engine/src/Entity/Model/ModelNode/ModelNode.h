@@ -33,8 +33,8 @@ class GENGINE_API ModelNode : public Entity
 #pragma endregion
 
 #pragma BSP
-	void processBSP(bool shouldBeDrawn, vec3 cameraPosition, vector<Plane*> planes);
-	void drawChildrenAsBSPNode(bool shouldBeDrawn, vec3 cameraPosition, vector<Plane*> planes);
+	void processBSP(vec3 cameraPosition, vector<Plane*> planes);
+	void drawChildrenAsBSPNode(vec3 cameraPosition, vector<Plane*> planes);
 #pragma endregion
 public:
 	ModelNode(string _name, bool _isRoot, vector<Mesh*> _meshes, vector<Entity*> _children);

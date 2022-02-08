@@ -35,11 +35,13 @@ protected:
 	ModelMatrix localModel;
 	mat4 globalModel;
 
-	TransformData transformData;
+	TransformData localData;
+	TransformData globalData;
 
 	Transform* parent = NULL;
 	vector<Transform*> children;
 
+	void initialize();
 	float positiveDegrees(float degrees);
 	float eulerAngles(float radians);
 	vec3 eulerAngles(vec3 radians);
@@ -62,23 +64,28 @@ public:
 
 #pragma region Transformations
 	virtual void translate(float x, float y, float z);
+	virtual void translate(vec3 translation);
 	virtual void setPosition(float x, float y, float z);
+	virtual void setPosition(vec3 position);
 	virtual vec3 getPosition();
 	vec3 getGlobalPosition();
 
 	virtual void rotate(float pitch, float yaw, float roll);
 	virtual void setRotation(float pitch, float yaw, float roll);
+	virtual void setRotation(vec3 rotation);
 	vec3 getRotation();
 	vec3 getGlobalRotation();
 
 	virtual void scale(float x, float y, float z);
 	virtual void setScale(float x, float y, float z);
+	virtual void setScale(vec3 scale);
 	vec3 getScale();
+	vec3 getGlobalScale();
 
 	vec3 getRight();
 	vec3 getUp();
 	vec3 getForward();
-
+	
 	mat4 getLocalModel();
 	mat4 getGlobalModel();
 #pragma endregion

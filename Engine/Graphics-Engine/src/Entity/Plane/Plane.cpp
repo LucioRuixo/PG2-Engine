@@ -81,6 +81,8 @@ vec3 Plane::getNormal() { return transform->getForward(); }
 float Plane::distanceToPoint(vec3 point)
 {
 	vec3 normal = getNormal();
+	vec3 position = transform->getGlobalPosition();
+
 	return dot(point - transform->getGlobalPosition(), normal) / length(normal);
 }
 

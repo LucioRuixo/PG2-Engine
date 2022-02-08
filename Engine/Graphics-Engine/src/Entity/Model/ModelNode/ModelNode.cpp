@@ -239,66 +239,50 @@ vector<vec3> ModelNode::getCollisionBoxVertices()
 #pragma endregion
 
 #pragma region BSP
-void ModelNode::processBSP(bool shouldBeDrawn, vec3 cameraPosition, vector<Plane*> planes)
+void ModelNode::processBSP(vec3 cameraPosition, vector<Plane*> planes)
 {
 	if (isRoot)
 	{
 		drawMeshes();
-		drawChildrenAsBSPNode(shouldBeDrawn, cameraPosition, planes);
+		drawChildrenAsBSPNode(cameraPosition, planes);
 
 		return;
 	}
 
-	//if (transform->getIsBSPPlane())
-	//{
-	//	if (drawPlanes)
-	//	{
-	//		drawMeshes();
-	//		//transform->getBSPPlane()->draw();
-	//	}
-	//
-	//	drawChildrenAsBSPNode(shouldBeDrawn, cameraPosition, planes, drawPlanes);
-	//}
-	//else
 	if (!transform->getIsBSPPlane())
 	{
 		bool sameSideAsCamera = false;
 
-		if (shouldBeDrawn)
+		bool sameSideAsAllPlanes = true;
+
+		for (int i = 0; i < planes.size(); i++)
 		{
-			bool sameSideAsAllPlanes = true;
-
-			for (int i = 0; i < planes.size(); i++)
+			if (!planes[i]->sameSide(cameraPosition, getCollisionBoxVertices()))
 			{
-				if (!planes[i]->sameSide(cameraPosition, getCollisionBoxVertices()))
-				{
-					sameSideAsAllPlanes = false;
-					break;
-				}
+				sameSideAsAllPlanes = false;
+				break;
 			}
-
-			if (sameSideAsAllPlanes) sameSideAsCamera = true;
 		}
 
-		//if (sameSideAsCamera) drawMeshes();
-		//if (sameSideAsCamera || drawPlanes) drawChildrenAsBSPNode(sameSideAsCamera, cameraPosition, planes, drawPlanes);
+		if (sameSideAsAllPlanes) sameSideAsCamera = true;
+
 		if (sameSideAsCamera)
 		{
 			drawMeshes();
-			drawChildrenAsBSPNode(sameSideAsCamera, cameraPosition, planes);
+			drawChildrenAsBSPNode(cameraPosition, planes);
 		}
 	}
-	else drawChildrenAsBSPNode(true, cameraPosition, planes);
+	else drawChildrenAsBSPNode(cameraPosition, planes);
 }
 
-void ModelNode::drawChildrenAsBSPNode(bool shouldBeDrawn, vec3 cameraPosition, vector<Plane*> planes)
+void ModelNode::drawChildrenAsBSPNode(vec3 cameraPosition, vector<Plane*> planes)
 {
 	for (int i = 0; i < children.size(); i++) dynamic_cast<ModelNode*>(children[i])->drawAsBSPNode(cameraPosition, planes);
 }
 
 void ModelNode::drawAsBSPNode(vec3 cameraPosition, vector<Plane*> planes)
 {
-	processBSP(true, cameraPosition, planes);
+	processBSP(cameraPosition, planes);
 }
 #pragma endregion
 

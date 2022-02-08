@@ -1,43 +1,56 @@
 #include "Entity.h"
 
+vector<Entity*> Entity::renderizableEntities;
 Renderer* Entity::renderer = NULL;
 TextureManager* Entity::textureManager = NULL;
 
-Entity::Entity()
-{
-	transform = new Transform();
-}
+Entity::Entity(bool _renderizable) { initialize(_renderizable); }
 
-Entity::Entity(vector<Entity*> _children)
+Entity::Entity(vector<Entity*> _children, bool _renderizable)
 {
-	transform = new Transform();
+	initialize(_renderizable);
 
 	for (int i = 0; i < _children.size(); i++) addChild(_children[i]);
 }
 
-Entity::Entity(vec3 _color)
+Entity::Entity(vec3 _color, bool _renderizable)
 {
-	transform = new Transform();
+	initialize(_renderizable);
 
 	setColor(_color);
 }
 
-Entity::Entity(Material _material)
+Entity::Entity(Material _material, bool _renderizable)
 {
-	transform = new Transform();
+	initialize(_renderizable);
 
 	setMaterial(_material);
 }
 
-Entity::Entity(vec3 _color, Material _material)
+Entity::Entity(vec3 _color, Material _material, bool _renderizable)
 {
-	transform = new Transform();
+	initialize(_renderizable);
 
 	setColor(_color);
 	setMaterial(_material);
 }
 
 Entity::~Entity() { if (transform) delete transform; }
+
+void Entity::initialize(bool _renderizable)
+{
+	transform = new Transform();
+
+	renderizable = _renderizable;
+	if (renderizable)
+	{
+		renderizableEntities.push_back(this);
+		cout << "new renderizable entity created, total: " << renderizableEntities.size() << endl;
+	}
+	else shouldBeDrawn = false;
+}
+
+vector<Entity*> Entity::getRenderizableEntities() { return renderizableEntities; }
 
 #pragma region Rendering
 void Entity::setRenderer(Renderer* _renderer) { renderer = _renderer; }
@@ -89,6 +102,13 @@ void Entity::updateModels(mat4 otherModel)
 
 	for (int i = 0; i < children.size(); i++) children[i]->updateModels(otherModel);
 }
+
+void Entity::setShouldBeDrawn(bool _shouldBeDrawn)
+{
+	if (!renderizable) cout << "Can not set if entity should be drawn: entity is non-renderizable" << endl;
+	else shouldBeDrawn = _shouldBeDrawn;
+}
+bool Entity::getShouldBeDrawn() { return shouldBeDrawn; }
 
 void Entity::setColor(vec3 value) { color = value; }
 vec3 Entity::getColor() { return color; }

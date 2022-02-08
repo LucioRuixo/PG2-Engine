@@ -1,42 +1,10 @@
 #include "Transform.h"
 
-Transform::Transform()
-{
-	right = vec3(1.0f, 0.0f, 0.0f);
-	up = vec3(0.0f, 1.0f, 0.0f);
-	forward = vec3(0.0f, 0.0f, 1.0f);
-
-	setPosition(0.0f, 0.0f, 0.0f);
-	setRotation(0.0f, 0.0f, 0.0f);
-	setScale(1.0f, 1.0f, 1.0f);
-
-	localModel.model = mat4(1.0f);
-	localModel.translation = mat4(1.0f);
-	localModel.rotationX = mat4(1.0f);
-	localModel.rotationY = mat4(1.0f);
-	localModel.rotationZ = mat4(1.0f);
-	localModel.rotation = mat4(1.0f);
-	localModel.scale = mat4(1.0f);
-}
+Transform::Transform() { initialize(); }
 
 Transform::Transform(vector<Transform*> _children)
 {
-	right = vec3(1.0f, 0.0f, 0.0f);
-	up = vec3(0.0f, 1.0f, 0.0f);
-	forward = vec3(0.0f, 0.0f, 1.0f);
-
-	transformData.position = vec3(0.0f, 0.0f, 0.0f);
-	transformData.rotation = vec3(0.0f, 0.0f, 0.0f);
-	transformData.scale = vec3(1.0f, 1.0f, 1.0f);
-
-	localModel.model = mat4(1.0f);
-	localModel.translation = mat4(1.0f);
-	localModel.rotationX = mat4(1.0f);
-	localModel.rotationY = mat4(1.0f);
-	localModel.rotationZ = mat4(1.0f);
-	localModel.scale = mat4(1.0f);
-
-	localModel.rotation = mat4(1.0f);
+	initialize();
 
 	for (int i = 0; i < _children.size(); i++) addChild(_children[i]);
 }
@@ -48,6 +16,29 @@ Transform::~Transform()
 		for (int i = 0; i < children.size(); i++) if (children[i]) delete children[i];
 		children.clear();
 	}
+}
+
+void Transform::initialize()
+{
+	right = vec3(1.0f, 0.0f, 0.0f);
+	up = vec3(0.0f, 1.0f, 0.0f);
+	forward = vec3(0.0f, 0.0f, 1.0f);
+
+	localData.position = vec3(0.0f, 0.0f, 0.0f);
+	localData.rotation = vec3(0.0f, 0.0f, 0.0f);
+	localData.scale = vec3(1.0f, 1.0f, 1.0f);
+	localModel.model = mat4(1.0f);
+	localModel.translation = mat4(1.0f);
+	localModel.rotationX = mat4(1.0f);
+	localModel.rotationY = mat4(1.0f);
+	localModel.rotationZ = mat4(1.0f);
+	localModel.rotation = mat4(1.0f);
+	localModel.scale = mat4(1.0f);
+
+	globalData.position = vec3(0.0f, 0.0f, 0.0f);
+	globalData.rotation = vec3(0.0f, 0.0f, 0.0f);
+	globalData.scale = vec3(1.0f, 1.0f, 1.0f);
+	globalModel = mat4(1.0f);
 }
 
 float Transform::positiveDegrees(float degrees)
@@ -70,7 +61,6 @@ void Transform::decompose(mat4 matrix)
 
 	vec3 radiansRotation = glm::eulerAngles(quatRotation);
 	vec3 eulerRotation = eulerAngles(radiansRotation);
-	//cout << "decomposed rotation: " << eulerRotation.x << " | " << eulerRotation.y << " | " << eulerRotation.z << endl;
 }
 
 void Transform::decompose(mat4 matrix, vec3& translation, vec3& eulerRotation, vec3& scale)
@@ -82,7 +72,6 @@ void Transform::decompose(mat4 matrix, vec3& translation, vec3& eulerRotation, v
 
 	vec3 radiansRotation = glm::eulerAngles(quatRotation);
 	eulerRotation = eulerAngles(radiansRotation);
-	cout << "decomposed rotation: " << eulerRotation.x << " | " << eulerRotation.y << " | " << eulerRotation.z << endl;
 }
 
 void Transform::decompose(mat4 matrix, vec3& translation, quat& quatRotation, vec3& scale)
@@ -93,23 +82,22 @@ void Transform::decompose(mat4 matrix, vec3& translation, quat& quatRotation, ve
 
 	vec3 radiansRotation = glm::eulerAngles(quatRotation);
 	vec3 eulerRotation = eulerAngles(radiansRotation);
-	//cout << "decomposed rotation: " << eulerRotation.x << " | " << eulerRotation.y << " | " << eulerRotation.z << endl;
 }
 
 void Transform::processRotation(float pitch, float yaw, float roll)
 {
-	transformData.rotation.x += pitch;
-	transformData.rotation.y += yaw;
-	transformData.rotation.z += roll;
+	localData.rotation.x += pitch;
+	localData.rotation.y += yaw;
+	localData.rotation.z += roll;
 
-	if (transformData.rotation.x >= 360.0f) transformData.rotation.x -= 360.0f;
-	else if (transformData.rotation.x < 0.0f) transformData.rotation.x += 360.0f;
+	if (localData.rotation.x >= 360.0f) localData.rotation.x -= 360.0f;
+	else if (localData.rotation.x < 0.0f) localData.rotation.x += 360.0f;
 
-	if (transformData.rotation.y >= 360.0f) transformData.rotation.y -= 360.0f;
-	else if (transformData.rotation.y < 0.0f) transformData.rotation.y += 360.0f;
+	if (localData.rotation.y >= 360.0f) localData.rotation.y -= 360.0f;
+	else if (localData.rotation.y < 0.0f) localData.rotation.y += 360.0f;
 
-	if (transformData.rotation.z >= 360.0f) transformData.rotation.z -= 360.0f;
-	else if (transformData.rotation.z < 0.0f) transformData.rotation.z += 360.0f;
+	if (localData.rotation.z >= 360.0f) localData.rotation.z -= 360.0f;
+	else if (localData.rotation.z < 0.0f) localData.rotation.z += 360.0f;
 
 	localModel.rotation = glm::rotate(localModel.rotation, radians(pitch), vec3(1.0f, 0.0f, 0.0f));
 	localModel.rotation = glm::rotate(localModel.rotation, radians(yaw)  , vec3(0.0f, 1.0f, 0.0f));
@@ -201,6 +189,9 @@ void Transform::updateGlobalModel()
 	if (parent) globalModel = parent->getGlobalModel() * localModel.model;
 	else globalModel = localModel.model;
 
+	decompose(globalModel, globalData.position, globalData.rotation, globalData.scale);
+	globalData.position.x *= -1.0f;
+
 	if (!children.empty()) for (int i = 0; i < children.size(); i++) children[i]->updateGlobalModel();
 }
 
@@ -209,31 +200,36 @@ void Transform::updateGlobalModel(mat4 other) { globalModel = other * localModel
 #pragma region Transformations
 void Transform::translate(float x, float y, float z)
 {
-	transformData.position.x += x;
-	transformData.position.y += y;
-	transformData.position.z += z;
+	localData.position.x += x;
+	localData.position.y += y;
+	localData.position.z += z;
 	
-	vec3 position = transformData.position;
+	vec3 position = localData.position;
 	position.x *= -1.0f;
 	localModel.translation = glm::translate(mat4(1.0f), position);
 
 	updateLocalModel();
 }
+void Transform::translate(vec3 translation) { translate(translation.x, translation.y, translation.z); }
 
 void Transform::setPosition(float x, float y, float z)
 {
-	float translationX = x - transformData.position.x;
-	float translationY = y - transformData.position.y;
-	float translationZ = z - transformData.position.z;
+	float translationX = x - localData.position.x;
+	float translationY = y - localData.position.y;
+	float translationZ = z - localData.position.z;
 
 	translate(translationX, translationY, translationZ);
 }
-vec3 Transform::getPosition() { return vec3(-transformData.position.x, transformData.position.y, transformData.position.z); }
+void Transform::setPosition(vec3 position) { setPosition(position.x, position.y, position.z); }
+vec3 Transform::getPosition() { return vec3(-localData.position.x, localData.position.y, localData.position.z); }
 
 vec3 Transform::getGlobalPosition()
 {
-	vec3 position = vec3(globalModel * vec4(transformData.position, 1.0f));
-	return vec3(-position.x, position.y, position.z);
+	//vec3 position = vec3(globalModel * vec4(localData.position, 1.0f));
+	////cout << "plane local position: " << transformData.position.x << " | " << transformData.position.y << " | " << transformData.position.z << endl;
+	//return vec3(-position.x, position.y, position.z);
+
+	return globalData.position;
 }
 
 void Transform::rotate(float pitch, float yaw, float roll)
@@ -245,44 +241,50 @@ void Transform::rotate(float pitch, float yaw, float roll)
 
 void Transform::setRotation(float pitch, float yaw, float roll)
 {
-	float rotationX = positiveDegrees(pitch - transformData.rotation.x);
-	float rotationY = positiveDegrees(yaw - transformData.rotation.y);
-	float rotationZ = positiveDegrees(roll - transformData.rotation.z);
+	float rotationX = positiveDegrees(pitch - localData.rotation.x);
+	float rotationY = positiveDegrees(yaw - localData.rotation.y);
+	float rotationZ = positiveDegrees(roll - localData.rotation.z);
 
 	if (rotationX != 0.0f) processRotation(rotationX, 0.0f, 0.0f);
 	if (rotationY != 0.0f) processRotation(0.0f, rotationY, 0.0f);
 	if (rotationZ != 0.0f) processRotation(0.0f, 0.0f, rotationZ);
 
 }
-vec3 Transform::getRotation() { return transformData.rotation; }
+void Transform::setRotation(vec3 rotation) { setRotation(rotation.x, rotation.y, rotation.z); }
+vec3 Transform::getRotation() { return localData.rotation; }
 
 vec3 Transform::getGlobalRotation()
 {
-	vec3 rotation = getRotation();
-	if (parent) rotation += parent->getGlobalRotation();
+	//vec3 rotation = getRotation();
+	//if (parent) rotation += parent->getGlobalRotation();
+	//
+	//return rotation;
 
-	return rotation;
+	return globalData.rotation;
 }
 
 void Transform::scale(float x, float y, float z)
 {
-	transformData.scale.x += x;
-	transformData.scale.y += y;
-	transformData.scale.z += z;
+	localData.scale.x += x;
+	localData.scale.y += y;
+	localData.scale.z += z;
 
-	localModel.scale = glm::scale(mat4(1.0f), transformData.scale);
+	localModel.scale = glm::scale(mat4(1.0f), localData.scale);
 	updateLocalModel();
 }
 
 void Transform::setScale(float x, float y, float z)
 {
-	float scaleX = x - transformData.scale.x;
-	float scaleY = y - transformData.scale.y;
-	float scaleZ = z - transformData.scale.z;
+	float scaleX = x - localData.scale.x;
+	float scaleY = y - localData.scale.y;
+	float scaleZ = z - localData.scale.z;
 
 	scale(scaleX, scaleY, scaleZ);
 }
-vec3 Transform::getScale() { return transformData.scale; }
+void Transform::setScale(vec3 scale) { setScale(scale.x, scale.y, scale.z); }
+vec3 Transform::getScale() { return localData.scale; }
+
+vec3 Transform::getGlobalScale() { return globalData.scale; }
 
 vec3 Transform::getRight() { return right; }
 
