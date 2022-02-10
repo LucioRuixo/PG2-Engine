@@ -77,51 +77,99 @@ void ModelNode::removeChild(Entity* child)
 }
 #pragma endregion
 
+#pragma region BSP
+void ModelNode::processBSP(vec3 cameraPosition, vector<Plane*> planes)
+{
+	if (isRoot)
+	{
+		drawMeshes();
+		drawChildrenAsBSPNode(cameraPosition, planes);
+
+		return;
+	}
+
+	if (!transform->getIsBSPPlane())
+	{
+		bool sameSideAsCamera = false;
+
+		bool sameSideAsAllPlanes = true;
+
+		for (int i = 0; i < planes.size(); i++)
+		{
+			if (!planes[i]->sameSide(cameraPosition, getCollisionBoxVertices()))
+			{
+				sameSideAsAllPlanes = false;
+				break;
+			}
+		}
+
+		if (sameSideAsAllPlanes) sameSideAsCamera = true;
+
+		if (sameSideAsCamera)
+		{
+			drawMeshes();
+			drawChildrenAsBSPNode(cameraPosition, planes);
+		}
+	}
+	else drawChildrenAsBSPNode(cameraPosition, planes);
+}
+
+void ModelNode::drawChildrenAsBSPNode(vec3 cameraPosition, vector<Plane*> planes)
+{
+	for (int i = 0; i < children.size(); i++) dynamic_cast<ModelNode*>(children[i])->drawAsBSPNode(cameraPosition, planes);
+}
+
+void ModelNode::drawAsBSPNode(vec3 cameraPosition, vector<Plane*> planes)
+{
+	processBSP(cameraPosition, planes);
+}
+#pragma endregion
+
 #pragma region Collision Box
-vector<vec3> ModelNode::generateCollisonBoxVertices(CollisionBoxEdges edges)
-{
-	vector<vec3> vertices = vector<vec3>
-	{
-		vec3(edges.minEdge.x, edges.minEdge.y, edges.minEdge.z), //0 ---
-		vec3(edges.maxEdge.x, edges.minEdge.y, edges.minEdge.z), //1 +--
-		vec3(edges.maxEdge.x, edges.maxEdge.y, edges.minEdge.z), //2 ++-
-		vec3(edges.minEdge.x, edges.maxEdge.y, edges.minEdge.z), //3 -+-
-		vec3(edges.minEdge.x, edges.minEdge.y, edges.maxEdge.z), //4 --+
-		vec3(edges.maxEdge.x, edges.minEdge.y, edges.maxEdge.z), //5 +-+
-		vec3(edges.maxEdge.x, edges.maxEdge.y, edges.maxEdge.z), //6 +++
-		vec3(edges.minEdge.x, edges.maxEdge.y, edges.maxEdge.z)  //7 -++
-	};
-
-	return vertices;
-}
-
-CollisionBoxEdges ModelNode::generateCollisonBoxEdges(vector<vec3> vertices)
-{
-	CollisionBoxEdges edges;
-	if (vertices.size() > 0)
-	{
-		edges.minEdge.x = vertices[0].x;
-		edges.minEdge.y = vertices[0].y;
-		edges.minEdge.z = vertices[0].z;
-
-		edges.maxEdge.x = vertices[0].x;
-		edges.maxEdge.y = vertices[0].y;
-		edges.maxEdge.z = vertices[0].z;
-	}
-
-	for (int i = 0; i < vertices.size(); i++)
-	{
-		edges.minEdge.x = glm::min(edges.minEdge.x, vertices[i].x);
-		edges.minEdge.y = glm::min(edges.minEdge.y, vertices[i].y);
-		edges.minEdge.z = glm::min(edges.minEdge.z, vertices[i].z);
-
-		edges.maxEdge.x = glm::max(vertices[i].x, edges.maxEdge.x);
-		edges.maxEdge.y = glm::max(vertices[i].y, edges.maxEdge.y);
-		edges.maxEdge.z = glm::max(vertices[i].z, edges.maxEdge.z);
-	}
-
-	return edges;
-}
+//vector<vec3> ModelNode::generateCollisonBoxVertices(CollisionBoxEdges edges)
+//{
+//	vector<vec3> vertices = vector<vec3>
+//	{
+//		vec3(edges.minEdge.x, edges.minEdge.y, edges.minEdge.z), //0 ---
+//		vec3(edges.maxEdge.x, edges.minEdge.y, edges.minEdge.z), //1 +--
+//		vec3(edges.maxEdge.x, edges.maxEdge.y, edges.minEdge.z), //2 ++-
+//		vec3(edges.minEdge.x, edges.maxEdge.y, edges.minEdge.z), //3 -+-
+//		vec3(edges.minEdge.x, edges.minEdge.y, edges.maxEdge.z), //4 --+
+//		vec3(edges.maxEdge.x, edges.minEdge.y, edges.maxEdge.z), //5 +-+
+//		vec3(edges.maxEdge.x, edges.maxEdge.y, edges.maxEdge.z), //6 +++
+//		vec3(edges.minEdge.x, edges.maxEdge.y, edges.maxEdge.z)  //7 -++
+//	};
+//
+//	return vertices;
+//}
+//
+//CollisionBoxEdges ModelNode::generateCollisonBoxEdges(vector<vec3> vertices)
+//{
+//	CollisionBoxEdges edges;
+//	if (vertices.size() > 0)
+//	{
+//		edges.minEdge.x = vertices[0].x;
+//		edges.minEdge.y = vertices[0].y;
+//		edges.minEdge.z = vertices[0].z;
+//
+//		edges.maxEdge.x = vertices[0].x;
+//		edges.maxEdge.y = vertices[0].y;
+//		edges.maxEdge.z = vertices[0].z;
+//	}
+//
+//	for (int i = 0; i < vertices.size(); i++)
+//	{
+//		edges.minEdge.x = glm::min(edges.minEdge.x, vertices[i].x);
+//		edges.minEdge.y = glm::min(edges.minEdge.y, vertices[i].y);
+//		edges.minEdge.z = glm::min(edges.minEdge.z, vertices[i].z);
+//
+//		edges.maxEdge.x = glm::max(vertices[i].x, edges.maxEdge.x);
+//		edges.maxEdge.y = glm::max(vertices[i].y, edges.maxEdge.y);
+//		edges.maxEdge.z = glm::max(vertices[i].z, edges.maxEdge.z);
+//	}
+//
+//	return edges;
+//}
 
 vector<vec3> ModelNode::getTransformedVertices()
 {
@@ -212,77 +260,29 @@ vector<vec3> ModelNode::getCollisionBoxVertices()
 		{
 			vector<vec3> transformedVertices = getTransformedVertices();
 			CollisionBoxEdges transformedEdges = generateCollisonBoxEdges(transformedVertices);
-	
+
 			for (int i = 0; i < children.size(); i++)
 			{
 				vector<vec3> childVertices = dynamic_cast<ModelNode*>(children[i])->getCollisionBoxVertices();
 				CollisionBoxEdges childEdges = generateCollisonBoxEdges(childVertices);
-	
+
 				transformedEdges.minEdge.x = glm::min(transformedEdges.minEdge.x, childEdges.minEdge.x);
 				transformedEdges.minEdge.y = glm::min(transformedEdges.minEdge.y, childEdges.minEdge.y);
 				transformedEdges.minEdge.z = glm::min(transformedEdges.minEdge.z, childEdges.minEdge.z);
-	
+
 				transformedEdges.maxEdge.x = glm::max(childEdges.maxEdge.x, transformedEdges.maxEdge.x);
 				transformedEdges.maxEdge.y = glm::max(childEdges.maxEdge.y, transformedEdges.maxEdge.y);
 				transformedEdges.maxEdge.z = glm::max(childEdges.maxEdge.z, transformedEdges.maxEdge.z);
 			}
-	
+
 			collisionBoxVertices = generateCollisonBoxVertices(transformedEdges);
 		}
 		else collisionBoxVertices = generateCollisonBoxVertices(getTransformedEdges());
-	
+
 		transform->setTransformedSinceCBUpdate(false);
 	}
 
 	return collisionBoxVertices;
-}
-#pragma endregion
-
-#pragma region BSP
-void ModelNode::processBSP(vec3 cameraPosition, vector<Plane*> planes)
-{
-	if (isRoot)
-	{
-		drawMeshes();
-		drawChildrenAsBSPNode(cameraPosition, planes);
-
-		return;
-	}
-
-	if (!transform->getIsBSPPlane())
-	{
-		bool sameSideAsCamera = false;
-
-		bool sameSideAsAllPlanes = true;
-
-		for (int i = 0; i < planes.size(); i++)
-		{
-			if (!planes[i]->sameSide(cameraPosition, getCollisionBoxVertices()))
-			{
-				sameSideAsAllPlanes = false;
-				break;
-			}
-		}
-
-		if (sameSideAsAllPlanes) sameSideAsCamera = true;
-
-		if (sameSideAsCamera)
-		{
-			drawMeshes();
-			drawChildrenAsBSPNode(cameraPosition, planes);
-		}
-	}
-	else drawChildrenAsBSPNode(cameraPosition, planes);
-}
-
-void ModelNode::drawChildrenAsBSPNode(vec3 cameraPosition, vector<Plane*> planes)
-{
-	for (int i = 0; i < children.size(); i++) dynamic_cast<ModelNode*>(children[i])->drawAsBSPNode(cameraPosition, planes);
-}
-
-void ModelNode::drawAsBSPNode(vec3 cameraPosition, vector<Plane*> planes)
-{
-	processBSP(cameraPosition, planes);
 }
 #pragma endregion
 

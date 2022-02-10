@@ -1,6 +1,6 @@
 #include "LightCube.h"
 
-LightCube::LightCube() : Cube()
+LightCube::LightCube() : Cube(false)
 {
 	shader = ShaderType::LightSource;
 	transform->setScale(0.2f, 0.2f, 0.2f);

@@ -51,6 +51,9 @@ protected:
 
 	virtual void processRotation(float pitch, float yaw, float roll);
 
+protected:
+	bool transformedSinceCBUpdate = true;
+
 public:
 	void updateDirectionVectors(float pitch, float yaw, float roll);
 	void updateChildrenDirectionVectors(float pitch, float yaw, float roll, vec3 xAxis, vec3 yAxis, vec3 zAxis);
@@ -61,6 +64,11 @@ public:
 	Transform();
 	Transform(vector<Transform*> _children);
 	~Transform();
+
+#pragma region CollisionBox
+	void setTransformedSinceCBUpdate(bool _transformedSinceCBUpdate);
+	bool getTransformedSinceCBUpdate();
+#pragma endregion
 
 #pragma region Transformations
 	virtual void translate(float x, float y, float z);

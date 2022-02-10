@@ -8,12 +8,6 @@
 
 using namespace std;
 
-struct CollisionBoxEdges
-{
-	vec3 minEdge = vec3(0.0f);
-	vec3 maxEdge = vec3(0.0f);
-};
-
 class GENGINE_API ModelNode : public Entity
 {
 	string name;
@@ -22,20 +16,22 @@ class GENGINE_API ModelNode : public Entity
 	ModelNodeTransform* transform;
 	vector<Mesh*> meshes;
 
+#pragma BSP
+	void processBSP(vec3 cameraPosition, vector<Plane*> planes);
+	void drawChildrenAsBSPNode(vec3 cameraPosition, vector<Plane*> planes);
+#pragma endregion
+
+protected:
 #pragma Collision Box
 	vector<vec3> collisionBoxVertices;
 
-	vector<vec3> generateCollisonBoxVertices(CollisionBoxEdges edges);
-	CollisionBoxEdges generateCollisonBoxEdges(vector<vec3> vertices);
+	//vector<vec3> generateCollisonBoxVertices(CollisionBoxEdges edges) override;
+	//CollisionBoxEdges generateCollisonBoxEdges(vector<vec3> vertices) override;
 
 	vector<vec3> getTransformedVertices();
 	CollisionBoxEdges getTransformedEdges();
 #pragma endregion
 
-#pragma BSP
-	void processBSP(vec3 cameraPosition, vector<Plane*> planes);
-	void drawChildrenAsBSPNode(vec3 cameraPosition, vector<Plane*> planes);
-#pragma endregion
 public:
 	ModelNode(string _name, bool _isRoot, vector<Mesh*> _meshes, vector<Entity*> _children);
 	~ModelNode();
@@ -52,7 +48,7 @@ public:
 #pragma endregion
 
 #pragma Collision Box
-	vector<vec3> getCollisionBoxVertices();
+	vector<vec3> getCollisionBoxVertices() override;
 #pragma endregion
 
 #pragma region BSP

@@ -93,14 +93,15 @@ void Camera::disableFrustumCulling()
 	frustumCulling = false;
 }
 
-void Camera::processFrustumCulling()
-{
-	for (int i = 0; i < Entity::getRenderizableEntities().size(); i++)
-	{
-		Entity* entity = Entity::getRenderizableEntities()[i];
+void Camera::processFrustumCulling(Entity* entity) { if (frustum->isInside(entity)) entity->draw(); }
+#pragma endregion
 
-		if (entity->getShouldBeDrawn()) entity->draw();
-	}
+#pragma region Rendering
+void Camera::draw()
+{
+	if (frustumCulling) drawFrustum();
+
+	Entity::draw();
 }
 
 void Camera::drawFrustum()
@@ -111,5 +112,35 @@ void Camera::drawFrustum()
 		else cout << "Can not draw camera frustum: frustum object is null" << endl;
 	}
 	else cout << "Can not draw camera frustum: frustum culling is not enabled" << endl;
+}
+
+void Camera::drawEntities()
+{
+	int drawnEntities = 0;
+
+	for (int i = 0; i < Entity::getRenderizableEntities().size(); i++)
+	{
+		Entity* entity = Entity::getRenderizableEntities()[i];
+
+		if (entity->getShouldBeDrawn())
+		{
+			//if (frustumCulling) processFrustumCulling(entity);
+			if (frustumCulling)
+			{
+				if (frustum->isInside(entity))
+				{
+					entity->draw();
+					drawnEntities++;
+				}
+			}
+			else
+			{
+				entity->draw();
+				drawnEntities++;
+			}
+		}
+	}
+
+	cout << "drawn entities: " << drawnEntities << endl;
 }
 #pragma endregion

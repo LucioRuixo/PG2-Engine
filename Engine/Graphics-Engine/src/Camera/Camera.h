@@ -43,8 +43,13 @@ public:
 
 	void enableFrustumCulling(FrustumData frustumData);
 	void disableFrustumCulling();
-	void processFrustumCulling();
+	void processFrustumCulling(Entity* entity);
+#pragma endregion
+
+#pragma region Rendering
+	void draw() override;
 	void drawFrustum();
+	void drawEntities();
 #pragma endregion
 };
 

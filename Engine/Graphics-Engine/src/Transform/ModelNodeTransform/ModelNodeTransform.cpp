@@ -69,9 +69,6 @@ void ModelNodeTransform::updateGlobalModel()
 
 void ModelNodeTransform::updateGlobalModel(mat4 other) { globalModel = other * localModel.model; }
 
-void ModelNodeTransform::setTransformedSinceCBUpdate(bool _transformedSinceCBUpdate) { transformedSinceCBUpdate = _transformedSinceCBUpdate; }
-bool ModelNodeTransform::getTransformedSinceCBUpdate() { return transformedSinceCBUpdate; }
-
 #pragma region Transformations
 void ModelNodeTransform::translate(float x, float y, float z)
 {

@@ -19,15 +19,19 @@ protected:
 	//static float vertexPositions[CUBE_VERTEX_POSITIONS_COMPONENTS];
 	static unsigned int indices[CUBE_INDICES];
 public:
-	static void initializeRenderingObjects();
+	static void initializeRenderingData();
 
-	Cube();
-	Cube(vec3 _color);
-	Cube(Material _material);
-	Cube(vec3 _color, Material _material);
+	Cube(bool renderizable = true);
+	Cube(vec3 _color, bool renderizable = true);
+	Cube(Material _material, bool renderizable = true);
+	Cube(vec3 _color, Material _material, bool renderizable = true);
 	~Cube();
 
 	//vec3* getVertices();
+
+#pragma Collision Box
+	vector<vec3> getCollisionBoxVertices() override;
+#pragma endregion
 
 	virtual void draw() override;
 };

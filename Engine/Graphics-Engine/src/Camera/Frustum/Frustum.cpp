@@ -6,7 +6,7 @@ Frustum::Frustum(FrustumData _data, CameraTransform* cameraTransform)
 
 	for (int i = 0; i < FrustumPlanes::Length; i++)
 	{
-		planes.push_back(new Plane());
+		planes.push_back(new FrustumPlane());
 		addChild(dynamic_cast<Entity*>(planes[i]));
 	}
 
@@ -72,7 +72,7 @@ Frustum::~Frustum()
 
 FrustumData Frustum::getFrustumData() { return data; }
 
-Plane* Frustum::getPlane(FrustumPlanes plane)
+FrustumPlane* Frustum::getPlane(FrustumPlanes plane)
 {
 	if (plane == FrustumPlanes::Length)
 	{
@@ -85,12 +85,19 @@ Plane* Frustum::getPlane(FrustumPlanes plane)
 
 bool Frustum::isInside(vec3 point)
 {
-	cout << "point position: " << point.x << " | " << point.y << " | " << point.z << endl;
-	cout << "distance to far: " << planes[FrustumPlanes::Far]->distanceToPoint(point) << endl;
-	cout << endl;
+	//cout << "point position: " << point.x << " | " << point.y << " | " << point.z << endl;
+	//cout << "distance to far: " << planes[FrustumPlanes::Far]->distanceToPoint(point) << endl;
+	//cout << endl;
 
 	for (int i = 0; i < FrustumPlanes::Length; i++) if (planes[i]->distanceToPoint(point) < 0.0f) return false;
+	return true;
+}
 
+bool Frustum::isInside(Entity * entity)
+{
+	vec3 position = entity->getTransform()->getGlobalPosition();
+
+	for (int i = 0; i < FrustumPlanes::Length; i++) if (planes[i]->distanceToPoint(position) < 0.0f) return false;
 	return true;
 }
 

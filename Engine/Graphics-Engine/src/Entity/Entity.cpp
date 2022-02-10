@@ -4,6 +4,12 @@ vector<Entity*> Entity::renderizableEntities;
 Renderer* Entity::renderer = NULL;
 TextureManager* Entity::textureManager = NULL;
 
+bool Entity::planeRenderingDataInitialized = false;
+vector<vec3> Entity::planeVertexPositions;
+
+bool Entity::cubeRenderingDataInitialized = false;
+vector<vec3> Entity::cubeVertexPositions;
+
 Entity::Entity(bool _renderizable) { initialize(_renderizable); }
 
 Entity::Entity(vector<Entity*> _children, bool _renderizable)
@@ -51,6 +57,190 @@ void Entity::initialize(bool _renderizable)
 }
 
 vector<Entity*> Entity::getRenderizableEntities() { return renderizableEntities; }
+
+#pragma region Collision Box
+vector<vec3> Entity::generateCollisonBoxVertices(CollisionBoxEdges edges)
+{
+	vector<vec3> vertices = vector<vec3>
+	{
+		vec3(edges.minEdge.x, edges.minEdge.y, edges.minEdge.z), //0 ---
+		vec3(edges.maxEdge.x, edges.minEdge.y, edges.minEdge.z), //1 +--
+		vec3(edges.maxEdge.x, edges.maxEdge.y, edges.minEdge.z), //2 ++-
+		vec3(edges.minEdge.x, edges.maxEdge.y, edges.minEdge.z), //3 -+-
+		vec3(edges.minEdge.x, edges.minEdge.y, edges.maxEdge.z), //4 --+
+		vec3(edges.maxEdge.x, edges.minEdge.y, edges.maxEdge.z), //5 +-+
+		vec3(edges.maxEdge.x, edges.maxEdge.y, edges.maxEdge.z), //6 +++
+		vec3(edges.minEdge.x, edges.maxEdge.y, edges.maxEdge.z)  //7 -++
+	};
+
+	return vertices;
+}
+
+CollisionBoxEdges Entity::generateCollisonBoxEdges(vector<vec3> vertices)
+{
+	CollisionBoxEdges edges;
+	if (vertices.size() > 0)
+	{
+		edges.minEdge.x = vertices[0].x;
+		edges.minEdge.y = vertices[0].y;
+		edges.minEdge.z = vertices[0].z;
+
+		edges.maxEdge.x = vertices[0].x;
+		edges.maxEdge.y = vertices[0].y;
+		edges.maxEdge.z = vertices[0].z;
+	}
+
+	for (int i = 0; i < vertices.size(); i++)
+	{
+		edges.minEdge.x = glm::min(edges.minEdge.x, vertices[i].x);
+		edges.minEdge.y = glm::min(edges.minEdge.y, vertices[i].y);
+		edges.minEdge.z = glm::min(edges.minEdge.z, vertices[i].z);
+
+		edges.maxEdge.x = glm::max(vertices[i].x, edges.maxEdge.x);
+		edges.maxEdge.y = glm::max(vertices[i].y, edges.maxEdge.y);
+		edges.maxEdge.z = glm::max(vertices[i].z, edges.maxEdge.z);
+	}
+
+	return edges;
+}
+
+vector<vec3> Entity::calculateCollisionBoxVertices(vector<vec3> vertices)
+{
+	if (transform->getTransformedSinceCBUpdate())
+	{
+		if (children.size() > 0)
+		{
+			vector<vec3> transformedVertices = getTransformedVertices(vertices);
+			CollisionBoxEdges transformedEdges = generateCollisonBoxEdges(transformedVertices);
+
+			for (int i = 0; i < children.size(); i++)
+			{
+				vector<vec3> childVertices = dynamic_cast<Entity*>(children[i])->getCollisionBoxVertices();
+				CollisionBoxEdges childEdges = generateCollisonBoxEdges(childVertices);
+
+				transformedEdges.minEdge.x = glm::min(transformedEdges.minEdge.x, childEdges.minEdge.x);
+				transformedEdges.minEdge.y = glm::min(transformedEdges.minEdge.y, childEdges.minEdge.y);
+				transformedEdges.minEdge.z = glm::min(transformedEdges.minEdge.z, childEdges.minEdge.z);
+
+				transformedEdges.maxEdge.x = glm::max(childEdges.maxEdge.x, transformedEdges.maxEdge.x);
+				transformedEdges.maxEdge.y = glm::max(childEdges.maxEdge.y, transformedEdges.maxEdge.y);
+				transformedEdges.maxEdge.z = glm::max(childEdges.maxEdge.z, transformedEdges.maxEdge.z);
+			}
+
+			collisionBoxVertices = generateCollisonBoxVertices(transformedEdges);
+		}
+		else collisionBoxVertices = generateCollisonBoxVertices(getTransformedEdges(vertices));
+
+		transform->setTransformedSinceCBUpdate(false);
+	}
+
+	return collisionBoxVertices;
+}
+
+vector<vec3> Entity::getTransformedVertices(vector<vec3> vertices)
+{
+	if (vertices.size() == 0)
+	{
+		cout << "Can not get transformed vertices: vertex vector is empty" << endl;
+		return vector<vec3>();
+	}
+
+	CollisionBoxEdges edges;
+	edges.minEdge.x = vertices[0].x;
+	edges.minEdge.y = vertices[0].y;
+	edges.minEdge.z = vertices[0].z;
+
+	edges.maxEdge.x = vertices[0].x;
+	edges.maxEdge.y = vertices[0].y;
+	edges.maxEdge.z = vertices[0].z;
+
+	for (int j = 0; j < vertices.size(); j++)
+	{
+		edges.minEdge.x = glm::min(edges.minEdge.x, vertices[j].x);
+		edges.minEdge.y = glm::min(edges.minEdge.y, vertices[j].y);
+		edges.minEdge.z = glm::min(edges.minEdge.z, vertices[j].z);
+
+		edges.maxEdge.x = glm::max(vertices[j].x, edges.maxEdge.x);
+		edges.maxEdge.y = glm::max(vertices[j].y, edges.maxEdge.y);
+		edges.maxEdge.z = glm::max(vertices[j].z, edges.maxEdge.z);
+	}
+	vector<vec3> cbVertices = generateCollisonBoxVertices(edges);
+
+	vector<vec3> transformedVertices;
+	for (int i = 0; i < cbVertices.size(); i++)
+	{
+		vec3 vertex = vec3(transform->getGlobalModel() * vec4(cbVertices[i], 1.0f));
+		vertex.x *= -1.0f;
+		transformedVertices.push_back(vertex);
+	}
+
+	return transformedVertices;
+}
+
+CollisionBoxEdges Entity::getTransformedEdges(vector<vec3> vertices)
+{
+	CollisionBoxEdges edges;
+	vec3 vertex = vec3(transform->getGlobalModel() * vec4(vertices[0], 1.0f));
+	vertex.x *= -1.0f;
+
+	edges.minEdge.x = vertex.x;
+	edges.minEdge.y = vertex.y;
+	edges.minEdge.z = vertex.z;
+
+	edges.maxEdge.x = vertex.x;
+	edges.maxEdge.y = vertex.y;
+	edges.maxEdge.z = vertex.z;
+
+	for (int j = 0; j < vertices.size(); j++)
+	{
+		vec3 vertex = vec3(transform->getGlobalModel() * vec4(vertices[j], 1.0f));
+		vertex.x *= -1.0f;
+
+		edges.minEdge.x = glm::min(edges.minEdge.x, vertex.x);
+		edges.minEdge.y = glm::min(edges.minEdge.y, vertex.y);
+		edges.minEdge.z = glm::min(edges.minEdge.z, vertex.z);
+
+		edges.maxEdge.x = glm::max(vertex.x, edges.maxEdge.x);
+		edges.maxEdge.y = glm::max(vertex.y, edges.maxEdge.y);
+		edges.maxEdge.z = glm::max(vertex.z, edges.maxEdge.z);
+	}
+
+	return edges;
+}
+
+//vector<vec3> Entity::getCollisionBoxVertices()
+//{
+//	//if (transform->getTransformedSinceCBUpdate())
+//	//{
+//	//	if (children.size() > 0)
+//	//	{
+//	//		vector<vec3> transformedVertices = getTransformedVertices();
+//	//		CollisionBoxEdges transformedEdges = generateCollisonBoxEdges(transformedVertices);
+//	//
+//	//		for (int i = 0; i < children.size(); i++)
+//	//		{
+//	//			vector<vec3> childVertices = dynamic_cast<Entity*>(children[i])->getCollisionBoxVertices();
+//	//			CollisionBoxEdges childEdges = generateCollisonBoxEdges(childVertices);
+//	//
+//	//			transformedEdges.minEdge.x = glm::min(transformedEdges.minEdge.x, childEdges.minEdge.x);
+//	//			transformedEdges.minEdge.y = glm::min(transformedEdges.minEdge.y, childEdges.minEdge.y);
+//	//			transformedEdges.minEdge.z = glm::min(transformedEdges.minEdge.z, childEdges.minEdge.z);
+//	//
+//	//			transformedEdges.maxEdge.x = glm::max(childEdges.maxEdge.x, transformedEdges.maxEdge.x);
+//	//			transformedEdges.maxEdge.y = glm::max(childEdges.maxEdge.y, transformedEdges.maxEdge.y);
+//	//			transformedEdges.maxEdge.z = glm::max(childEdges.maxEdge.z, transformedEdges.maxEdge.z);
+//	//		}
+//	//
+//	//		collisionBoxVertices = generateCollisonBoxVertices(transformedEdges);
+//	//	}
+//	//	else collisionBoxVertices = generateCollisonBoxVertices(getTransformedEdges());
+//	//
+//	//	transform->setTransformedSinceCBUpdate(false);
+//	//}
+//	//
+//	//return collisionBoxVertices;
+//}
+#pragma endregion
 
 #pragma region Rendering
 void Entity::setRenderer(Renderer* _renderer) { renderer = _renderer; }
@@ -171,6 +361,12 @@ void Entity::setParent(Entity* _parent)
 
 Entity* Entity::getParent() { return parent; }
 #pragma endregion
+
+vector<vec3> Entity::getCollisionBoxVertices()
+{
+	cout << "Base Entity class can not generate collision box vertices" << endl;
+	return vector<vec3>();
+}
 
 void Entity::draw()
 {

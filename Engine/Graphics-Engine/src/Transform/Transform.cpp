@@ -197,6 +197,11 @@ void Transform::updateGlobalModel()
 
 void Transform::updateGlobalModel(mat4 other) { globalModel = other * localModel.model; }
 
+#pragma region CollisionBox
+void Transform::setTransformedSinceCBUpdate(bool _transformedSinceCBUpdate) { transformedSinceCBUpdate = _transformedSinceCBUpdate; }
+bool Transform::getTransformedSinceCBUpdate() { return transformedSinceCBUpdate; }
+#pragma endregion
+
 #pragma region Transformations
 void Transform::translate(float x, float y, float z)
 {

@@ -8,6 +8,15 @@
 
 using namespace glm;
 
+const int VERTEX_ELEMENTS = 3;
+const int VERTEX_LENGTH = 8;
+
+struct GENGINE_API CollisionBoxEdges
+{
+	vec3 minEdge = vec3(0.0f);
+	vec3 maxEdge = vec3(0.0f);
+};
+
 struct GENGINE_API Material
 {
 	vec3 diffuse = vec3(1.0f, 1.0f, 1.0f);
@@ -27,6 +36,18 @@ protected:
 	static Renderer* renderer;
 	static TextureManager* textureManager;
 
+	//Plane
+	//----------
+	static bool planeRenderingDataInitialized;
+	static vector<vec3> planeVertexPositions;
+	//----------
+
+	//Cube
+	//----------
+	static bool cubeRenderingDataInitialized;
+	static vector<vec3> cubeVertexPositions;
+	//----------
+
 	ShaderType shader = ShaderType::Main;
 	bool renderizable = true;
 	bool shouldBeDrawn = true;
@@ -41,6 +62,17 @@ protected:
 	vector<Entity*> children;
 
 	void setUniformValues();
+
+#pragma Collision Box
+	vector<vec3> collisionBoxVertices;
+
+	vector<vec3> generateCollisonBoxVertices(CollisionBoxEdges edges);
+	CollisionBoxEdges generateCollisonBoxEdges(vector<vec3> vertices);
+	vector<vec3> calculateCollisionBoxVertices(vector<vec3> vertices);
+
+	virtual vector<vec3> getTransformedVertices(vector<vec3> vertices);
+	virtual CollisionBoxEdges getTransformedEdges(vector<vec3> vertices);
+#pragma endregion
 
 public:
 	static vector<Entity*> getRenderizableEntities();
@@ -78,6 +110,10 @@ public:
 #pragma region Parent
 	virtual void setParent(Entity* _parent);
 	virtual Entity* getParent();
+#pragma endregion
+
+#pragma Collision Box
+	virtual vector<vec3> getCollisionBoxVertices();
 #pragma endregion
 
 	virtual void draw();

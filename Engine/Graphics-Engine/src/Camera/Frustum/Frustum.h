@@ -2,7 +2,7 @@
 #define FRUSTUM_H
 
 #include "Tools/Includes.h"
-#include "Entity/Plane/Plane.h"
+#include "Entity/Plane/FrustumPlane/FrustumPlane.h"
 #include "Transform/CameraTransform/CameraTransform.h"
 
 enum FrustumPlanes
@@ -19,16 +19,17 @@ enum FrustumPlanes
 class GENGINE_API Frustum : public Entity
 {
 	FrustumData data;
-	vector<Plane*> planes;
+	vector<FrustumPlane*> planes;
 
 public:
 	Frustum(FrustumData _data, CameraTransform* cameraTransform);
 	~Frustum();
 
 	FrustumData getFrustumData();
-	Plane* getPlane(FrustumPlanes plane);
+	FrustumPlane* getPlane(FrustumPlanes plane);
 
 	bool isInside(vec3 point);
+	bool isInside(Entity* entity);
 
 	void draw();
 };

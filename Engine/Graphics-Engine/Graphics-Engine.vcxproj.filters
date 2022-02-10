@@ -104,6 +104,9 @@
     <Filter Include="src\Camera\Frustum">
       <UniqueIdentifier>{d5ae4c57-f17c-4be4-a4be-708cb55f35ed}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Entity\Plane\FrustumPlane">
+      <UniqueIdentifier>{bc1616e9-1911-4246-b08b-26e7c3ea8c7d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\Shaders\LightSourceShader_FS.shader">
@@ -207,6 +210,9 @@
     <ClCompile Include="src\Camera\Frustum\Frustum.cpp">
       <Filter>src\Camera\Frustum</Filter>
     </ClCompile>
+    <ClCompile Include="src\Entity\Plane\FrustumPlane\FrustumPlane.cpp">
+      <Filter>src\Entity\Plane\FrustumPlane</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Animation\Animation.h">
@@ -304,6 +310,9 @@
     </ClInclude>
     <ClInclude Include="src\Camera\Frustum\Frustum.h">
       <Filter>src\Camera\Frustum</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Entity\Plane\FrustumPlane\FrustumPlane.h">
+      <Filter>src\Entity\Plane\FrustumPlane</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

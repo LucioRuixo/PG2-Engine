@@ -134,8 +134,8 @@ GameBase::GameBase()
 	//Entities
 	Entity::setRenderer(renderer);
 	Entity::setTextureManager(textureManager);
-	Plane::initializeRenderingObjects();
-	Cube::initializeRenderingObjects();
+	Plane::initializeRenderingData();
+	Cube::initializeRenderingData();
 
 	//Projection
 	for (int i = 0; i < ShaderType::Size; i++) renderer->setProjection(renderer->getProjection());
@@ -174,17 +174,13 @@ void GameBase::run()
 		update();
 
 		camera->draw();
-		camera->processFrustumCulling();
+		camera->drawEntities();
 
 		renderer->useShader(ShaderType::LightSource);
 		for (int i = 0; i < MAX_POINT_LIGHT_AMOUNT; i++)
-		{
 			if (lightingManager->getPointLight(i)) lightingManager->getPointLight(i)->draw();
-		}
 		for (int i = 0; i < MAX_SPOTLIGHT_AMOUNT; i++)
-		{
 			if (lightingManager->getSpotlight(i)) lightingManager->getSpotlight(i)->draw();
-		}
 
 		time->tick();
 		elapsedTime += time->getDeltaTime();

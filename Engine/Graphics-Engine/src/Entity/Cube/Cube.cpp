@@ -83,45 +83,53 @@ unsigned int Cube::indices[] =
 	33, 34, 35
 };
 
-void Cube::initializeRenderingObjects()
+void Cube::initializeRenderingData()
 {
-	glGenVertexArrays(1, &vao);
-	glGenBuffers(1, &vbo);
-	glGenBuffers(1, &ebo);
+	if (!Entity::cubeRenderingDataInitialized)
+	{
+		glGenVertexArrays(1, &vao);
+		glGenBuffers(1, &vbo);
+		glGenBuffers(1, &ebo);
 
-	glBindVertexArray(vao);
+		glBindVertexArray(vao);
 
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, CUBE_VERTEX_COMPONENTS * sizeof(float), vertices, GL_STATIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, vbo);
+		glBufferData(GL_ARRAY_BUFFER, CUBE_VERTEX_COMPONENTS * sizeof(float), vertices, GL_STATIC_DRAW);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, CUBE_INDICES * sizeof(unsigned int), indices, GL_STATIC_DRAW);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, CUBE_INDICES * sizeof(unsigned int), indices, GL_STATIC_DRAW);
 
-	//Position
-	unsigned int positionAttributeLocation = glGetAttribLocation(renderer->getShaderProgram(ShaderType::Main), "aPosition");
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), 0);
-	glEnableVertexAttribArray(0);
+		//Position
+		unsigned int positionAttributeLocation = glGetAttribLocation(renderer->getShaderProgram(ShaderType::Main), "aPosition");
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), 0);
+		glEnableVertexAttribArray(0);
 
-	//Normal
-	unsigned int normalAttributeLocation = glGetAttribLocation(renderer->getShaderProgram(ShaderType::Main), "aNormal");
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
+		//Normal
+		unsigned int normalAttributeLocation = glGetAttribLocation(renderer->getShaderProgram(ShaderType::Main), "aNormal");
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+		glEnableVertexAttribArray(1);
 
-	//Texture coordinates
-	//glUniform1i(glGetUniformLocation(renderer->getShaderProgram(ShaderType::Main), "textureData"), 0);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
+		//Texture coordinates
+		//glUniform1i(glGetUniformLocation(renderer->getShaderProgram(ShaderType::Main), "textureData"), 0);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+		glEnableVertexAttribArray(2);
 
-	glBindVertexArray(0);
+		glBindVertexArray(0);
+
+
+
+		Entity::cubeRenderingDataInitialized = true;
+	}
+	else cout << "Can not initialize cube rendering data: data has already been initialized" << endl;
 }
 
-Cube::Cube() : Entity() {}
+Cube::Cube(bool renderizable) : Entity(renderizable) {}
 
-Cube::Cube(vec3 _color) : Entity(_color) {}
+Cube::Cube(vec3 _color, bool renderizable) : Entity(_color, renderizable) {}
 
-Cube::Cube(Material _material) : Entity(_material) {}
+Cube::Cube(Material _material, bool renderizable) : Entity(_material, renderizable) {}
 
-Cube::Cube(vec3 _color, Material _material) : Entity(_color, _material) {}
+Cube::Cube(vec3 _color, Material _material, bool renderizable) : Entity(_color, _material, renderizable) {}
 
 Cube::~Cube() {}
 
@@ -146,6 +154,10 @@ Cube::~Cube() {}
 //
 //	return vec3VertexPositions;
 //}
+
+#pragma Collision Box
+vector<vec3> Cube::getCollisionBoxVertices() { return calculateCollisionBoxVertices(cubeVertexPositions); }
+#pragma endregion
 
 void Cube::draw()
 {
