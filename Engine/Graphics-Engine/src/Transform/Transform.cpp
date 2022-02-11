@@ -192,6 +192,8 @@ void Transform::updateGlobalModel()
 	decompose(globalModel, globalData.position, globalData.rotation, globalData.scale);
 	globalData.position.x *= -1.0f;
 
+	transformedSinceCBUpdate = true;
+
 	if (!children.empty()) for (int i = 0; i < children.size(); i++) children[i]->updateGlobalModel();
 }
 

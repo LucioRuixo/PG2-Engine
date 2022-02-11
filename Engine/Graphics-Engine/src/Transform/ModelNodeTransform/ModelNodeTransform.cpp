@@ -69,66 +69,66 @@ void ModelNodeTransform::updateGlobalModel()
 
 void ModelNodeTransform::updateGlobalModel(mat4 other) { globalModel = other * localModel.model; }
 
-#pragma region Transformations
-void ModelNodeTransform::translate(float x, float y, float z)
-{
-	localData.position.x += x;
-	localData.position.y += y;
-	localData.position.z += z;
-
-	vec3 position = localData.position;
-	position.x *= -1.0f;
-	localModel.translation = glm::translate(mat4(1.0f), position);
-
-	updateLocalModel();
-}
-
-void ModelNodeTransform::setPosition(float x, float y, float z)
-{
-	float translationX = x - localData.position.x;
-	float translationY = y - localData.position.y;
-	float translationZ = z - localData.position.z;
-
-	translate(translationX, translationY, translationZ);
-}
-
-void ModelNodeTransform::rotate(float pitch, float yaw, float roll)
-{
-	if (pitch != 0.0f) processRotation(pitch, 0.0f, 0.0f);
-	if (yaw != 0.0f) processRotation(0.0f, yaw, 0.0f);
-	if (roll != 0.0f) processRotation(0.0f, 0.0f, roll);
-}
-
-void ModelNodeTransform::setRotation(float pitch, float yaw, float roll)
-{
-	float rotationX = positiveDegrees(pitch - localData.rotation.x);
-	float rotationY = positiveDegrees(yaw - localData.rotation.y);
-	float rotationZ = positiveDegrees(roll - localData.rotation.z);
-
-	if (rotationX != 0.0f) processRotation(rotationX, 0.0f, 0.0f);
-	if (rotationY != 0.0f) processRotation(0.0f, rotationY, 0.0f);
-	if (rotationZ != 0.0f) processRotation(0.0f, 0.0f, rotationZ);
-}
-
-void ModelNodeTransform::scale(float x, float y, float z)
-{
-	localData.scale.x += x;
-	localData.scale.y += y;
-	localData.scale.z += z;
-
-	localModel.scale = glm::scale(mat4(1.0f), localData.scale);
-	updateLocalModel();
-}
-
-void ModelNodeTransform::setScale(float x, float y, float z)
-{
-	float scaleX = x - localData.scale.x;
-	float scaleY = y - localData.scale.y;
-	float scaleZ = z - localData.scale.z;
-
-	scale(scaleX, scaleY, scaleZ);
-}
-#pragma endregion
+//#pragma region Transformations
+//void ModelNodeTransform::translate(float x, float y, float z)
+//{
+//	localData.position.x += x;
+//	localData.position.y += y;
+//	localData.position.z += z;
+//
+//	vec3 position = localData.position;
+//	position.x *= -1.0f;
+//	localModel.translation = glm::translate(mat4(1.0f), position);
+//
+//	updateLocalModel();
+//}
+//
+//void ModelNodeTransform::setPosition(float x, float y, float z)
+//{
+//	float translationX = x - localData.position.x;
+//	float translationY = y - localData.position.y;
+//	float translationZ = z - localData.position.z;
+//
+//	translate(translationX, translationY, translationZ);
+//}
+//
+//void ModelNodeTransform::rotate(float pitch, float yaw, float roll)
+//{
+//	if (pitch != 0.0f) processRotation(pitch, 0.0f, 0.0f);
+//	if (yaw != 0.0f) processRotation(0.0f, yaw, 0.0f);
+//	if (roll != 0.0f) processRotation(0.0f, 0.0f, roll);
+//}
+//
+//void ModelNodeTransform::setRotation(float pitch, float yaw, float roll)
+//{
+//	float rotationX = positiveDegrees(pitch - localData.rotation.x);
+//	float rotationY = positiveDegrees(yaw - localData.rotation.y);
+//	float rotationZ = positiveDegrees(roll - localData.rotation.z);
+//
+//	if (rotationX != 0.0f) processRotation(rotationX, 0.0f, 0.0f);
+//	if (rotationY != 0.0f) processRotation(0.0f, rotationY, 0.0f);
+//	if (rotationZ != 0.0f) processRotation(0.0f, 0.0f, rotationZ);
+//}
+//
+//void ModelNodeTransform::scale(float x, float y, float z)
+//{
+//	localData.scale.x += x;
+//	localData.scale.y += y;
+//	localData.scale.z += z;
+//
+//	localModel.scale = glm::scale(mat4(1.0f), localData.scale);
+//	updateLocalModel();
+//}
+//
+//void ModelNodeTransform::setScale(float x, float y, float z)
+//{
+//	float scaleX = x - localData.scale.x;
+//	float scaleY = y - localData.scale.y;
+//	float scaleZ = z - localData.scale.z;
+//
+//	scale(scaleX, scaleY, scaleZ);
+//}
+//#pragma endregion
 
 #pragma region BSP
 bool ModelNodeTransform::getIsBSPPlane() { return isBSPPlane; }

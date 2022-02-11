@@ -93,13 +93,32 @@ bool Frustum::isInside(vec3 point)
 	return true;
 }
 
-bool Frustum::isInside(Entity * entity)
+bool Frustum::isInside(Entity* entity)
 {
-	vec3 position = entity->getTransform()->getGlobalPosition();
+	vector<vec3> vertices = entity->getCollisionVertices();
+	for (int i = 0; i < vertices.size(); i++)
+	{
+		bool inside = true;
 
-	for (int i = 0; i < FrustumPlanes::Length; i++) if (planes[i]->distanceToPoint(position) < 0.0f) return false;
-	return true;
+		for (int j = 0; j < FrustumPlanes::Length; j++) if (planes[j]->distanceToPoint(vertices[i]) < 0.0f)
+		{
+			inside = false;
+			break;
+		}
+
+		if (inside) return true;
+	}
+
+	return false;
 }
+
+#pragma region Collision Box
+vector<vec3> Frustum::getCollisionVertices()
+{
+	cout << "Can not generate collision vertices for this class (Frustum)" << endl;
+	return vector<vec3>();
+}
+#pragma endregion
 
 void Frustum::draw()
 {

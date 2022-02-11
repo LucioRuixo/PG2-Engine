@@ -33,7 +33,7 @@ public:
 	bool sameSide(vec3 a, vector<vec3> b);
 
 #pragma Collision Box
-	vector<vec3> getCollisionBoxVertices() override;
+	vector<vec3> getCollisionVertices() override;
 #pragma endregion
 
 	virtual void draw() override;

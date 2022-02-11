@@ -6,22 +6,24 @@ unsigned int Cube::vao = 0;
 unsigned int Cube::vbo = 0;
 unsigned int Cube::ebo = 0;
 
+int Cube::collisionVertexIndices[] = { 0, 1, 2, 4, 6, 7, 8, 10 };
+
 float Cube::vertices[] =
 {
 	//Position              //Normal               //UV       
 	//-----------------
-	-0.5f, -0.5f, -0.5f,  	0.0f,  0.0f, -1.0f,    0.0f, 1.0f,
-	 0.5f, -0.5f, -0.5f,  	0.0f,  0.0f, -1.0f,    1.0f, 1.0f,
-	 0.5f,  0.5f, -0.5f,  	0.0f,  0.0f, -1.0f,    1.0f, 0.0f,
-	 0.5f,  0.5f, -0.5f,  	0.0f,  0.0f, -1.0f,    1.0f, 0.0f,
-	-0.5f,  0.5f, -0.5f,  	0.0f,  0.0f, -1.0f,    0.0f, 0.0f,
-	-0.5f, -0.5f, -0.5f,  	0.0f,  0.0f, -1.0f,    0.0f, 1.0f,
+	-0.5f, -0.5f, -0.5f,  	0.0f,  0.0f, -1.0f,    0.0f, 1.0f, //0 ---
+	 0.5f, -0.5f, -0.5f,  	0.0f,  0.0f, -1.0f,    1.0f, 1.0f, //1 +--
+	 0.5f,  0.5f, -0.5f,  	0.0f,  0.0f, -1.0f,    1.0f, 0.0f, //2 ++-
+	 0.5f,  0.5f, -0.5f,  	0.0f,  0.0f, -1.0f,    1.0f, 0.0f, //3
+	-0.5f,  0.5f, -0.5f,  	0.0f,  0.0f, -1.0f,    0.0f, 0.0f, //4 -+-
+	-0.5f, -0.5f, -0.5f,  	0.0f,  0.0f, -1.0f,    0.0f, 1.0f, //5
 							
-	-0.5f, -0.5f,  0.5f,    0.0f,  0.0f,  1.0f,    0.0f, 1.0f,
-	 0.5f, -0.5f,  0.5f,  	0.0f,  0.0f,  1.0f,    1.0f, 1.0f,
-	 0.5f,  0.5f,  0.5f,  	0.0f,  0.0f,  1.0f,    1.0f, 0.0f,
-	 0.5f,  0.5f,  0.5f,    0.0f,  0.0f,  1.0f,    1.0f, 0.0f,
-	-0.5f,  0.5f,  0.5f,  	0.0f,  0.0f,  1.0f,    0.0f, 0.0f,
+	-0.5f, -0.5f,  0.5f,    0.0f,  0.0f,  1.0f,    0.0f, 1.0f, //6 --+
+	 0.5f, -0.5f,  0.5f,  	0.0f,  0.0f,  1.0f,    1.0f, 1.0f, //7 +-+
+	 0.5f,  0.5f,  0.5f,  	0.0f,  0.0f,  1.0f,    1.0f, 0.0f, //8 +++
+	 0.5f,  0.5f,  0.5f,    0.0f,  0.0f,  1.0f,    1.0f, 0.0f, //9
+	-0.5f,  0.5f,  0.5f,  	0.0f,  0.0f,  1.0f,    0.0f, 0.0f, //10 -++
 	-0.5f, -0.5f,  0.5f,  	0.0f,  0.0f,  1.0f,    0.0f, 1.0f,
 							
 	-0.5f,  0.5f,  0.5f,   -1.0f,  0.0f,  0.0f,    0.0f, 1.0f,
@@ -116,7 +118,12 @@ void Cube::initializeRenderingData()
 
 		glBindVertexArray(0);
 
-
+		for (int i = 0; i < CUBE_VERTICES; i++)
+		{
+			int xIndex = collisionVertexIndices[i] * VERTEX_LENGTH;
+			vec3 position = vec3(vertices[xIndex], vertices[xIndex + 1], vertices[xIndex + 2]);
+			cubeVertexPositions.push_back(position);
+		}
 
 		Entity::cubeRenderingDataInitialized = true;
 	}
@@ -133,30 +140,8 @@ Cube::Cube(vec3 _color, Material _material, bool renderizable) : Entity(_color, 
 
 Cube::~Cube() {}
 
-//vec3* Cube::getVertices()
-//{
-//	const int VERTEX_POSITIONS = 8;
-//	vec3 vec3VertexPositions[VERTEX_POSITIONS];
-//
-//	//cout << "VERTICES: " << endl;
-//	//cout << "------------------" << endl;
-//	for (int i = 0; i < VERTEX_POSITIONS; i++)
-//	{
-//		float x = vertexPositions[(3 * i)];
-//		float y = vertexPositions[(3 * i) + 1];
-//		float z = vertexPositions[(3 * i) + 2];
-//
-//		//TODO: probar esto
-//		vec3VertexPositions[i] = (vec3(x, y, z) + transform->getPosition()) * transform->getScale();
-//		//cout << i << ": " << vec3VertexPositions[i].x << " | " << vec3VertexPositions[i].y << " | " << vec3VertexPositions[i].z << endl;
-//	}
-//	//cout << "------------------" << endl;
-//
-//	return vec3VertexPositions;
-//}
-
 #pragma Collision Box
-vector<vec3> Cube::getCollisionBoxVertices() { return calculateCollisionBoxVertices(cubeVertexPositions); }
+vector<vec3> Cube::getCollisionVertices() { return calculateCollisionVertices(cubeVertexPositions); }
 #pragma endregion
 
 void Cube::draw()

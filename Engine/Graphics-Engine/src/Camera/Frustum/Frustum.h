@@ -31,6 +31,10 @@ public:
 	bool isInside(vec3 point);
 	bool isInside(Entity* entity);
 
+#pragma Collision Box
+	vector<vec3> getCollisionVertices() override;
+#pragma endregion
+
 	void draw();
 };
 

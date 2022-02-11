@@ -96,6 +96,14 @@ void Camera::disableFrustumCulling()
 void Camera::processFrustumCulling(Entity* entity) { if (frustum->isInside(entity)) entity->draw(); }
 #pragma endregion
 
+#pragma region Collision Box
+vector<vec3> Camera::getCollisionVertices()
+{
+	cout << "Can not generate collision vertices for this class (Camera)" << endl;
+	return vector<vec3>();
+}
+#pragma endregion
+
 #pragma region Rendering
 void Camera::draw()
 {

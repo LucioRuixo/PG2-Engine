@@ -60,7 +60,13 @@ vector<unsigned int> Mesh::getIndices() { return indices; }
 
 vector<Texture> Mesh::getTextures() { return textures; }
 
-//void Mesh::draw() {}
+#pragma region Collision Box
+vector<vec3> Mesh::getCollisionVertices()
+{
+	cout << "Can not generate collision vertices for this class (Mesh)" << endl;
+	return vector<vec3>();
+}
+#pragma endregion
 
 void Mesh::draw(/*mat4 model /*Renderer* renderer, TextureManager* textureManager*/)
 {

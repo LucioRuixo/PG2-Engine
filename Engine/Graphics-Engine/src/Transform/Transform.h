@@ -42,17 +42,18 @@ protected:
 	vector<Transform*> children;
 
 	void initialize();
+
 	float positiveDegrees(float degrees);
 	float eulerAngles(float radians);
 	vec3 eulerAngles(vec3 radians);
 	void decompose(mat4 matrix); // Debug
 	void decompose(mat4 matrix, vec3& translation, vec3& eulerRotation, vec3& scale);
 	void decompose(mat4 matrix, vec3& translation, quat& quatRotation, vec3& scale);
-
 	virtual void processRotation(float pitch, float yaw, float roll);
 
-protected:
+#pragma region CollisionBox
 	bool transformedSinceCBUpdate = true;
+#pragma endregion
 
 public:
 	void updateDirectionVectors(float pitch, float yaw, float roll);

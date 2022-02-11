@@ -1,5 +1,6 @@
 #include "Entity.h"
 
+vector<Entity*> Entity::entities;
 vector<Entity*> Entity::renderizableEntities;
 Renderer* Entity::renderer = NULL;
 TextureManager* Entity::textureManager = NULL;
@@ -45,7 +46,7 @@ Entity::~Entity() { if (transform) delete transform; }
 
 void Entity::initialize(bool _renderizable)
 {
-	transform = new Transform();
+	entities.push_back(this);
 
 	renderizable = _renderizable;
 	if (renderizable)
@@ -54,12 +55,29 @@ void Entity::initialize(bool _renderizable)
 		cout << "new renderizable entity created, total: " << renderizableEntities.size() << endl;
 	}
 	else shouldBeDrawn = false;
+
+	transform = new Transform();
 }
+
+vector<Entity*> Entity::getEntities() { return entities; }
 
 vector<Entity*> Entity::getRenderizableEntities() { return renderizableEntities; }
 
 #pragma region Collision Box
-vector<vec3> Entity::generateCollisonBoxVertices(CollisionBoxEdges edges)
+vector<vec3> Entity::transformVertices(vector<vec3> vertices)
+{
+	vector<vec3> transformedVertices;
+	for (int i = 0; i < vertices.size(); i++)
+	{
+		vec3 vertex = vec3(transform->getGlobalModel() * vec4(vertices[i], 1.0f));
+		vertex.x *= -1.0f;
+		transformedVertices.push_back(vertex);
+	}
+
+	return transformedVertices;
+}
+
+vector<vec3> Entity::generateCBVertices(CollisionBoxEdges edges)
 {
 	vector<vec3> vertices = vector<vec3>
 	{
@@ -76,7 +94,7 @@ vector<vec3> Entity::generateCollisonBoxVertices(CollisionBoxEdges edges)
 	return vertices;
 }
 
-CollisionBoxEdges Entity::generateCollisonBoxEdges(vector<vec3> vertices)
+CollisionBoxEdges Entity::generateCBEdges(vector<vec3> vertices)
 {
 	CollisionBoxEdges edges;
 	if (vertices.size() > 0)
@@ -104,19 +122,19 @@ CollisionBoxEdges Entity::generateCollisonBoxEdges(vector<vec3> vertices)
 	return edges;
 }
 
-vector<vec3> Entity::calculateCollisionBoxVertices(vector<vec3> vertices)
+vector<vec3> Entity::calculateCollisionVertices(vector<vec3> vertices)
 {
 	if (transform->getTransformedSinceCBUpdate())
 	{
 		if (children.size() > 0)
 		{
 			vector<vec3> transformedVertices = getTransformedVertices(vertices);
-			CollisionBoxEdges transformedEdges = generateCollisonBoxEdges(transformedVertices);
+			CollisionBoxEdges transformedEdges = generateCBEdges(transformedVertices);
 
 			for (int i = 0; i < children.size(); i++)
 			{
-				vector<vec3> childVertices = dynamic_cast<Entity*>(children[i])->getCollisionBoxVertices();
-				CollisionBoxEdges childEdges = generateCollisonBoxEdges(childVertices);
+				vector<vec3> childVertices = dynamic_cast<Entity*>(children[i])->getCollisionVertices();
+				CollisionBoxEdges childEdges = generateCBEdges(childVertices);
 
 				transformedEdges.minEdge.x = glm::min(transformedEdges.minEdge.x, childEdges.minEdge.x);
 				transformedEdges.minEdge.y = glm::min(transformedEdges.minEdge.y, childEdges.minEdge.y);
@@ -127,14 +145,15 @@ vector<vec3> Entity::calculateCollisionBoxVertices(vector<vec3> vertices)
 				transformedEdges.maxEdge.z = glm::max(childEdges.maxEdge.z, transformedEdges.maxEdge.z);
 			}
 
-			collisionBoxVertices = generateCollisonBoxVertices(transformedEdges);
+			collisionVertices = generateCBVertices(transformedEdges);
 		}
-		else collisionBoxVertices = generateCollisonBoxVertices(getTransformedEdges(vertices));
+		//else collisionBoxVertices = generateCBVertices(getTransformedEdges(vertices));
+		else collisionVertices = transformVertices(vertices);
 
 		transform->setTransformedSinceCBUpdate(false);
 	}
 
-	return collisionBoxVertices;
+	return collisionVertices;
 }
 
 vector<vec3> Entity::getTransformedVertices(vector<vec3> vertices)
@@ -164,17 +183,19 @@ vector<vec3> Entity::getTransformedVertices(vector<vec3> vertices)
 		edges.maxEdge.y = glm::max(vertices[j].y, edges.maxEdge.y);
 		edges.maxEdge.z = glm::max(vertices[j].z, edges.maxEdge.z);
 	}
-	vector<vec3> cbVertices = generateCollisonBoxVertices(edges);
+	vector<vec3> cbVertices = generateCBVertices(edges);
 
-	vector<vec3> transformedVertices;
-	for (int i = 0; i < cbVertices.size(); i++)
-	{
-		vec3 vertex = vec3(transform->getGlobalModel() * vec4(cbVertices[i], 1.0f));
-		vertex.x *= -1.0f;
-		transformedVertices.push_back(vertex);
-	}
+	//vector<vec3> transformedVertices;
+	//for (int i = 0; i < cbVertices.size(); i++)
+	//{
+	//	vec3 vertex = vec3(transform->getGlobalModel() * vec4(cbVertices[i], 1.0f));
+	//	vertex.x *= -1.0f;
+	//	transformedVertices.push_back(vertex);
+	//}
+	//
+	//return transformedVertices;
 
-	return transformedVertices;
+	return transformVertices(cbVertices);
 }
 
 CollisionBoxEdges Entity::getTransformedEdges(vector<vec3> vertices)
@@ -362,11 +383,11 @@ void Entity::setParent(Entity* _parent)
 Entity* Entity::getParent() { return parent; }
 #pragma endregion
 
-vector<vec3> Entity::getCollisionBoxVertices()
-{
-	cout << "Base Entity class can not generate collision box vertices" << endl;
-	return vector<vec3>();
-}
+//vector<vec3> Entity::getCollisionVertices()
+//{
+//	cout << "Base Entity class can not generate collision box vertices" << endl;
+//	return vector<vec3>();
+//}
 
 void Entity::draw()
 {

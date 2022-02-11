@@ -30,6 +30,7 @@ struct GENGINE_API Material
 
 class GENGINE_API Entity
 {
+	static vector<Entity*> entities;
 	static vector<Entity*> renderizableEntities;
 
 protected:
@@ -64,17 +65,19 @@ protected:
 	void setUniformValues();
 
 #pragma Collision Box
-	vector<vec3> collisionBoxVertices;
+	vector<vec3> collisionVertices;
 
-	vector<vec3> generateCollisonBoxVertices(CollisionBoxEdges edges);
-	CollisionBoxEdges generateCollisonBoxEdges(vector<vec3> vertices);
-	vector<vec3> calculateCollisionBoxVertices(vector<vec3> vertices);
+	vector<vec3> transformVertices(vector<vec3> vertices);
+	vector<vec3> generateCBVertices(CollisionBoxEdges edges);
+	CollisionBoxEdges generateCBEdges(vector<vec3> vertices);
+	vector<vec3> calculateCollisionVertices(vector<vec3> vertices);
 
 	virtual vector<vec3> getTransformedVertices(vector<vec3> vertices);
 	virtual CollisionBoxEdges getTransformedEdges(vector<vec3> vertices);
 #pragma endregion
 
 public:
+	static vector<Entity*> getEntities();
 	static vector<Entity*> getRenderizableEntities();
 	static void setRenderer(Renderer* _renderer);
 	static void setTextureManager(TextureManager* _textureManager);
@@ -113,7 +116,7 @@ public:
 #pragma endregion
 
 #pragma Collision Box
-	virtual vector<vec3> getCollisionBoxVertices();
+	virtual vector<vec3> getCollisionVertices() = 0;
 #pragma endregion
 
 	virtual void draw();

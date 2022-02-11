@@ -33,6 +33,14 @@ Sprite* Tile::getSprite()
 	return sprite;
 }
 
+#pragma region Collision Box
+vector<vec3> Tile::getCollisionVertices()
+{
+	cout << "Can not generate collision vertices for this class (Tile)" << endl;
+	return vector<vec3>();
+}
+#pragma endregion
+
 //(no funciona)
 void Tile::draw()
 {

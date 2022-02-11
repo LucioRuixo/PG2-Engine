@@ -38,6 +38,10 @@ public:
 	Entity* getParent() override;
 #pragma endregion
 
+#pragma Collision Box
+	vector<vec3> getCollisionVertices() override;
+#pragma endregion
+
 #pragma region Frustum Culling
 	Frustum* getFrustum();
 

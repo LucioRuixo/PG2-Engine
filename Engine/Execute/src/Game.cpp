@@ -25,7 +25,7 @@ Cube* rubyCube;
 Cube* emeraldCube;
 Cube* goldCube;
 
-//Model* bsp;
+Cube* cube;
 //Cube* v0;
 //Cube* v1;
 //Cube* v2;
@@ -67,29 +67,6 @@ int Game::initialize()
 	goldCube->getTransform()->setScale(1.0f, 3.0f, 1.0f);
 #pragma endregion
 
-#pragma region Models
-	//bsp = modelManager->importModel("res/Assets/Modelos/Blender/Escena.dae");
-	//bsp->getRootNode()->getTransform()->translate(0.0f, 0.0f, -4.0f);
-	//
-	//v0 = new Cube(vec3(1.0f, 0.0f, 0.0f));
-	//v1 = new Cube(vec3(1.0f, 0.0f, 0.0f));
-	//v2 = new Cube(vec3(1.0f, 0.0f, 0.0f));
-	//v3 = new Cube(vec3(1.0f, 0.0f, 0.0f));
-	//v4 = new Cube(vec3(1.0f, 0.0f, 0.0f));
-	//v5 = new Cube(vec3(1.0f, 0.0f, 0.0f));
-	//v6 = new Cube(vec3(1.0f, 0.0f, 0.0f));
-	//v7 = new Cube(vec3(1.0f, 0.0f, 0.0f));
-	//
-	//v0->getTransform()->setScale(0.2f, 0.2f, 0.2f);
-	//v1->getTransform()->setScale(0.2f, 0.2f, 0.2f);
-	//v2->getTransform()->setScale(0.2f, 0.2f, 0.2f);
-	//v3->getTransform()->setScale(0.2f, 0.2f, 0.2f);
-	//v4->getTransform()->setScale(0.2f, 0.2f, 0.2f);
-	//v5->getTransform()->setScale(0.2f, 0.2f, 0.2f);
-	//v6->getTransform()->setScale(0.2f, 0.2f, 0.2f);
-	//v7->getTransform()->setScale(0.2f, 0.2f, 0.2f);
-#pragma endregion
-
 #pragma region Light
 	lightingManager->addDirectionalLight(vec3(1.0f, -1.0f, 0.0f));
 
@@ -101,13 +78,34 @@ int Game::initialize()
 	
 #pragma region Camera
 	FrustumData frustumData;
-	frustumData.near = 1.0f;
-	frustumData.far = 3.0f;
+	frustumData.near = 0.5f;
+	frustumData.far = 7.0f;
 
 	camera->enableFrustumCulling(frustumData);
 
 	camera->getTransform()->setPosition(0.0f, 0.0f, 0.0f);
 	camera->getTransform()->setRotation(0.0f, 180.0f, 0.0f);
+
+	cube = new Cube(vec3(0.4f, 0.0f, 0.4f));
+	cube->getTransform()->setPosition(0.0f, 0.0f, -5.0f);
+
+	//v0 = new Cube(vec3(1.0f, 0.0f, 0.0f));
+	//v1 = new Cube(vec3(1.0f, 0.0f, 0.0f));
+	//v2 = new Cube(vec3(1.0f, 0.0f, 0.0f));
+	//v3 = new Cube(vec3(1.0f, 0.0f, 0.0f));
+	//v4 = new Cube(vec3(1.0f, 0.0f, 0.0f));
+	//v5 = new Cube(vec3(1.0f, 0.0f, 0.0f));
+	//v6 = new Cube(vec3(1.0f, 0.0f, 0.0f));
+	//v7 = new Cube(vec3(1.0f, 0.0f, 0.0f));
+	//
+	//v0->getTransform()->setScale(0.1f, 0.1f, 0.1f);
+	//v1->getTransform()->setScale(0.1f, 0.1f, 0.1f);
+	//v2->getTransform()->setScale(0.1f, 0.1f, 0.1f);
+	//v3->getTransform()->setScale(0.1f, 0.1f, 0.1f);
+	//v4->getTransform()->setScale(0.1f, 0.1f, 0.1f);
+	//v5->getTransform()->setScale(0.1f, 0.1f, 0.1f);
+	//v6->getTransform()->setScale(0.1f, 0.1f, 0.1f);
+	//v7->getTransform()->setScale(0.1f, 0.1f, 0.1f);
 #pragma endregion
 
 	return 1;
@@ -140,6 +138,7 @@ void Game::update()
 	if (input->getKeyPress(FunctionKey::LEFT)) camera->getTransform()->rotate(0.0f, -cameraRotationSpeed * time->getDeltaTime(), 0.0f);
 	//-----------
 
+#pragma region Frustum Testing
 	//Transform frustum
 	//-----------
 	//if (input->getKeyPress(PrintableKey::U)) camera->getFrustum()->getTransform()->translate(0.0f, 0.0f, cameraMovementSpeed * time->getDeltaTime());
@@ -152,22 +151,44 @@ void Game::update()
 	//if (input->getKeyPress(PrintableKey::L)) camera->getFrustum()->getTransform()->rotate(-cameraRotationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
 	//-----------
 
-	//Move testing cube
+	//Frustum plane testing
 	//-----------
 	if (input->getKeyPress(PrintableKey::U)) camera->getFrustum()->getTransform()->translate(0.0f, 0.0f, cameraMovementSpeed * time->getDeltaTime());
 	if (input->getKeyPress(PrintableKey::J)) camera->getFrustum()->getTransform()->translate(0.0f, 0.0f, -cameraMovementSpeed * time->getDeltaTime());
-
+	
 	if (input->getKeyPress(PrintableKey::I)) camera->getFrustum()->getTransform()->translate(0.0f, cameraMovementSpeed * time->getDeltaTime(), 0.0f);
 	if (input->getKeyPress(PrintableKey::K)) camera->getFrustum()->getTransform()->translate(0.0f, -cameraMovementSpeed * time->getDeltaTime(), 0.0f);
-
+	
 	if (input->getKeyPress(PrintableKey::O)) camera->getFrustum()->getTransform()->translate(cameraMovementSpeed * time->getDeltaTime(), 0.0f, 0.0f);
 	if (input->getKeyPress(PrintableKey::L)) camera->getFrustum()->getTransform()->translate(-cameraMovementSpeed * time->getDeltaTime(), 0.0f, 0.0f);
-
+	
 	//string isInside = camera->getFrustum()->isInside(cube->getTransform()->getGlobalPosition()) ? "true" : "false";
 	//cout << "cube is inside frustum: " << isInside << endl;
-
-	//cout << "entities: " << Entity::getEntities().size() << endl;
 	//-----------
+
+	//Collision box testing
+	//-----------
+	vector<vec3> v = cube->getCollisionVertices();
+	
+	//v0->getTransform()->setPosition(v[0].x, v[0].y, v[0].z);
+	//v1->getTransform()->setPosition(v[1].x, v[1].y, v[1].z);
+	//v2->getTransform()->setPosition(v[2].x, v[2].y, v[2].z);
+	//v3->getTransform()->setPosition(v[3].x, v[3].y, v[3].z);
+	//v4->getTransform()->setPosition(v[4].x, v[4].y, v[4].z);
+	//v5->getTransform()->setPosition(v[5].x, v[5].y, v[5].z);
+	//v6->getTransform()->setPosition(v[6].x, v[6].y, v[6].z);
+	//v7->getTransform()->setPosition(v[7].x, v[7].y, v[7].z);
+	
+	//if (input->getKeyPress(PrintableKey::J)) cube->getTransform()->translate(cubeTranslationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
+	//if (input->getKeyPress(PrintableKey::L)) cube->getTransform()->translate(-cubeTranslationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
+	//
+	if (input->getKeyPress(PrintableKey::M)) cube->getTransform()->rotate(0.0f, cubeRotationSpeed * time->getDeltaTime(), 0.0f);
+	if (input->getKeyPress(PrintableKey::N)) cube->getTransform()->rotate(0.0f, -cubeRotationSpeed * time->getDeltaTime(), 0.0f);
+	//
+	//if (input->getKeyPress(PrintableKey::K)) cube->getTransform()->translate(0.0f, 0.0f, cubeTranslationSpeed * time->getDeltaTime());
+	//if (input->getKeyPress(PrintableKey::I)) cube->getTransform()->translate(0.0f, 0.0f, -cubeTranslationSpeed * time->getDeltaTime());
+	//-----------
+#pragma endregion
 #pragma endregion
 
 #pragma region Light
@@ -209,31 +230,6 @@ void Game::update()
 	else if (input->getKeyRelease(PrintableKey::FIVE)) fivePressed = false;
 	//-----------
 #pragma endregion
-
-#pragma region Models
-	//ModelNode* bspScene = dynamic_cast<ModelNode*>(bsp->getRootNode());
-	//ModelNode* bspRoot = dynamic_cast<ModelNode*>(bsp->getRootNode()->getChildren()[0]);
-	//ModelNode* bspChild = dynamic_cast<ModelNode*>(bsp->getRootNode()->getChildren()[0]);
-	//vector<vec3> v = bspChild->getCollisionBoxVertices();
-	//
-	//v0->getTransform()->setPosition(v[0].x, v[0].y, v[0].z);
-	//v1->getTransform()->setPosition(v[1].x, v[1].y, v[1].z);
-	//v2->getTransform()->setPosition(v[2].x, v[2].y, v[2].z);
-	//v3->getTransform()->setPosition(v[3].x, v[3].y, v[3].z);
-	//v4->getTransform()->setPosition(v[4].x, v[4].y, v[4].z);
-	//v5->getTransform()->setPosition(v[5].x, v[5].y, v[5].z);
-	//v6->getTransform()->setPosition(v[6].x, v[6].y, v[6].z);
-	//v7->getTransform()->setPosition(v[7].x, v[7].y, v[7].z);
-	//
-	//if (input->getKeyPress(PrintableKey::J)) bspRoot->getTransform()->translate(cubeTranslationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
-	//if (input->getKeyPress(PrintableKey::L)) bspRoot->getTransform()->translate(-cubeTranslationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
-	//
-	//if (input->getKeyPress(PrintableKey::M)) bspRoot->getTransform()->rotate(0.0f, cubeRotationSpeed * time->getDeltaTime(), 0.0f);
-	//if (input->getKeyPress(PrintableKey::N)) bspRoot->getTransform()->rotate(0.0f, -cubeRotationSpeed * time->getDeltaTime(), 0.0f);
-	//
-	//if (input->getKeyPress(PrintableKey::K)) bspRoot->getTransform()->translate(0.0f, 0.0f, cubeTranslationSpeed * time->getDeltaTime());
-	//if (input->getKeyPress(PrintableKey::I)) bspRoot->getTransform()->translate(0.0f, 0.0f, -cubeTranslationSpeed * time->getDeltaTime());
-#pragma endregion
 #pragma endregion
 
 #pragma region Rendering
@@ -255,21 +251,4 @@ void Game::update()
 #pragma endregion
 }
 
-int Game::terminate()
-{
-	if (rubyCube) delete rubyCube;
-	if (emeraldCube) delete emeraldCube;
-	if (goldCube) delete goldCube;
-
-	//if (bsp) delete bsp;
-	//if (v0) delete v0;
-	//if (v1) delete v0;
-	//if (v2) delete v0;
-	//if (v3) delete v0;
-	//if (v4) delete v0;
-	//if (v5) delete v0;
-	//if (v6) delete v0;
-	//if (v7) delete v0;
-
-	return 0;
-}
+int Game::terminate() { return 0; }

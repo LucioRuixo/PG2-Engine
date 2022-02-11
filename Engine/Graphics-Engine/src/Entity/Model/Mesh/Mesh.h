@@ -38,6 +38,10 @@ public:
 	vector<unsigned int> getIndices();
 	vector<Texture> getTextures();
 
+#pragma Collision Box
+	vector<vec3> getCollisionVertices() override;
+#pragma endregion
+
 	void draw() override;
 	//void draw(mat4 model);
 	//void draw(Renderer* renderer, TextureManager* textureManager);

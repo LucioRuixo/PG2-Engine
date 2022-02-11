@@ -119,7 +119,7 @@ bool Plane::sameSide(vec3 a, vector<vec3> b)
 }
 
 #pragma Collision Box
-vector<vec3> Plane::getCollisionBoxVertices() { return calculateCollisionBoxVertices(planeVertexPositions); }
+vector<vec3> Plane::getCollisionVertices() { return calculateCollisionVertices(planeVertexPositions); }
 #pragma endregion
 
 void Plane::draw()

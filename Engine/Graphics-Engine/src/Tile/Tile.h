@@ -16,6 +16,11 @@ public:
 	bool getWalkability();
 	void setSprite(Sprite* _sprite);
 	Sprite* getSprite();
+
+#pragma Collision Box
+	vector<vec3> getCollisionVertices() override;
+#pragma endregion
+
 	void draw();
 };
 

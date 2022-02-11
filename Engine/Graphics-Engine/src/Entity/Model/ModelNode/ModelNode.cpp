@@ -96,7 +96,7 @@ void ModelNode::processBSP(vec3 cameraPosition, vector<Plane*> planes)
 
 		for (int i = 0; i < planes.size(); i++)
 		{
-			if (!planes[i]->sameSide(cameraPosition, getCollisionBoxVertices()))
+			if (!planes[i]->sameSide(cameraPosition, getCollisionVertices()))
 			{
 				sameSideAsAllPlanes = false;
 				break;
@@ -200,7 +200,7 @@ vector<vec3> ModelNode::getTransformedVertices()
 			edges.maxEdge.z = glm::max(meshVertices[j].Position.z, edges.maxEdge.z);
 		}
 	}
-	vector<vec3> vertices = generateCollisonBoxVertices(edges);
+	vector<vec3> vertices = generateCBVertices(edges);
 
 	vector<vec3> transformedVertices;
 	for (int i = 0; i < vertices.size(); i++)
@@ -252,19 +252,19 @@ CollisionBoxEdges ModelNode::getTransformedEdges()
 	return edges;
 }
 
-vector<vec3> ModelNode::getCollisionBoxVertices()
+vector<vec3> ModelNode::getCollisionVertices()
 {
 	if (transform->getTransformedSinceCBUpdate())
 	{
 		if (children.size() > 0)
 		{
 			vector<vec3> transformedVertices = getTransformedVertices();
-			CollisionBoxEdges transformedEdges = generateCollisonBoxEdges(transformedVertices);
+			CollisionBoxEdges transformedEdges = generateCBEdges(transformedVertices);
 
 			for (int i = 0; i < children.size(); i++)
 			{
-				vector<vec3> childVertices = dynamic_cast<ModelNode*>(children[i])->getCollisionBoxVertices();
-				CollisionBoxEdges childEdges = generateCollisonBoxEdges(childVertices);
+				vector<vec3> childVertices = dynamic_cast<ModelNode*>(children[i])->getCollisionVertices();
+				CollisionBoxEdges childEdges = generateCBEdges(childVertices);
 
 				transformedEdges.minEdge.x = glm::min(transformedEdges.minEdge.x, childEdges.minEdge.x);
 				transformedEdges.minEdge.y = glm::min(transformedEdges.minEdge.y, childEdges.minEdge.y);
@@ -275,9 +275,9 @@ vector<vec3> ModelNode::getCollisionBoxVertices()
 				transformedEdges.maxEdge.z = glm::max(childEdges.maxEdge.z, transformedEdges.maxEdge.z);
 			}
 
-			collisionBoxVertices = generateCollisonBoxVertices(transformedEdges);
+			collisionBoxVertices = generateCBVertices(transformedEdges);
 		}
-		else collisionBoxVertices = generateCollisonBoxVertices(getTransformedEdges());
+		else collisionBoxVertices = generateCBVertices(getTransformedEdges());
 
 		transform->setTransformedSinceCBUpdate(false);
 	}

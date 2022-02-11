@@ -161,11 +161,14 @@ GameBase::~GameBase()
 
 void GameBase::run()
 {
+#pragma region Initialize
 	float elapsedTime = 0.0f;
 	int framesInSecond = 0;
 
 	initialize();
+#pragma endregion
 
+#pragma region Update
 	while (!window->getWindowShouldClose())
 	{
 		renderer->clearBackground();
@@ -196,6 +199,16 @@ void GameBase::run()
 		window->swapBuffers();
 		window->pollEvents();
 	}
+#pragma endregion
 
+#pragma region Terminate
 	terminate();
+
+	vector<Entity*> entities = Entity::getEntities();
+	for (int i = 0; i < entities.size(); i++) if (entities[i]) delete entities[i];
+
+	entities.clear();
+	Entity::getEntities().clear();
+	Entity::getRenderizableEntities().clear();
+#pragma endregion
 }

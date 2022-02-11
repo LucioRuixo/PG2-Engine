@@ -48,7 +48,7 @@ public:
 #pragma endregion
 
 #pragma Collision Box
-	vector<vec3> getCollisionBoxVertices() override;
+	vector<vec3> getCollisionVertices() override;
 #pragma endregion
 
 #pragma region BSP
