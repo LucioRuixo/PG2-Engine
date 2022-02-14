@@ -104,18 +104,18 @@ public:
 	Material getMaterial();
 #pragma endregion
 
+#pragma region Parent
+	virtual void setParent(Entity* _parent);
+	virtual Entity* getParent();
+#pragma endregion
+
 #pragma region Children
 	virtual vector<Entity*> getChildren();
 	virtual void addChild(Entity* child);
 	virtual void removeChild(Entity* child);
 #pragma endregion
 
-#pragma region Parent
-	virtual void setParent(Entity* _parent);
-	virtual Entity* getParent();
-#pragma endregion
-
-#pragma Collision Box
+#pragma region Collision Box
 	virtual vector<vec3> getCollisionVertices() = 0;
 #pragma endregion
 

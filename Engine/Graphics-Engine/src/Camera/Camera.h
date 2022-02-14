@@ -4,7 +4,6 @@
 #include "Tools/Includes.h"
 #include "Entity/Cube/Cube.h"
 #include "Entity/Plane/Plane.h"
-#include "Frustum/Frustum.h"
 #include "Renderer/Renderer.h"
 #include "Transform/CameraTransform/CameraTransform.h"
 
@@ -14,9 +13,6 @@ class GENGINE_API Camera : public Entity
 {
 	bool bspCulling = false;
 	vector<Plane*> bspPlanes;
-
-	bool frustumCulling = false;
-	Frustum* frustum;
 
 	Renderer* renderer;
 	CameraTransform* transform;
@@ -40,14 +36,6 @@ public:
 
 #pragma Collision Box
 	vector<vec3> getCollisionVertices() override;
-#pragma endregion
-
-#pragma region Frustum Culling
-	Frustum* getFrustum();
-
-	void enableFrustumCulling(FrustumData frustumData);
-	void disableFrustumCulling();
-	void processFrustumCulling(Entity* entity);
 #pragma endregion
 
 #pragma region Rendering

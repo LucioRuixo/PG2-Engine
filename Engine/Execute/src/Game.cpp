@@ -5,6 +5,7 @@ bool twoPressed = false;
 bool threePressed = false;
 bool fourPressed = false;
 bool fivePressed = false;
+bool fPressed = false;
 
 float cameraMovementSpeed = 2.0f;
 float cameraRotationSpeed = 50.0f;
@@ -80,8 +81,9 @@ int Game::initialize()
 	FrustumData frustumData;
 	frustumData.near = 0.5f;
 	frustumData.far = 7.0f;
+	frustumData.verticalFOV = 35.0f;
 
-	camera->enableFrustumCulling(frustumData);
+	camera->getTransform()->enableFrustumCulling(frustumData);
 
 	camera->getTransform()->setPosition(0.0f, 0.0f, 0.0f);
 	camera->getTransform()->setRotation(0.0f, 180.0f, 0.0f);
@@ -131,11 +133,11 @@ void Game::update()
 
 	//Rotate camera
 	//-----------
-	if (input->getKeyPress(FunctionKey::UP)) camera->getTransform()->rotate(cameraRotationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
-	if (input->getKeyPress(FunctionKey::DOWN)) camera->getTransform()->rotate(-cameraRotationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
+	if (input->getKeyPress(FunctionKey::DOWN)) camera->getTransform()->rotate(cameraRotationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
+	if (input->getKeyPress(FunctionKey::UP)) camera->getTransform()->rotate(-cameraRotationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
 
-	if (input->getKeyPress(FunctionKey::RIGHT)) camera->getTransform()->rotate(0.0f, cameraRotationSpeed * time->getDeltaTime(), 0.0f);
-	if (input->getKeyPress(FunctionKey::LEFT)) camera->getTransform()->rotate(0.0f, -cameraRotationSpeed * time->getDeltaTime(), 0.0f);
+	if (input->getKeyPress(FunctionKey::LEFT)) camera->getTransform()->rotate(0.0f, cameraRotationSpeed * time->getDeltaTime(), 0.0f);
+	if (input->getKeyPress(FunctionKey::RIGHT)) camera->getTransform()->rotate(0.0f, -cameraRotationSpeed * time->getDeltaTime(), 0.0f);
 	//-----------
 
 #pragma region Frustum Testing
@@ -153,14 +155,28 @@ void Game::update()
 
 	//Frustum plane testing
 	//-----------
-	if (input->getKeyPress(PrintableKey::U)) camera->getFrustum()->getTransform()->translate(0.0f, 0.0f, cameraMovementSpeed * time->getDeltaTime());
-	if (input->getKeyPress(PrintableKey::J)) camera->getFrustum()->getTransform()->translate(0.0f, 0.0f, -cameraMovementSpeed * time->getDeltaTime());
+	if (input->getKeyPress(PrintableKey::F) && !fPressed)
+	{
+		fPressed = true;
+		camera->getTransform()->toggleFrustumAttachment();
+	}
+	else if (input->getKeyRelease(PrintableKey::F)) fPressed = false;
+
+	if (!camera->getTransform()->getFrustumAttached())
+	{
+		Transform* frustumTransform = camera->getTransform()->getFrustum()->getTransform();
+
+		if (input->getKeyPress(PrintableKey::J)) frustumTransform->translate(cubeTranslationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
+		if (input->getKeyPress(PrintableKey::L)) frustumTransform->translate(-cubeTranslationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
 	
-	if (input->getKeyPress(PrintableKey::I)) camera->getFrustum()->getTransform()->translate(0.0f, cameraMovementSpeed * time->getDeltaTime(), 0.0f);
-	if (input->getKeyPress(PrintableKey::K)) camera->getFrustum()->getTransform()->translate(0.0f, -cameraMovementSpeed * time->getDeltaTime(), 0.0f);
+		if (input->getKeyPress(PrintableKey::M)) frustumTransform->rotate(0.0f, cubeRotationSpeed * time->getDeltaTime(), 0.0f);
+		if (input->getKeyPress(PrintableKey::N)) frustumTransform->rotate(0.0f, -cubeRotationSpeed * time->getDeltaTime(), 0.0f);
 	
-	if (input->getKeyPress(PrintableKey::O)) camera->getFrustum()->getTransform()->translate(cameraMovementSpeed * time->getDeltaTime(), 0.0f, 0.0f);
-	if (input->getKeyPress(PrintableKey::L)) camera->getFrustum()->getTransform()->translate(-cameraMovementSpeed * time->getDeltaTime(), 0.0f, 0.0f);
+		if (input->getKeyPress(PrintableKey::K)) frustumTransform->translate(0.0f, 0.0f, cubeTranslationSpeed * time->getDeltaTime());
+		if (input->getKeyPress(PrintableKey::I)) frustumTransform->translate(0.0f, 0.0f, -cubeTranslationSpeed * time->getDeltaTime());
+	}
+
+	camera->getTransform()->getFrustum()->printDebugData();
 	
 	//string isInside = camera->getFrustum()->isInside(cube->getTransform()->getGlobalPosition()) ? "true" : "false";
 	//cout << "cube is inside frustum: " << isInside << endl;

@@ -66,36 +66,6 @@ void Camera::setParent(Entity* _parent)
 Entity* Camera::getParent() { return parent; }
 #pragma endregion
 
-#pragma region Frustum Culling
-Frustum* Camera::getFrustum()
-{ 
-	if (!frustumCulling)
-	{
-		cout << "Frustum culling is not enabled, returning null" << endl;
-		return NULL;
-	}
-	else return frustum;
-}
-
-void Camera::enableFrustumCulling(FrustumData frustumData)
-{
-	frustum = new Frustum(frustumData, transform);
-	//addChild(dynamic_cast<Entity*>(frustum));
-
-	frustumCulling = true;
-}
-
-void Camera::disableFrustumCulling()
-{
-	if (frustum) delete frustum;
-	//removeChild(dynamic_cast<Entity*>(frustum));
-
-	frustumCulling = false;
-}
-
-void Camera::processFrustumCulling(Entity* entity) { if (frustum->isInside(entity)) entity->draw(); }
-#pragma endregion
-
 #pragma region Collision Box
 vector<vec3> Camera::getCollisionVertices()
 {
@@ -107,24 +77,20 @@ vector<vec3> Camera::getCollisionVertices()
 #pragma region Rendering
 void Camera::draw()
 {
-	if (frustumCulling) drawFrustum();
+	if (getTransform()->getFrustum()) drawFrustum();
 
 	Entity::draw();
 }
 
 void Camera::drawFrustum()
 {
-	if (frustumCulling)
-	{
-		if (frustum) frustum->draw();
-		else cout << "Can not draw camera frustum: frustum object is null" << endl;
-	}
+	if (transform->getFrustumCulling()) transform->getFrustum()->draw();
 	else cout << "Can not draw camera frustum: frustum culling is not enabled" << endl;
 }
 
 void Camera::drawEntities()
 {
-	int drawnEntities = 0;
+	//int drawnEntities = 0;
 
 	for (int i = 0; i < Entity::getRenderizableEntities().size(); i++)
 	{
@@ -132,23 +98,22 @@ void Camera::drawEntities()
 
 		if (entity->getShouldBeDrawn())
 		{
-			//if (frustumCulling) processFrustumCulling(entity);
-			if (frustumCulling)
+			if (transform->getFrustumCulling())
 			{
-				if (frustum->isInside(entity))
+				if (transform->getFrustum()->isInside(entity))
 				{
 					entity->draw();
-					drawnEntities++;
+					//drawnEntities++;
 				}
 			}
 			else
 			{
 				entity->draw();
-				drawnEntities++;
+				//drawnEntities++;
 			}
 		}
 	}
 
-	cout << "drawn entities: " << drawnEntities << endl;
+	//cout << "drawn entities: " << drawnEntities << endl;
 }
 #pragma endregion

@@ -11,7 +11,7 @@ class GENGINE_API ModelNodeTransform : public Transform
 	Plane* bspPlane = NULL;
 
 protected:
-	void processRotation(float pitch, float yaw, float roll) override;
+	void processRotation(float pitch, float yaw, float roll, bool matchingParentRotation) override;
 
 public:
 	ModelNodeTransform();

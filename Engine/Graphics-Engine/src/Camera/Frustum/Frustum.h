@@ -3,7 +3,6 @@
 
 #include "Tools/Includes.h"
 #include "Entity/Plane/FrustumPlane/FrustumPlane.h"
-#include "Transform/CameraTransform/CameraTransform.h"
 
 enum FrustumPlanes
 {
@@ -22,7 +21,7 @@ class GENGINE_API Frustum : public Entity
 	vector<FrustumPlane*> planes;
 
 public:
-	Frustum(FrustumData _data, CameraTransform* cameraTransform);
+	Frustum(FrustumData _data);
 	~Frustum();
 
 	FrustumData getFrustumData();
@@ -34,6 +33,8 @@ public:
 #pragma Collision Box
 	vector<vec3> getCollisionVertices() override;
 #pragma endregion
+
+	void printDebugData();
 
 	void draw();
 };

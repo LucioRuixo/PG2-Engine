@@ -21,7 +21,7 @@ void ModelNodeTransform::initializeValues(vec3 _position, vec3 _rotation, vec3 _
 	localData.scale = _scale;
 }
 
-void ModelNodeTransform::processRotation(float pitch, float yaw, float roll)
+void ModelNodeTransform::processRotation(float pitch, float yaw, float roll, bool matchingParentRotation)
 {
 	localData.rotation.x += pitch;
 	localData.rotation.y += yaw;
@@ -41,6 +41,14 @@ void ModelNodeTransform::processRotation(float pitch, float yaw, float roll)
 	localModel.rotation = glm::rotate(localModel.rotation, radians(roll), vec3(0.0f, 0.0f, 1.0f));
 
 	updateLocalModel();
+
+	if (matchingParentRotation)
+	{
+		vec3 parentRotation = parent->getGlobalRotation();
+		pitch += parentRotation.x;
+		yaw += parentRotation.y;
+		roll += parentRotation.z;
+	}
 	updateDirectionVectors(pitch, yaw, roll);
 }
 

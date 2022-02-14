@@ -1,6 +1,6 @@
 #include "Frustum.h"
 
-Frustum::Frustum(FrustumData _data, CameraTransform* cameraTransform)
+Frustum::Frustum(FrustumData _data) : Entity(false)
 {
 	data = _data;
 
@@ -14,19 +14,30 @@ Frustum::Frustum(FrustumData _data, CameraTransform* cameraTransform)
 
 	//Plane setting
 	//----------
+	//Near & Far
 	planes[FrustumPlanes::Near]->getTransform()->setPosition(transform->getPosition() + transform->getForward() * data.near);
-
+	planes[FrustumPlanes::Near]->getTransform()->setScale(vec3(0.05f));
 	planes[FrustumPlanes::Far]->getTransform()->setPosition(transform->getPosition() + transform->getForward() * data.far);
 	planes[FrustumPlanes::Far]->getTransform()->rotate(0.0f, 180.0f, 0.0f);
 
+	//Up & Down
 	planes[FrustumPlanes::Up]->getTransform()->rotate(90.0f - data.verticalFOV / 2.0f, 0.0f, 0.0f);
 	planes[FrustumPlanes::Down]->getTransform()->rotate(-90.0f + data.verticalFOV / 2.0f, 0.0f, 0.0f);
+	vec3 up = planes[FrustumPlanes::Up]->getTransform()->getUp();
+	vec3 down = planes[FrustumPlanes::Down]->getTransform()->getUp();
+	planes[FrustumPlanes::Up]->getTransform()->translate(up * 5.0f);
+	planes[FrustumPlanes::Down]->getTransform()->translate(down * -5.0f);
 
+	//Right & Left
 	planes[FrustumPlanes::Right]->getTransform()->rotate(0.0f, 90.0f - horizontalFOV / 2.0f, 0.0f);
 	planes[FrustumPlanes::Left]->getTransform()->rotate(0.0f, -90.0f + horizontalFOV / 2.0f, 0.0f);
+	vec3 right = planes[FrustumPlanes::Right]->getTransform()->getRight();
+	vec3 left = planes[FrustumPlanes::Left]->getTransform()->getRight();
+	planes[FrustumPlanes::Right]->getTransform()->translate(right * 5.0f);
+	planes[FrustumPlanes::Left]->getTransform()->translate(left * -5.0f);
 	//----------
 
-	transform->rotate(0.0f, 180.0f, 0.0f);
+	//transform->rotate(0.0f, 180.0f, 0.0f);
 
 	//cout << "==========" << endl;
 	//cout << "FRUSTUM" << endl;
@@ -119,6 +130,35 @@ vector<vec3> Frustum::getCollisionVertices()
 	return vector<vec3>();
 }
 #pragma endregion
+
+void Frustum::printDebugData()
+{
+	//cout << endl << endl;
+	//cout << "==========" << endl;
+	//cout << "FRUSTUM" << endl;
+	//vec3 frustumLocalPosition = transform->getPosition();
+	//vec3 frustumGlobalPosition = transform->getGlobalPosition();
+	//vec3 frustumRotation = transform->getRotation();
+	//vec3 frustumForward = transform->getForward();
+	//cout << "frustumLocalPosition: " << frustumLocalPosition.x << " | " << frustumLocalPosition.y << " | " << frustumLocalPosition.z << endl;
+	//cout << "frustumGlobalPosition: " << frustumGlobalPosition.x << " | " << frustumGlobalPosition.y << " | " << frustumGlobalPosition.z << endl;
+	//cout << "frustumRotation: " << frustumRotation.x << " | " << frustumRotation.y << " | " << frustumRotation.z << endl;
+	//cout << "frustumForward: " << frustumForward.x << " | " << frustumForward.y << " | " << frustumForward.z << endl;
+	//cout << "==========" << endl;
+	//
+	//cout << "==========" << endl;
+	//cout << "NEAR" << endl;
+	//vec3 nearLocalPosition = planes[FrustumPlanes::Near]->getTransform()->getPosition();
+	//vec3 nearGlobalPosition = planes[FrustumPlanes::Near]->getTransform()->getGlobalPosition();
+	//vec3 nearRotation = planes[FrustumPlanes::Near]->getTransform()->getRotation();
+	//vec3 nearScale = planes[FrustumPlanes::Near]->getTransform()->getScale();
+	//vec3 nearForward = planes[FrustumPlanes::Near]->getTransform()->getForward();
+	//cout << "nearLocalPosition: " << nearLocalPosition.x << " | " << nearLocalPosition.y << " | " << nearLocalPosition.z << endl;
+	//cout << "nearGlobalPosition: " << nearGlobalPosition.x << " | " << nearGlobalPosition.y << " | " << nearGlobalPosition.z << endl;
+	//cout << "nearRotation: " << nearRotation.x << " | " << nearRotation.y << " | " << nearRotation.z << endl;
+	//cout << "nearForward: " << nearForward.x << " | " << nearForward.y << " | " << nearForward.z << endl;
+	//cout << "==========" << endl;
+}
 
 void Frustum::draw()
 {

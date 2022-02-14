@@ -328,6 +328,21 @@ void Entity::setMaterial(Material value) { material = value; }
 Material Entity::getMaterial() { return material; }
 #pragma endregion
 
+#pragma region Parent
+void Entity::setParent(Entity* _parent)
+{
+	if (parent == _parent) return;
+
+	if (parent) parent->removeChild(this);
+
+	parent = _parent;
+	if (parent) transform->setParent(parent->getTransform());
+	else transform->setParent(NULL);
+}
+
+Entity* Entity::getParent() { return parent; }
+#pragma endregion
+
 #pragma region Children
 vector<Entity*> Entity::getChildren() { return children; }
 
@@ -366,21 +381,6 @@ void Entity::removeChild(Entity* child)
 
 	cout << "Child entity intended to be removed from parent was not found" << endl;
 }
-#pragma endregion
-
-#pragma region Parent
-void Entity::setParent(Entity* _parent)
-{
-	if (parent == _parent) return;
-
-	if (parent) parent->removeChild(this);
-
-	parent = _parent;
-	if (parent) transform->setParent(parent->getTransform());
-	else transform->setParent(NULL);
-}
-
-Entity* Entity::getParent() { return parent; }
 #pragma endregion
 
 //vector<vec3> Entity::getCollisionVertices()
