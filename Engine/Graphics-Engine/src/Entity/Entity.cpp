@@ -391,6 +391,6 @@ void Entity::removeChild(Entity* child)
 
 void Entity::draw()
 {
-	if (!children.empty())
-		for (int i = 0; i < children.size(); i++) children[i]->draw();
+	//if (!children.empty())
+	//	for (int i = 0; i < children.size(); i++) children[i]->draw();
 }

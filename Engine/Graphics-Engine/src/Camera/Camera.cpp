@@ -92,6 +92,7 @@ void Camera::drawEntities()
 {
 	//int drawnEntities = 0;
 
+	vector<Entity*> re = Entity::getRenderizableEntities();
 	for (int i = 0; i < Entity::getRenderizableEntities().size(); i++)
 	{
 		Entity* entity = Entity::getRenderizableEntities()[i];

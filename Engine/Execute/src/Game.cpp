@@ -1,5 +1,6 @@
 #include "Game.h"
 
+bool zeroPressed = false;
 bool onePressed = false;
 bool twoPressed = false;
 bool threePressed = false;
@@ -26,15 +27,17 @@ Cube* rubyCube;
 Cube* emeraldCube;
 Cube* goldCube;
 
+int controlledEntity = 1;
 Cube* cube;
-//Cube* v0;
-//Cube* v1;
-//Cube* v2;
-//Cube* v3;
-//Cube* v4;
-//Cube* v5;
-//Cube* v6;
-//Cube* v7;
+Cube* cube2;
+Cube* v0;
+Cube* v1;
+Cube* v2;
+Cube* v3;
+Cube* v4;
+Cube* v5;
+Cube* v6;
+Cube* v7;
 
 Game::Game() {}
 
@@ -42,7 +45,7 @@ Game::~Game() {}
 
 int Game::initialize()
 {
-#pragma region Material Cubes
+#pragma region Materials
 	Material ruby;
 	ruby.diffuse = vec3(0.61424f, 0.04136f, 0.04136f);
 	ruby.specular = vec3(0.727811f, 0.626959f, 0.626959f);
@@ -87,27 +90,38 @@ int Game::initialize()
 
 	camera->getTransform()->setPosition(0.0f, 0.0f, 0.0f);
 	camera->getTransform()->setRotation(0.0f, 180.0f, 0.0f);
+#pragma endregion
 
-	cube = new Cube(vec3(0.4f, 0.0f, 0.4f));
+#pragma region Hierarchical Transformations
+	cube = new Cube(vec3(0.3f, 0.8f, 0.5f));
+	cube->getTransform()->setScale(1.0f, 0.5f, 1.5f);
 	cube->getTransform()->setPosition(0.0f, 0.0f, -5.0f);
 
-	//v0 = new Cube(vec3(1.0f, 0.0f, 0.0f));
-	//v1 = new Cube(vec3(1.0f, 0.0f, 0.0f));
-	//v2 = new Cube(vec3(1.0f, 0.0f, 0.0f));
-	//v3 = new Cube(vec3(1.0f, 0.0f, 0.0f));
-	//v4 = new Cube(vec3(1.0f, 0.0f, 0.0f));
-	//v5 = new Cube(vec3(1.0f, 0.0f, 0.0f));
-	//v6 = new Cube(vec3(1.0f, 0.0f, 0.0f));
-	//v7 = new Cube(vec3(1.0f, 0.0f, 0.0f));
-	//
-	//v0->getTransform()->setScale(0.1f, 0.1f, 0.1f);
-	//v1->getTransform()->setScale(0.1f, 0.1f, 0.1f);
-	//v2->getTransform()->setScale(0.1f, 0.1f, 0.1f);
-	//v3->getTransform()->setScale(0.1f, 0.1f, 0.1f);
-	//v4->getTransform()->setScale(0.1f, 0.1f, 0.1f);
-	//v5->getTransform()->setScale(0.1f, 0.1f, 0.1f);
-	//v6->getTransform()->setScale(0.1f, 0.1f, 0.1f);
-	//v7->getTransform()->setScale(0.1f, 0.1f, 0.1f);
+	cube2 = new Cube(vec3(0.3f, 0.5f, 0.8f));
+	cube2->name = "Cube 2";
+	cube2->getTransform()->setScale(0.5f, 0.75f, 0.5f);
+
+	cube->addChild(cube2);
+
+	cube2->getTransform()->translate(0.0f, 0.75f, 0.0f);
+
+	v0 = new Cube(vec3(1.0f, 0.0f, 0.0f));
+	v1 = new Cube(vec3(1.0f, 0.0f, 0.0f));
+	v2 = new Cube(vec3(1.0f, 0.0f, 0.0f));
+	v3 = new Cube(vec3(1.0f, 0.0f, 0.0f));
+	v4 = new Cube(vec3(1.0f, 0.0f, 0.0f));
+	v5 = new Cube(vec3(1.0f, 0.0f, 0.0f));
+	v6 = new Cube(vec3(1.0f, 0.0f, 0.0f));
+	v7 = new Cube(vec3(1.0f, 0.0f, 0.0f));
+	
+	v0->getTransform()->setScale(0.1f, 0.1f, 0.1f);
+	v1->getTransform()->setScale(0.1f, 0.1f, 0.1f);
+	v2->getTransform()->setScale(0.1f, 0.1f, 0.1f);
+	v3->getTransform()->setScale(0.1f, 0.1f, 0.1f);
+	v4->getTransform()->setScale(0.1f, 0.1f, 0.1f);
+	v5->getTransform()->setScale(0.1f, 0.1f, 0.1f);
+	v6->getTransform()->setScale(0.1f, 0.1f, 0.1f);
+	v7->getTransform()->setScale(0.1f, 0.1f, 0.1f);
 #pragma endregion
 
 	return 1;
@@ -162,7 +176,14 @@ void Game::update()
 	}
 	else if (input->getKeyRelease(PrintableKey::F)) fPressed = false;
 
-	if (!camera->getTransform()->getFrustumAttached())
+	if (input->getKeyPress(PrintableKey::ZERO) && !zeroPressed)
+	{
+		zeroPressed = true;
+		controlledEntity = 0;
+	}
+	else if (input->getKeyRelease(PrintableKey::ZERO)) zeroPressed = false;
+
+	if (controlledEntity == 0 && !camera->getTransform()->getFrustumAttached())
 	{
 		Transform* frustumTransform = camera->getTransform()->getFrustum()->getTransform();
 
@@ -181,69 +202,106 @@ void Game::update()
 	//string isInside = camera->getFrustum()->isInside(cube->getTransform()->getGlobalPosition()) ? "true" : "false";
 	//cout << "cube is inside frustum: " << isInside << endl;
 	//-----------
-
-	//Collision box testing
-	//-----------
-	vector<vec3> v = cube->getCollisionVertices();
-	
-	//v0->getTransform()->setPosition(v[0].x, v[0].y, v[0].z);
-	//v1->getTransform()->setPosition(v[1].x, v[1].y, v[1].z);
-	//v2->getTransform()->setPosition(v[2].x, v[2].y, v[2].z);
-	//v3->getTransform()->setPosition(v[3].x, v[3].y, v[3].z);
-	//v4->getTransform()->setPosition(v[4].x, v[4].y, v[4].z);
-	//v5->getTransform()->setPosition(v[5].x, v[5].y, v[5].z);
-	//v6->getTransform()->setPosition(v[6].x, v[6].y, v[6].z);
-	//v7->getTransform()->setPosition(v[7].x, v[7].y, v[7].z);
-	
-	//if (input->getKeyPress(PrintableKey::J)) cube->getTransform()->translate(cubeTranslationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
-	//if (input->getKeyPress(PrintableKey::L)) cube->getTransform()->translate(-cubeTranslationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
-	//
-	if (input->getKeyPress(PrintableKey::M)) cube->getTransform()->rotate(0.0f, cubeRotationSpeed * time->getDeltaTime(), 0.0f);
-	if (input->getKeyPress(PrintableKey::N)) cube->getTransform()->rotate(0.0f, -cubeRotationSpeed * time->getDeltaTime(), 0.0f);
-	//
-	//if (input->getKeyPress(PrintableKey::K)) cube->getTransform()->translate(0.0f, 0.0f, cubeTranslationSpeed * time->getDeltaTime());
-	//if (input->getKeyPress(PrintableKey::I)) cube->getTransform()->translate(0.0f, 0.0f, -cubeTranslationSpeed * time->getDeltaTime());
-	//-----------
 #pragma endregion
 #pragma endregion
 
-#pragma region Light
-	//Turn on/off light
+#pragma region Hierarchical Transformations
+	// Cube 1
 	//-----------
 	if (input->getKeyPress(PrintableKey::ONE) && !onePressed)
 	{
 		onePressed = true;
-		lightingManager->getDirectionalLight()->setOn(!lightingManager->getDirectionalLight()->getOn());
+		controlledEntity = 1;
 	}
 	else if (input->getKeyRelease(PrintableKey::ONE)) onePressed = false;
-	
+
+	if (controlledEntity == 1)
+	{
+		if (input->getKeyPress(PrintableKey::J)) cube->getTransform()->translate(cubeTranslationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
+		if (input->getKeyPress(PrintableKey::L)) cube->getTransform()->translate(-cubeTranslationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
+
+		if (input->getKeyPress(PrintableKey::K)) cube->getTransform()->translate(0.0f, 0.0f, cubeTranslationSpeed * time->getDeltaTime());
+		if (input->getKeyPress(PrintableKey::I)) cube->getTransform()->translate(0.0f, 0.0f, -cubeTranslationSpeed * time->getDeltaTime());
+
+		if (input->getKeyPress(PrintableKey::M)) cube->getTransform()->rotate(0.0f, cubeRotationSpeed * time->getDeltaTime(), 0.0f);
+		if (input->getKeyPress(PrintableKey::N)) cube->getTransform()->rotate(0.0f, -cubeRotationSpeed * time->getDeltaTime(), 0.0f);
+	}
+	//-----------
+
+	// Cube 2
+	//-----------
 	if (input->getKeyPress(PrintableKey::TWO) && !twoPressed)
 	{
 		twoPressed = true;
-		lightingManager->getPointLight(0)->setOn(!lightingManager->getPointLight(0)->getOn());
+		controlledEntity = 2;
 	}
 	else if (input->getKeyRelease(PrintableKey::TWO)) twoPressed = false;
-	
-	if (input->getKeyPress(PrintableKey::THREE) && !threePressed)
-	{
-		threePressed = true;
-		lightingManager->getPointLight(1)->setOn(!lightingManager->getPointLight(1)->getOn());
-	}
-	else if (input->getKeyRelease(PrintableKey::THREE)) threePressed = false;
 
-	if (input->getKeyPress(PrintableKey::FOUR) && !fourPressed)
+	if (controlledEntity == 2)
 	{
-		fourPressed = true;
-		lightingManager->getSpotlight(0)->setOn(!lightingManager->getSpotlight(0)->getOn());
-	}
-	else if (input->getKeyRelease(PrintableKey::FOUR)) fourPressed = false;
+		if (input->getKeyPress(PrintableKey::J)) cube2->getTransform()->translate(cubeTranslationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
+		if (input->getKeyPress(PrintableKey::L)) cube2->getTransform()->translate(-cubeTranslationSpeed * time->getDeltaTime(), 0.0f, 0.0f);
 
-	if (input->getKeyPress(PrintableKey::FIVE) && !fivePressed)
-	{
-		fivePressed = true;
-		lightingManager->getSpotlight(1)->setOn(!lightingManager->getSpotlight(1)->getOn());
+		if (input->getKeyPress(PrintableKey::K)) cube2->getTransform()->translate(0.0f, 0.0f, cubeTranslationSpeed * time->getDeltaTime());
+		if (input->getKeyPress(PrintableKey::I)) cube2->getTransform()->translate(0.0f, 0.0f, -cubeTranslationSpeed * time->getDeltaTime());
+
+		if (input->getKeyPress(PrintableKey::M)) cube2->getTransform()->rotate(0.0f, cubeRotationSpeed * time->getDeltaTime(), 0.0f);
+		if (input->getKeyPress(PrintableKey::N)) cube2->getTransform()->rotate(0.0f, -cubeRotationSpeed * time->getDeltaTime(), 0.0f);
 	}
-	else if (input->getKeyRelease(PrintableKey::FIVE)) fivePressed = false;
+	//-----------
+
+	//Collision box testing
+	//-----------
+	vector<vec3> v = cube->getCollisionVertices();
+
+	v0->getTransform()->setPosition(v[0].x, v[0].y, v[0].z);
+	v1->getTransform()->setPosition(v[1].x, v[1].y, v[1].z);
+	v2->getTransform()->setPosition(v[2].x, v[2].y, v[2].z);
+	v3->getTransform()->setPosition(v[3].x, v[3].y, v[3].z);
+	v4->getTransform()->setPosition(v[4].x, v[4].y, v[4].z);
+	v5->getTransform()->setPosition(v[5].x, v[5].y, v[5].z);
+	v6->getTransform()->setPosition(v[6].x, v[6].y, v[6].z);
+	v7->getTransform()->setPosition(v[7].x, v[7].y, v[7].z);
+	//-----------
+#pragma endregion
+
+#pragma region Light
+	// Turn on/off light
+	//-----------
+	//if (input->getKeyPress(PrintableKey::ONE) && !onePressed)
+	//{
+	//	onePressed = true;
+	//	lightingManager->getDirectionalLight()->setOn(!lightingManager->getDirectionalLight()->getOn());
+	//}
+	//else if (input->getKeyRelease(PrintableKey::ONE)) onePressed = false;
+	//
+	//if (input->getKeyPress(PrintableKey::TWO) && !twoPressed)
+	//{
+	//	twoPressed = true;
+	//	lightingManager->getPointLight(0)->setOn(!lightingManager->getPointLight(0)->getOn());
+	//}
+	//else if (input->getKeyRelease(PrintableKey::TWO)) twoPressed = false;
+	//
+	//if (input->getKeyPress(PrintableKey::THREE) && !threePressed)
+	//{
+	//	threePressed = true;
+	//	lightingManager->getPointLight(1)->setOn(!lightingManager->getPointLight(1)->getOn());
+	//}
+	//else if (input->getKeyRelease(PrintableKey::THREE)) threePressed = false;
+	//
+	//if (input->getKeyPress(PrintableKey::FOUR) && !fourPressed)
+	//{
+	//	fourPressed = true;
+	//	lightingManager->getSpotlight(0)->setOn(!lightingManager->getSpotlight(0)->getOn());
+	//}
+	//else if (input->getKeyRelease(PrintableKey::FOUR)) fourPressed = false;
+	//
+	//if (input->getKeyPress(PrintableKey::FIVE) && !fivePressed)
+	//{
+	//	fivePressed = true;
+	//	lightingManager->getSpotlight(1)->setOn(!lightingManager->getSpotlight(1)->getOn());
+	//}
+	//else if (input->getKeyRelease(PrintableKey::FIVE)) fivePressed = false;
 	//-----------
 #pragma endregion
 #pragma endregion

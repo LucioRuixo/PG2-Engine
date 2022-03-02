@@ -82,6 +82,8 @@ public:
 	static void setRenderer(Renderer* _renderer);
 	static void setTextureManager(TextureManager* _textureManager);
 
+	string name = "Entity";
+
 	Entity(bool _renderizable = true);
 	Entity(vector<Entity*> _children, bool _renderizable = true);
 	Entity(vec3 _color, bool _renderizable = true);

@@ -130,13 +130,13 @@ void Cube::initializeRenderingData()
 	else cout << "Can not initialize cube rendering data: data has already been initialized" << endl;
 }
 
-Cube::Cube(bool renderizable) : Entity(renderizable) {}
+Cube::Cube(bool renderizable) : Entity(renderizable) { name = "Cube"; }
 
-Cube::Cube(vec3 _color, bool renderizable) : Entity(_color, renderizable) {}
+Cube::Cube(vec3 _color, bool renderizable) : Entity(_color, renderizable) { name = "Cube"; }
 
-Cube::Cube(Material _material, bool renderizable) : Entity(_material, renderizable) {}
+Cube::Cube(Material _material, bool renderizable) : Entity(_material, renderizable) { name = "Cube"; }
 
-Cube::Cube(vec3 _color, Material _material, bool renderizable) : Entity(_color, _material, renderizable) {}
+Cube::Cube(vec3 _color, Material _material, bool renderizable) : Entity(_color, _material, renderizable) { name = "Cube"; }
 
 Cube::~Cube() {}
 
