@@ -39,6 +39,8 @@ public:
 #pragma endregion
 
 #pragma region Rendering
+	void processFrustumCulling(Entity* entity);
+
 	void draw() override;
 	void drawFrustum();
 	void drawEntities();

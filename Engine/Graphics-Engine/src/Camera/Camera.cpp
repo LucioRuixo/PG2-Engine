@@ -75,6 +75,19 @@ vector<vec3> Camera::getCollisionVertices()
 #pragma endregion
 
 #pragma region Rendering
+void Camera::processFrustumCulling(Entity* entity)
+{
+	if (transform->getFrustum()->isInside(entity))
+	{
+		entity->draw();
+
+		vector<Entity*> children = entity->getChildren();
+		vector<Entity*>::iterator childrenIterator;
+		for (childrenIterator = children.begin(); childrenIterator < children.end(); childrenIterator++)
+			processFrustumCulling(*childrenIterator);
+	}
+}
+
 void Camera::draw()
 {
 	if (getTransform()->getFrustum()) drawFrustum();
@@ -90,31 +103,15 @@ void Camera::drawFrustum()
 
 void Camera::drawEntities()
 {
-	//int drawnEntities = 0;
-
-	vector<Entity*> re = Entity::getRenderizableEntities();
 	for (int i = 0; i < Entity::getRenderizableEntities().size(); i++)
 	{
 		Entity* entity = Entity::getRenderizableEntities()[i];
 
 		if (entity->getShouldBeDrawn())
 		{
-			if (transform->getFrustumCulling())
-			{
-				if (transform->getFrustum()->isInside(entity))
-				{
-					entity->draw();
-					//drawnEntities++;
-				}
-			}
-			else
-			{
-				entity->draw();
-				//drawnEntities++;
-			}
+			if (transform->getFrustumCulling()) processFrustumCulling(entity);
+			else entity->draw();
 		}
 	}
-
-	//cout << "drawn entities: " << drawnEntities << endl;
 }
 #pragma endregion

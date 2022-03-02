@@ -336,8 +336,25 @@ void Entity::setParent(Entity* _parent)
 	if (parent) parent->removeChild(this);
 
 	parent = _parent;
-	if (parent) transform->setParent(parent->getTransform());
-	else transform->setParent(NULL);
+	if (parent)
+	{
+		transform->setParent(parent->getTransform());
+
+		vector<Entity*>::iterator reIterator;
+		for (reIterator = renderizableEntities.begin(); reIterator < renderizableEntities.end(); reIterator++)
+		{
+			if (*reIterator == this)
+			{
+				renderizableEntities.erase(reIterator);
+				break;
+			}
+		}
+	}
+	else
+	{
+		transform->setParent(NULL);
+		renderizableEntities.push_back(this);
+	}
 }
 
 Entity* Entity::getParent() { return parent; }
@@ -366,12 +383,12 @@ void Entity::addChild(Entity* child)
 
 void Entity::removeChild(Entity* child)
 {
-	vector<Entity*>::iterator iterator;
-	for (iterator = children.begin(); iterator < children.end(); iterator++)
+	vector<Entity*>::iterator childrenIterator;
+	for (childrenIterator = children.begin(); childrenIterator < children.end(); childrenIterator++)
 	{
-		if (*iterator == child)
+		if (*childrenIterator == child)
 		{
-			children.erase(iterator);
+			children.erase(childrenIterator);
 			transform->removeChild(child->getTransform());
 			child->setParent(NULL);
 
